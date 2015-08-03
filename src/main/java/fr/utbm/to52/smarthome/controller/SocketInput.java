@@ -30,14 +30,10 @@ public class SocketInput implements Runnable{
 		this.server = new ServerSocket(port);
 	}
 
-	public void setRingEventController(Event r){
-		this.ringEvent = r;
-	}
-
 	@Override
 	public void run() {
-		this.running =true;
-		while(this.running){
+		this.setRunning(true);
+		while(this.getRunning()){
 			try {
 				this.getListSocket().add(this.server.accept());
 			} catch (IOException e) {
@@ -57,15 +53,16 @@ public class SocketInput implements Runnable{
 							reader = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
 							String command = reader.readLine();
 							if(command.equals("Ring")){
-								if(SocketInput.this.ringEvent != null)
-									SocketInput.this.ringEvent.inform(null);
+								if(SocketInput.this.getRingEvent() != null)
+									SocketInput.this.getRingEvent().inform(null);
 							}else if(command.equals("Quit")){
-								SocketInput.this.running = false;
+								SocketInput.this.setRunning(false);
 							}else{
 								System.out.println("unhandled event : " + command);
 							}
 
 							this.s.close();
+							SocketInput.this.getListSocket().remove(this.s);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -78,6 +75,22 @@ public class SocketInput implements Runnable{
 
 			}
 		}
+	}
+	
+	public void setRingEventController(Event r){
+		this.ringEvent = r;
+	}
+	
+	protected void setRunning(boolean b) {
+		this.running = b;
+	}
+
+	public Event getRingEvent(){
+		return this.ringEvent;
+	}
+	
+	public boolean getRunning(){
+		return this.running;
 	}
 
 	public List<Socket> getListSocket() {
