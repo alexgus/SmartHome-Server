@@ -2,7 +2,7 @@ package fr.utbm.to52.smarthome;
 
 import java.io.IOException;
 
-import fr.utbm.to52.smarthome.controller.Event;
+import fr.utbm.to52.smarthome.controller.RingEvent;
 import fr.utbm.to52.smarthome.controller.SocketInput;
 
 public class MainControler {
@@ -15,12 +15,7 @@ public class MainControler {
 		
 		try {
 			server = new SocketInput(2000);
-			server.setRingEventController(new Event() {
-				@Override
-				public void inform(Object o) {
-					System.out.println("YEEEEES");
-				}
-			});
+			server.setRingEventController(new RingEvent());
 			
 			
 			t = new Thread(server);
