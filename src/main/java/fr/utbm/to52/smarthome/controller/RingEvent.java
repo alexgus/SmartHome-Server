@@ -25,9 +25,9 @@ public class RingEvent implements Event {
 	public void inform(Object o) {		
 		String topic        = Controller.getInstance().getConfig().getMQTTRingTopic();
         String content      = Controller.getInstance().getConfig().getMQTTRingPayload();
-        int qos             = 2;
+        int qos             = Controller.getInstance().getConfig().getMQTTQOS();
         String broker       = Controller.getInstance().getConfig().getMQTTServer();
-        String clientId     = "JavaSample";
+        String clientId     = Controller.getInstance().getConfig().getMQTTID();
         MemoryPersistence persistence = new MemoryPersistence();
 
         try {

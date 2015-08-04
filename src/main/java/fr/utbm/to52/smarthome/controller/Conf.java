@@ -18,10 +18,14 @@ public class Conf {
 	private static final String DEFAULT_CONF_FILE = "smart.conf";
 	
 	private String MQTTServer;
+	
+	private String MQTTID;
 
 	private String MQTTRingTopic;
 
 	private String MQTTRingPayload;
+
+	private int MQTTQOS;
 	
 	/**
 	 * Read a file passed on argument
@@ -68,8 +72,34 @@ public class Conf {
 		JSONObject js = new JSONObject(content);
 		JSONObject MQTT = js.getJSONObject("MQTT");
 		this.setMQTTServer(MQTT.getString("server"));
+		this.setMQTTID(MQTT.getString("id"));
 		this.setMQTTRingTopic(MQTT.getString("topic"));
 		this.setMQTTRingPayload(MQTT.getString("payload"));
+		this.setMQTTRingQOS(MQTT.getInt("payload"));
+	}
+
+	/**
+	 * Set the MQTT QOS in this object
+	 * @param int1 The MQTT QOS to set
+	 */
+	private void setMQTTRingQOS(int int1) {
+		this.MQTTQOS = int1;
+	}
+
+	/**
+	 * Set the MQTT id uses
+	 * @param string The MQTT id
+	 */
+	public void setMQTTID(String string) {
+		this.MQTTID = string;
+	}
+	
+	/**
+	 * Get the MQTT id in the configuration file
+	 * @return The MQTT id
+	 */
+	public String getMQTTID(){
+		return this.MQTTID;
 	}
 
 	/**
@@ -118,6 +148,14 @@ public class Conf {
 	 */
 	public void setMQTTRingPayload(String mQTTRingPayload) {
 		this.MQTTRingPayload = mQTTRingPayload;
+	}
+
+	/**
+	 * Get the MQTT QOS uses in this object
+	 * @return The MQTT QOS uses
+	 */
+	public int getMQTTQOS() {
+		return this.MQTTQOS;
 	}
 
 }
