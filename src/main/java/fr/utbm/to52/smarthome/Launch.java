@@ -5,7 +5,7 @@ import java.io.IOException;
 import fr.utbm.to52.smarthome.controller.RingEvent;
 import fr.utbm.to52.smarthome.controller.SocketInput;
 
-public class MainControler {
+public class Launch {
 
 	public static void main(String[] args){
 		System.out.println("in main !");
