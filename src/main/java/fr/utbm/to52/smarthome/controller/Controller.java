@@ -2,10 +2,25 @@ package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
 
+/**
+ * This controller is a singleton. For getting an instance from it 
+ * <code>Controller.getInstance()</code> This initialize it with 
+ * the default configuration file if it was not created before.
+ * 
+ * @author Alexandre Guyon
+ *
+ */
 public class Controller {
 	
+	/**
+	 * Singleton instance for this controller 
+	 */
 	private static Controller singleton = null;
 	
+	/**
+	 * Get an instance from the controller. The first call initialize it with the default configuration file.
+	 * @return Singleton instance of this controller
+	 */
 	public static Controller getInstance(){
 		if(singleton == null)
 			singleton = new Controller();
@@ -17,12 +32,15 @@ public class Controller {
 	
 	private Conf config;
 	
-	public Controller(){
+	private Controller(){
 		this.config = new Conf();
+		this.config.importConf();
 	}
 
+	/**
+	 * Start the server
+	 */
 	public void start(){	
-		this.config.importConf();
 		
 		try {
 			this.server = new SocketInput(2000);
@@ -39,10 +57,18 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * Get the configuration of the application loaded
+	 * @return The configuration loaded.
+	 */
 	public Conf getConfig() {
 		return this.config;
 	}
 
+	/**
+	 * Set to the controller a special configuration
+	 * @param config The configuration to set to the controller.
+	 */
 	public void setConfig(Conf config) {
 		this.config = config;
 	}

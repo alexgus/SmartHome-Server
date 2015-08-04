@@ -12,7 +12,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author alexandre
+ * This class is used to handle TCP connection.
+ * Command can be registered and then events are 
+ * triggered when they arrived for launching methods 
+ * 
+ * @author Alexandre Guyon
  *
  */
 public class SocketInput implements Runnable{
@@ -25,6 +29,12 @@ public class SocketInput implements Runnable{
 
 	private boolean running;
 
+	/**
+	 * Default constructor. Launch server on desired port.</br>
+	 * For receiving event you need to register callback !
+	 * @param port Port you want to open the server on
+	 * @throws IOException Throw IO Exception when error happens
+	 */
 	public SocketInput(int port) throws IOException{
 		this.setListSocket(new LinkedList<Socket>());
 		this.server = new ServerSocket(port);
@@ -77,27 +87,31 @@ public class SocketInput implements Runnable{
 		}
 	}
 	
+	/**
+	 * Set the ring event 
+	 * @param r The ring event
+	 */
 	public void setRingEventController(Event r){
 		this.ringEvent = r;
 	}
 	
-	protected void setRunning(boolean b) {
-		this.running = b;
-	}
-
-	public Event getRingEvent(){
+	Event getRingEvent(){
 		return this.ringEvent;
 	}
 	
-	public boolean getRunning(){
+	void setRunning(boolean b) {
+		this.running = b;
+	}
+	
+	boolean getRunning(){
 		return this.running;
 	}
 
-	public List<Socket> getListSocket() {
+	List<Socket> getListSocket() {
 		return this.listSocket;
 	}
 
-	public void setListSocket(List<Socket> listSocket) {
+	void setListSocket(List<Socket> listSocket) {
 		this.listSocket = listSocket;
 	}
 

@@ -10,13 +10,16 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 /**
- * @author alexandre
+ * Send MQTT ring message
+ * 
+ * @author Alexandre Guyon
  *
  */
 public class RingEvent implements Event {
 
-	/* (non-Javadoc)
-	 * @see fr.utbm.to52.smarthome.controller.Event#inform(java.lang.Object)
+	/**
+	 * This event send MQTT message to the ring via MQTT
+	 * with values in the Conf Object of the main controller.
 	 */
 	@Override
 	public void inform(Object o) {		

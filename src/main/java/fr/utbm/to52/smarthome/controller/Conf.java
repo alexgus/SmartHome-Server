@@ -8,8 +8,9 @@ import java.io.IOException;
 import org.json.JSONObject;
 
 /**
- * 
- * @author alexandre
+ * This class is used to parse the configuration file.
+ * This is also used to store all this values.
+ * @author Alexandre Guyon
  *
  */
 public class Conf {
@@ -21,17 +22,19 @@ public class Conf {
 	private String MQTTRingTopic;
 
 	private String MQTTRingPayload;
-
-	public Conf(){
-		
-	}
 	
+	/**
+	 * Read a file passed on argument
+	 * @param file The file to read
+	 * @return String of the file
+	 */
 	public static String readFile(String file){
 		File f = new File(file);
 		String content = "";
 		
 		if(f.exists() && f.canRead()){
 			try {
+				@SuppressWarnings("resource")
 				BufferedReader reader = new BufferedReader(new FileReader(f));
 				
 				String line = null;
@@ -49,10 +52,17 @@ public class Conf {
 		return content;
 	}
 	
+	/**
+	 * Import the default configuration file into this object
+	 */
 	public void importConf(){
 		importConfFromFile(DEFAULT_CONF_FILE);
 	}
 	
+	/**
+	 * Import configuration file into this object
+	 * @param defaultConfFile The configuration file to import
+	 */
 	public void importConfFromFile(String defaultConfFile) {
 		String content = readFile(defaultConfFile);
 		JSONObject js = new JSONObject(content);
@@ -62,26 +72,50 @@ public class Conf {
 		this.setMQTTRingPayload(MQTT.getString("payload"));
 	}
 
+	/**
+	 * Get the values of MQTT server used
+	 * @return the values of MQTT server used
+	 */
 	public String getMQTTServer() {
 		return this.MQTTServer;
 	}
 
+	/**
+	 * Set the value of the MQTT server to use
+	 * @param mQTTServer the value of the MQTT server to use
+	 */
 	public void setMQTTServer(String mQTTServer) {
 		this.MQTTServer = mQTTServer;
 	}
 
+	/**
+	 * Get the MQTT topic to ring event
+	 * @return the MQTT topic to ring event
+	 */
 	public String getMQTTRingTopic() {
 		return this.MQTTRingTopic;
 	}
 
+	/**
+	 * Set the MQTT topic to ring event
+	 * @param mQTTRingTopic the MQTT topic to ring event
+	 */
 	public void setMQTTRingTopic(String mQTTRingTopic) {
 		this.MQTTRingTopic = mQTTRingTopic;
 	}
 
+	/**
+	 * Get the MQTT payload to ring event
+	 * @return the MQTT payload to ring event
+	 */
 	public String getMQTTRingPayload() {
 		return this.MQTTRingPayload;
 	}
 
+	/**
+	 * Set the MQTT payload to ring event
+	 * @param mQTTRingPayload the MQTT payload to ring event
+	 */
 	public void setMQTTRingPayload(String mQTTRingPayload) {
 		this.MQTTRingPayload = mQTTRingPayload;
 	}
