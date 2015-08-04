@@ -20,10 +20,10 @@ public class RingEvent implements Event {
 	 */
 	@Override
 	public void inform(Object o) {		
-		String topic        = "/ring";
-        String content      = "Ring";
+		String topic        = Controller.getInstance().getConfig().getMQTTRingTopic();
+        String content      = Controller.getInstance().getConfig().getMQTTRingPayload();
         int qos             = 2;
-        String broker       = "tcp://localhost:1883";
+        String broker       = Controller.getInstance().getConfig().getMQTTServer();
         String clientId     = "JavaSample";
         MemoryPersistence persistence = new MemoryPersistence();
 

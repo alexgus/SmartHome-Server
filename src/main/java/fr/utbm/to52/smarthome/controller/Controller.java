@@ -4,16 +4,25 @@ import java.io.IOException;
 
 public class Controller {
 	
+	private static Controller singleton = null;
+	
+	public static Controller getInstance(){
+		if(singleton == null)
+			singleton = new Controller();
+		return singleton;
+	}
+	
 	private SocketInput server;
 	private Thread mainThread;
 	
-	private Conf config = new Conf();
+	private Conf config;
 	
 	public Controller(){
-		this.config.importConf();
+		this.config = new Conf();
 	}
 
 	public void start(){	
+		this.config.importConf();
 		
 		try {
 			this.server = new SocketInput(2000);
@@ -30,4 +39,11 @@ public class Controller {
 		}
 	}
 	
+	public Conf getConfig() {
+		return this.config;
+	}
+
+	public void setConfig(Conf config) {
+		this.config = config;
+	}
 }
