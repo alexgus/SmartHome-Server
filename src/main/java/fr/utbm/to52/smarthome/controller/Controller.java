@@ -7,10 +7,12 @@ public class Controller {
 	private SocketInput server;
 	private Thread mainThread;
 	
-	public Controller(){
-		
-	}
+	private Conf config = new Conf();
 	
+	public Controller(){
+		this.config.importConf();
+	}
+
 	public void start(){	
 		
 		try {
