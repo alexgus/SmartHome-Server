@@ -80,7 +80,7 @@ public class Controller {
 	 */
 	public void addRing(Calendar c){
 		String[] broker = this.config.getMQTTServer().split(":");
-		ProcessTask p = new ProcessTask("netcat " + broker[1].substring(2) + " " + broker[2] + " << \"Ring\" #smart");
+		ProcessTask p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] + " #smart");
 		
 		int min = c.get(Calendar.MINUTE);
 		int hour = c.get(Calendar.HOUR_OF_DAY);
