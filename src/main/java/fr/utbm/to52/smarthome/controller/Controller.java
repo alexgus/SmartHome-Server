@@ -1,8 +1,11 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import fr.utbm.to52.smarthome.model.Cron;
+import it.sauronsoftware.cron4j.ProcessTask;
+import it.sauronsoftware.cron4j.SchedulingPattern;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -45,7 +48,6 @@ public class Controller {
 		this.connection = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
 		
 		this.cron = new Cron();
-		System.out.println(this.cron.getCrontab().toString());
 	}
 
 	/**
@@ -54,6 +56,8 @@ public class Controller {
 	public void start(){
 		
 		this.connection.connect();
+		
+		this.addRing(Calendar.getInstance());
 		
 		try {
 			this.server = new SocketInput(2000);
@@ -68,6 +72,24 @@ public class Controller {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Add ring in the crontab with the corresponding date
+	 * @param c The date to ring
+	 */
+	public void addRing(Calendar c){
+		String[] broker = this.config.getMQTTServer().split(":");
+		ProcessTask p = new ProcessTask("netcat " + broker[1].substring(2) + " " + broker[2] + " << \"Ring\" #smart");
+		
+		int min = c.get(Calendar.MINUTE);
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int d = c.get(Calendar.DAY_OF_MONTH);
+		int m = c.get(Calendar.MONTH) + 1;
+		
+		this.cron.add(new SchedulingPattern(min +" " + hour + " " + d + " " + m + " *" ), p);
+		
+		this.cron.apply();
 	}
 	
 	/**

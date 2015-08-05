@@ -51,8 +51,16 @@ public class Cron {
 		this.crontab = new MyTaskTable();
 		this.fillCrontab();
 	}
-
+	
 	private void fillCrontab() {
+		this.fillCrontab(this.crontab);
+	}
+
+	private void fillCrontab(MyTaskTable crontab2) {
+		this.fillCrontab(crontab2, 1);
+	}
+
+	private void fillCrontab(MyTaskTable tt, int checkTag) {
 		try {
 			String CMD = DEFAULT_CMD + "-l";
 			Process cronp = Runtime.getRuntime().exec(CMD);
@@ -62,11 +70,12 @@ public class Cron {
 			String line = reader.readLine();
 			
 			while(line != null){
-				if(line.contains(this.tag))
-					CronParser.parseLine(this.crontab, line);
+				if(checkTag >= 0 && line.contains(this.tag))
+					CronParser.parseLine(tt, line);
+				else if(checkTag <= 0 && !line.contains(this.tag))
+					CronParser.parseLine(tt, line);
 				line = reader.readLine();
 			}
-			
 			
 			cronp.waitFor();
 			reader.close();
@@ -83,14 +92,16 @@ public class Cron {
 	 */
 	public void apply(){
 		File f = new File(DEFAULT_TMP_FILE);
-		
 		try {
 			f.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}		
 		
-		write(f.getAbsolutePath(), this.crontab.toString());
+		MyTaskTable tt = new MyTaskTable();
+		this.fillCrontab(tt,-1); // Fill this tab with all non tagged lines
+		
+		write(f.getAbsolutePath(), tt.toString() + "\n" + this.crontab.toString());
 		load();
 		
 		f.delete();
