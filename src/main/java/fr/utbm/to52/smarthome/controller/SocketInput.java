@@ -49,7 +49,7 @@ public class SocketInput implements Runnable{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
+			
 			synchronized (this) {
 				Runnable r = new Runnable() {
 
@@ -81,8 +81,14 @@ public class SocketInput implements Runnable{
 				};
 
 				Thread t = new Thread(r);
-				t.start();
-
+				t.start();	
+				
+				// TODO Ugly, not multi user
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
