@@ -1,11 +1,8 @@
 package fr.utbm.to52.smarthome.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
 import org.json.JSONObject;
+
+import fr.utbm.to52.smarthome.util.BasicIO;
 
 /**
  * This class is used to parse the configuration file.
@@ -28,35 +25,6 @@ public class Conf {
 	private int MQTTQOS;
 	
 	/**
-	 * Read a file passed on argument
-	 * @param file The file to read
-	 * @return String of the file
-	 */
-	public static String readFile(String file){
-		File f = new File(file);
-		String content = "";
-		
-		if(f.exists() && f.canRead()){
-			try {
-				@SuppressWarnings("resource")
-				BufferedReader reader = new BufferedReader(new FileReader(f));
-				
-				String line = null;
-				do{
-					line = reader.readLine();
-					if(line != null)
-						content += line;
-				}while(line != null);
-				reader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return content;
-	}
-	
-	/**
 	 * Import the default configuration file into this object
 	 */
 	public void importConf(){
@@ -68,7 +36,7 @@ public class Conf {
 	 * @param defaultConfFile The configuration file to import
 	 */
 	public void importConfFromFile(String defaultConfFile) {
-		String content = readFile(defaultConfFile);
+		String content = BasicIO.readFile(defaultConfFile);
 		JSONObject js = new JSONObject(content);
 		JSONObject MQTT = js.getJSONObject("MQTT");
 		this.setMQTTServer(MQTT.getString("server"));

@@ -4,12 +4,11 @@
 package fr.utbm.to52.smarthome.model;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import fr.utbm.to52.smarthome.util.BasicIO;
 import it.sauronsoftware.cron4j.CronParser;
 import it.sauronsoftware.cron4j.SchedulingPattern;
 import it.sauronsoftware.cron4j.Task;
@@ -101,29 +100,10 @@ public class Cron {
 		MyTaskTable tt = new MyTaskTable();
 		this.fillCrontab(tt,-1); // Fill this tab with all non tagged lines
 		
-		write(f.getAbsolutePath(), tt.toString() + "\n" + this.crontab.toString());
+		BasicIO.write(f.getAbsolutePath(), tt.toString() + "\n" + this.crontab.toString());
 		load();
 		
 		f.delete();
-	}
-	
-	/**
-	 * Write content to a file
-	 * @param path The path to the file
-	 * @param content The content to write
-	 */
-	@SuppressWarnings("resource")
-	public static void write(String path, String content){ 
-		try {
-			
-			FileWriter fw = new FileWriter(path);
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
-			bw.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	private static void load(){
