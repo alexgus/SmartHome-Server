@@ -22,7 +22,7 @@ import it.sauronsoftware.cron4j.TaskTable;
  */
 public class Cron {
 
-	private static final String DEFAULT_CMD = "crontab -u ";
+	private static final String DEFAULT_CMD = "crontab ";
 	
 	private static final String DEFAULT_TAG = "#smart";
 	
@@ -30,7 +30,7 @@ public class Cron {
 	
 	private String tag;
 	
-	private TaskTable crontab;
+	private MyTaskTable crontab;
 	
 	private String user;
 	
@@ -48,13 +48,14 @@ public class Cron {
 	public Cron(String user){
 		this.tag = DEFAULT_TAG;
 		this.user = user;
-		this.crontab = new TaskTable();
+		this.crontab = new MyTaskTable();
 		this.fillCrontab();
 	}
 
 	private void fillCrontab() {
 		try {
-			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + this.user + " -l");
+			String CMD = DEFAULT_CMD + "-l";
+			Process cronp = Runtime.getRuntime().exec(CMD);
 			@SuppressWarnings("resource")
 			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
 			
@@ -75,35 +76,48 @@ public class Cron {
 		}
 	}
 	
+	
+	
 	/**
 	 * Write the current crontab and load it
 	 */
 	public void apply(){
-		this.write();
-		this.load();
-	}
-	
-	@SuppressWarnings("resource")
-	private void write(){
 		File f = new File(DEFAULT_TMP_FILE);
+		
 		try {
 			f.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		write(f.getAbsolutePath(), this.crontab.toString());
+		load();
+		
+		f.delete();
+	}
+	
+	/**
+	 * Write content to a file
+	 * @param path The path to the file
+	 * @param content The content to write
+	 */
+	@SuppressWarnings("resource")
+	public static void write(String path, String content){ 
+		try {
 			
-			
-			FileWriter fw = new FileWriter(f.getAbsoluteFile());
+			FileWriter fw = new FileWriter(path);
 			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(this.crontab.toString());
+			bw.write(content);
 			bw.close();
 			
-			f.delete();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void load(){
+	private static void load(){
 		try {
-			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + this.user + DEFAULT_TMP_FILE);
+			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + " " + DEFAULT_TMP_FILE);
 			cronp.waitFor();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
@@ -122,7 +136,7 @@ public class Cron {
 	 * Set existing crontab
 	 * @param crontab The crontab to replace
 	 */
-	public void setCrontab(TaskTable crontab) {
+	public void setCrontab(MyTaskTable crontab) {
 		this.crontab = crontab;
 	}
 

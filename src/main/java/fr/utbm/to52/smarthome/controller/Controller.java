@@ -2,6 +2,8 @@ package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
 
+import fr.utbm.to52.smarthome.model.Cron;
+
 /**
  * This controller is a singleton. For getting an instance from it 
  * <code>Controller.getInstance()</code> This initialize it with 
@@ -34,11 +36,16 @@ public class Controller {
 	
 	private Conf config;
 	
+	private Cron cron;
+	
 	private Controller(){
 		this.config = new Conf();
 		this.config.importConf();
 		
 		this.connection = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
+		
+		this.cron = new Cron();
+		System.out.println(this.cron.getCrontab().toString());
 	}
 
 	/**

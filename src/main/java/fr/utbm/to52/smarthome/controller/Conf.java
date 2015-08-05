@@ -75,7 +75,7 @@ public class Conf {
 		this.setMQTTID(MQTT.getString("id"));
 		this.setMQTTRingTopic(MQTT.getString("topic"));
 		this.setMQTTRingPayload(MQTT.getString("payload"));
-		this.setMQTTRingQOS(MQTT.getInt("payload"));
+		this.setMQTTRingQOS(MQTT.getInt("QOS"));
 	}
 
 	/**
