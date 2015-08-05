@@ -24,12 +24,12 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	 */
 	@Override
 	public void handle(String cmd) {
-		if(cmd.equals(Controller.getInstance().getConfig().getServerCommandRing())){
+		if(cmd.equals(Controller.getInstance().getConfig().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
-		}else if(cmd.equals(Controller.getInstance().getConfig().getServerCommandQuit())){
+		}else if(cmd.equals(Controller.getInstance().getConfig().getCommandQuit())){
 			Controller.getInstance().stopServer();
-		}else if(cmd.contains(Controller.getInstance().getConfig().getServerCommandAddRing())){
+		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
 		}else{

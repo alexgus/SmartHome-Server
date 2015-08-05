@@ -26,11 +26,11 @@ public class Conf {
 	
 	private int serverPort;
 	
-	private String serverCommandQuit;
+	private String commandQuit;
 	
-	private String serverCommandRing;
+	private String commandRing;
 	
-	private String serverCommandAddRing;
+	private String commandAddRing;
 	
 	private String cronCommand;
 	
@@ -63,10 +63,10 @@ public class Conf {
 		JSONObject Server = js.getJSONObject("server");
 		this.setServerPort(Server.getInt("port"));
 		
-		JSONObject Command = Server.getJSONObject("command");
-		this.setServerCommandQuit(Command.getString("quitAction"));
-		this.setServerCommandRing(Command.getString("ringAction"));
-		this.setServerCommandAddRing(Command.getString("addRingAction"));
+		JSONObject Command = js.getJSONObject("command");
+		this.setCommandQuit(Command.getString("quitAction"));
+		this.setCommandRing(Command.getString("ringAction"));
+		this.setCommandAddRing(Command.getString("addRingAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronCommand(cron.getString("command"));
@@ -171,43 +171,43 @@ public class Conf {
 	/**
 	 * @return the serverCommandQuit
 	 */
-	public String getServerCommandQuit() {
-		return this.serverCommandQuit;
+	public String getCommandQuit() {
+		return this.commandQuit;
 	}
 
 	/**
 	 * @param serverCommandQuit the serverCommandQuit to set
 	 */
-	public void setServerCommandQuit(String serverCommandQuit) {
-		this.serverCommandQuit = serverCommandQuit;
+	public void setCommandQuit(String serverCommandQuit) {
+		this.commandQuit = serverCommandQuit;
 	}
 
 	/**
 	 * @return the serverCommandAddRing
 	 */
-	public String getServerCommandAddRing() {
-		return this.serverCommandAddRing;
+	public String getCommandAddRing() {
+		return this.commandAddRing;
 	}
 
 	/**
 	 * @param serverCommandAddRing the serverCommandAddRing to set
 	 */
-	public void setServerCommandAddRing(String serverCommandAddRing) {
-		this.serverCommandAddRing = serverCommandAddRing;
+	public void setCommandAddRing(String serverCommandAddRing) {
+		this.commandAddRing = serverCommandAddRing;
 	}
 
 	/**
 	 * @return the serverCommandRing
 	 */
-	public String getServerCommandRing() {
-		return this.serverCommandRing;
+	public String getCommandRing() {
+		return this.commandRing;
 	}
 
 	/**
 	 * @param serverCommandRing the serverCommandRing to set
 	 */
-	public void setServerCommandRing(String serverCommandRing) {
-		this.serverCommandRing = serverCommandRing;
+	public void setCommandRing(String serverCommandRing) {
+		this.commandRing = serverCommandRing;
 	}
 
 	/**
