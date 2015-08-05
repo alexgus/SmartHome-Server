@@ -35,7 +35,7 @@ public class Controller {
 	private SocketInput server;
 	private Thread mainThread;
 	
-	private MQTT connection;
+	private MQTT mqtt;
 	
 	private Conf config;
 	
@@ -45,7 +45,7 @@ public class Controller {
 		this.config = new Conf();
 		this.config.importConf();
 		
-		this.connection = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
+		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
 	}
 
 	/**
@@ -53,23 +53,36 @@ public class Controller {
 	 */
 	public void start(){
 		this.cron = new Cron();
-		this.connection.connect();
+		this.mqtt.connect();
 		
 		this.addRing(Calendar.getInstance());
 		
 		try {
 			this.server = new SocketInput(this.getConfig().getServerPort());
-			this.server.setRingEventController(new RingEvent(this.connection));
+			this.server.setRingEventController(new RingEvent(this.mqtt));
 			
 			
 			this.mainThread = new Thread(this.server);
 			this.mainThread.start();
 			
-			this.mainThread.join();
-			
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		this.stop();
+	}
+	
+	/**
+	 * Stop the controller and so the app
+	 */
+	public void stop(){
+		try {
+			this.mainThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		this.mqtt.disconnect();
 	}
 	
 	/**
