@@ -108,7 +108,7 @@ public class MQTT implements MqttCallback{
 
 	@Override
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-		// Nothing for now
+		// TODO Configuration modifier
 	}
 
 }
