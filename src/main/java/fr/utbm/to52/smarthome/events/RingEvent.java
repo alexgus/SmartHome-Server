@@ -1,7 +1,10 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller;
+package fr.utbm.to52.smarthome.events;
+
+import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.network.MQTT;
 
 /**
  * Send MQTT ring message

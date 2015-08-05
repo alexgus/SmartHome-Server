@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller;
+package fr.utbm.to52.smarthome.network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
+
+import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.events.Event;
 
 /**
  * This class is used to handle TCP connection.
