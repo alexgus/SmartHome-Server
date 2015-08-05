@@ -1,6 +1,7 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Calendar;
 
 import fr.utbm.to52.smarthome.events.AddRingEvent;
@@ -10,6 +11,8 @@ import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
 import it.sauronsoftware.cron4j.ProcessTask;
 import it.sauronsoftware.cron4j.SchedulingPattern;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.util.Calendars;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -59,6 +62,7 @@ public class Controller {
 	 */
 	public void start(){
 		this.cron = new Cron();
+		
 		this.mqtt.connect();
 
 		this.cmdHandler.setRingEventController(new RingEvent(this.mqtt));
@@ -75,9 +79,19 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
+		this.loadICal();
+		
 		this.stop();
 	}
 	
+	private void loadICal() {
+		try {
+			net.fortuna.ical4j.model.Calendar ical = Calendars.load(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/private-c99c6c281cf94c48e85f2155434f0423/basic.ics"));
+		} catch (IOException | ParserException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Stop the server
 	 */
