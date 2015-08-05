@@ -68,7 +68,7 @@ public class Conf {
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronCommand(cron.getString("command"));
 		this.setCronTag(cron.getString("tag"));
-		this.setCronTMPFile(cron.getString("TmpFile"));
+		this.setCronTMPFile(cron.getString("tmpFile"));
 	}
 
 	/**

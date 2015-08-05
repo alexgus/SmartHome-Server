@@ -46,15 +46,13 @@ public class Controller {
 		this.config.importConf();
 		
 		this.connection = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
-		
-		this.cron = new Cron();
 	}
 
 	/**
 	 * Start the server
 	 */
 	public void start(){
-		
+		this.cron = new Cron();
 		this.connection.connect();
 		
 		this.addRing(Calendar.getInstance());
