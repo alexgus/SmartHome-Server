@@ -3,12 +3,6 @@
  */
 package fr.utbm.to52.smarthome.controller;
 
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
 /**
  * Send MQTT ring message
  * 
@@ -17,41 +11,23 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  */
 public class RingEvent implements Event {
 
+	private MQTT connection; 
+	
+	/**
+	 * Default constructor. Initialize with valid MQTT connection
+	 * @param c A valid MQTT connection
+	 */
+	public RingEvent(MQTT c) {
+		this.connection = c;
+	}
+	
 	/**
 	 * This event send MQTT message to the ring via MQTT
 	 * with values in the Conf Object of the main controller.
 	 */
 	@Override
-	public void inform(Object o) {		
-		String topic        = Controller.getInstance().getConfig().getMQTTRingTopic();
-        String content      = Controller.getInstance().getConfig().getMQTTRingPayload();
-        int qos             = Controller.getInstance().getConfig().getMQTTQOS();
-        String broker       = Controller.getInstance().getConfig().getMQTTServer();
-        String clientId     = Controller.getInstance().getConfig().getMQTTID();
-        MemoryPersistence persistence = new MemoryPersistence();
-
-        try {
-            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);
-            MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setCleanSession(true);
-            System.out.println("Connecting to broker: "+broker);
-            sampleClient.connect(connOpts);
-            System.out.println("Connected");
-            System.out.println("Publishing message: "+content);
-            MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(qos);
-            sampleClient.publish(topic, message);
-            System.out.println("Message published");
-            sampleClient.disconnect();
-            System.out.println("Disconnected");
-            System.exit(0);
-        } catch(MqttException me) {
-            System.out.println("reason "+me.getReasonCode());
-            System.out.println("msg "+me.getMessage());
-            System.out.println("loc "+me.getLocalizedMessage());
-            System.out.println("cause "+me.getCause());
-            System.out.println("excep "+me);
-            me.printStackTrace();
-        }
+	public void inform(Object o) {
+        this.connection.publish(Controller.getInstance().getConfig().getMQTTRingTopic(), 
+        		Controller.getInstance().getConfig().getMQTTRingPayload());
 	}
 }

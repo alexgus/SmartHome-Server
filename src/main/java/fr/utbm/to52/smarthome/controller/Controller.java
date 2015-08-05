@@ -30,21 +30,27 @@ public class Controller {
 	private SocketInput server;
 	private Thread mainThread;
 	
+	private MQTT connection;
+	
 	private Conf config;
 	
 	private Controller(){
 		this.config = new Conf();
 		this.config.importConf();
+		
+		this.connection = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
 	}
 
 	/**
 	 * Start the server
 	 */
-	public void start(){	
+	public void start(){
+		
+		this.connection.connect();
 		
 		try {
 			this.server = new SocketInput(2000);
-			this.server.setRingEventController(new RingEvent());
+			this.server.setRingEventController(new RingEvent(this.connection));
 			
 			
 			this.mainThread = new Thread(this.server);
