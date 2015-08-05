@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.util.BasicIO;
 import it.sauronsoftware.cron4j.CronParser;
 import it.sauronsoftware.cron4j.SchedulingPattern;
@@ -21,13 +22,11 @@ import it.sauronsoftware.cron4j.TaskTable;
  */
 public class Cron {
 
-	private static final String DEFAULT_CMD = "crontab ";
-	
-	private static final String DEFAULT_TAG = "#smart";
-	
-	private static final String DEFAULT_TMP_FILE = "/tmp/smart_crontab";
+	private String command;
 	
 	private String tag;
+	
+	private String pathTmpFile;
 	
 	private MyTaskTable crontab;
 	
@@ -45,7 +44,9 @@ public class Cron {
 	 * @param user The user you want the crontab to be loaded
 	 */
 	public Cron(String user){
-		this.tag = DEFAULT_TAG;
+		this.tag = Controller.getInstance().getConfig().getCronTag();
+		this.command = Controller.getInstance().getConfig().getCronCommand();
+		this.pathTmpFile = Controller.getInstance().getConfig().getCronTMPFile();
 		this.user = user;
 		this.crontab = new MyTaskTable();
 		this.fillCrontab();
@@ -61,7 +62,7 @@ public class Cron {
 
 	private void fillCrontab(MyTaskTable tt, int checkTag) {
 		try {
-			String CMD = DEFAULT_CMD + "-l";
+			String CMD = this.command + " -l";
 			Process cronp = Runtime.getRuntime().exec(CMD);
 			@SuppressWarnings("resource")
 			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
@@ -90,7 +91,7 @@ public class Cron {
 	 * Write the current crontab and load it
 	 */
 	public void apply(){
-		File f = new File(DEFAULT_TMP_FILE);
+		File f = new File(this.pathTmpFile);
 		try {
 			f.createNewFile();
 		} catch (IOException e) {
@@ -101,14 +102,14 @@ public class Cron {
 		this.fillCrontab(tt,-1); // Fill this tab with all non tagged lines
 		
 		BasicIO.write(f.getAbsolutePath(), tt.toString() + "\n" + this.crontab.toString());
-		load();
+		this.load();
 		
 		f.delete();
 	}
 	
-	private static void load(){
+	private void load(){
 		try {
-			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + " " + DEFAULT_TMP_FILE);
+			Process cronp = Runtime.getRuntime().exec(this.command + " " + this.pathTmpFile);
 			cronp.waitFor();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();

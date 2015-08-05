@@ -62,13 +62,13 @@ public class SocketInput implements Runnable{
 						try {
 							reader = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
 							String command = reader.readLine();
-							if(command.equals("Ring")){
+							if(command.equals(Controller.getInstance().getConfig().getServerCommandRing())){
 								if(SocketInput.this.getRingEvent() != null)
 									SocketInput.this.getRingEvent().inform(null);
-							}else if(command.equals("Quit")){
+							}else if(command.equals(Controller.getInstance().getConfig().getServerCommandQuit())){
 								SocketInput.this.setRunning(false);
 							}else{
-								System.out.println("unhandled event : " + command);
+								System.out.println("unhandled command : " + command);
 							}
 
 							this.s.close();

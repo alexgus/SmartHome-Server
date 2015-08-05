@@ -60,7 +60,7 @@ public class Controller {
 		this.addRing(Calendar.getInstance());
 		
 		try {
-			this.server = new SocketInput(2000);
+			this.server = new SocketInput(this.getConfig().getServerPort());
 			this.server.setRingEventController(new RingEvent(this.connection));
 			
 			
