@@ -4,8 +4,10 @@
 package fr.utbm.to52.smarthome.model;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import it.sauronsoftware.cron4j.CronParser;
+import it.sauronsoftware.cron4j.TaskTable;
 
 /**
  * Represent the current crontab install on this system
@@ -20,7 +22,7 @@ public class Cron {
 	
 	private String tag;
 	
-	private String crontab;
+	private TaskTable crontab;
 	
 	private String user;
 	
@@ -38,6 +40,7 @@ public class Cron {
 	public Cron(String user){
 		this.tag = DEFAULT_TAG;
 		this.user = user;
+		this.crontab = new TaskTable();
 		this.fillCrontab();
 	}
 
@@ -47,18 +50,17 @@ public class Cron {
 			@SuppressWarnings("resource")
 			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
 			
-			this.setCrontab("");
 			String line = reader.readLine();
 			
 			while(line != null){
 				if(line.contains(this.tag))
-					this.setCrontab(this.getCrontab() + line);
+					CronParser.parseLine(this.crontab, line);
 				line = reader.readLine();
 			}
 			
 			reader.close();
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -67,11 +69,15 @@ public class Cron {
 	 * Get The raw crontab
 	 * @return The raw crontab
 	 */
-	public String getCrontab() {
+	public TaskTable getCrontab() {
 		return this.crontab;
 	}
 	
-	private void setCrontab(String crontab) {
+	/**
+	 * Set existing crontab
+	 * @param crontab The crontab to replace
+	 */
+	public void setCrontab(TaskTable crontab) {
 		this.crontab = crontab;
 	}
 
