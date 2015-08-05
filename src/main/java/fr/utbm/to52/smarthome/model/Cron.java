@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import it.sauronsoftware.cron4j.CronParser;
+import it.sauronsoftware.cron4j.SchedulingPattern;
+import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskTable;
 
 /**
@@ -63,6 +65,7 @@ public class Cron {
 					CronParser.parseLine(this.crontab, line);
 				line = reader.readLine();
 			}
+			
 			
 			cronp.waitFor();
 			reader.close();
@@ -129,6 +132,52 @@ public class Cron {
 	 */
 	public String getUser() {
 		return this.user;
+	}
+
+	/**
+	 * @param arg0 @see it.sauronsoftware.cron4j.TaskTable#add(it.sauronsoftware.cron4j.SchedulingPattern, it.sauronsoftware.cron4j.Task)
+	 * @param arg1 @see it.sauronsoftware.cron4j.TaskTable#add(it.sauronsoftware.cron4j.SchedulingPattern, it.sauronsoftware.cron4j.Task)
+	 * @see it.sauronsoftware.cron4j.TaskTable#add(it.sauronsoftware.cron4j.SchedulingPattern, it.sauronsoftware.cron4j.Task)
+	 */
+	public void add(SchedulingPattern arg0, Task arg1) {
+		this.crontab.add(arg0, arg1);
+	}
+
+	/**
+	 * @param arg0 @see it.sauronsoftware.cron4j.TaskTable#getSchedulingPattern(int)
+	 * @return @see it.sauronsoftware.cron4j.TaskTable#getSchedulingPattern(int)
+	 * @throws IndexOutOfBoundsException @see it.sauronsoftware.cron4j.TaskTable#getSchedulingPattern(int)
+	 * @see it.sauronsoftware.cron4j.TaskTable#getSchedulingPattern(int)
+	 */
+	public SchedulingPattern getSchedulingPattern(int arg0) throws IndexOutOfBoundsException {
+		return this.crontab.getSchedulingPattern(arg0);
+	}
+
+	/**
+	 * @param arg0 @see it.sauronsoftware.cron4j.TaskTable#getTask(int)
+	 * @return @see it.sauronsoftware.cron4j.TaskTable#getTask(int)
+	 * @throws IndexOutOfBoundsException @see it.sauronsoftware.cron4j.TaskTable#getTask(int)
+	 * @see it.sauronsoftware.cron4j.TaskTable#getTask(int)
+	 */
+	public Task getTask(int arg0) throws IndexOutOfBoundsException {
+		return this.crontab.getTask(arg0);
+	}
+
+	/**
+	 * @param arg0 @see it.sauronsoftware.cron4j.TaskTable#remove(int)
+	 * @throws IndexOutOfBoundsException @see it.sauronsoftware.cron4j.TaskTable#remove(int)
+	 * @see it.sauronsoftware.cron4j.TaskTable#remove(int)
+	 */
+	public void remove(int arg0) throws IndexOutOfBoundsException {
+		this.crontab.remove(arg0);
+	}
+
+	/**
+	 * @return @see it.sauronsoftware.cron4j.TaskTable#size()
+	 * @see it.sauronsoftware.cron4j.TaskTable#size()
+	 */
+	public int size() {
+		return this.crontab.size();
 	}
 	
 }
