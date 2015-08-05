@@ -11,8 +11,7 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.utbm.to52.smarthome.controller.Controller;
-import fr.utbm.to52.smarthome.events.Event;
+import fr.utbm.to52.smarthome.controller.CommandHandler;
 
 /**
  * This class is used to handle TCP connection.
@@ -28,11 +27,9 @@ public class SocketInput implements Runnable{
 
 	private List<Socket> listSocket;
 
-	private Event ringEvent;
-	
-	private Event addRingEvent;
-
 	private boolean running;
+	
+	private CommandHandler cmdHandler;
 
 	/**
 	 * Default constructor. Launch server on desired port.</br>
@@ -67,18 +64,9 @@ public class SocketInput implements Runnable{
 						try {
 							reader = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
 							String command = reader.readLine();
-							if(command.equals(Controller.getInstance().getConfig().getServerCommandRing())){
-								if(SocketInput.this.getRingEvent() != null)
-									SocketInput.this.getRingEvent().inform(null);
-							}else if(command.equals(Controller.getInstance().getConfig().getServerCommandQuit())){
-								SocketInput.this.setRunning(false);
-							}else if(command.contains(Controller.getInstance().getConfig().getServerCommandAddRing())){
-								if(SocketInput.this.getAddRingEvent() != null)
-									SocketInput.this.getAddRingEvent().inform(command);
-							}else{
-								System.out.println("unhandled command : " + command);
-							}
-
+							
+							SocketInput.this.getCmdHandler().handle(command);
+							
 							this.s.close();
 							SocketInput.this.getListSocket().remove(this.s);
 						} catch (IOException e) {
@@ -101,32 +89,11 @@ public class SocketInput implements Runnable{
 		}
 	}
 	
-	
-	Event getAddRingEvent() {
-		return this.addRingEvent;
-	}
-	
 	/**
-	 * Set the add ring event
-	 * @param r The add ring event
+	 * Set the state of the server
+	 * @param b True running, false othewise
 	 */
-	public void setAddRingEventController(Event r){
-		this.addRingEvent = r;
-	}
-
-	/**
-	 * Set the ring event 
-	 * @param r The ring event
-	 */
-	public void setRingEventController(Event r){
-		this.ringEvent = r;
-	}
-	
-	Event getRingEvent(){
-		return this.ringEvent;
-	}
-	
-	void setRunning(boolean b) {
+	public void setRunning(boolean b) {
 		this.running = b;
 	}
 	
@@ -140,6 +107,22 @@ public class SocketInput implements Runnable{
 
 	void setListSocket(List<Socket> listSocket) {
 		this.listSocket = listSocket;
+	}
+
+	/**
+	 * Get the command handler for this server
+	 * @return The command handler
+	 */
+	public CommandHandler getCmdHandler() {
+		return this.cmdHandler;
+	}
+
+	/**
+	 * Set The command handler for this server
+	 * @param cmdHandler The command handler to set
+	 */
+	public void setCmdHandler(CommandHandler cmdHandler) {
+		this.cmdHandler = cmdHandler;
 	}
 
 }

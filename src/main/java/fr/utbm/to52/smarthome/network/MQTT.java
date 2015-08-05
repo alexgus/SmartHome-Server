@@ -3,7 +3,6 @@
  */
 package fr.utbm.to52.smarthome.network;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -17,7 +16,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
  * @author Alexandre Guyon
  *
  */
-public class MQTT implements MqttCallback{
+public class MQTT{
 	
 	private String id;
 	
@@ -31,19 +30,24 @@ public class MQTT implements MqttCallback{
 	
 	private MqttConnectOptions connOpts;
 	
+	private MqttCallback cmdHandler;
+	
 	/**
 	 * Initialize client with default option
 	 * @param id Id to set to the client
 	 * @param server Broker ==> tcp://hostname:port
 	 * @param QOS Default QOS
+	 * @param c Callback for MQTT message and problems
 	 */
-	public MQTT(String id, String server, int QOS){
+	public MQTT(String id, String server, int QOS, MqttCallback c){
 		this.id = id;
 		this.broker = server;
 		this.QOS = QOS;
+		this.cmdHandler = c;
 		this.persistence = new MemoryPersistence();
 		try {
 			this.client = new MqttClient(this.broker, this.id, this.persistence);
+			this.client.setCallback(this.cmdHandler);
 		} catch (MqttException e) {
 			e.printStackTrace();
 		}
@@ -95,20 +99,4 @@ public class MQTT implements MqttCallback{
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public void connectionLost(Throwable arg0) {
-		this.reconnect();
-	}
-
-	@Override
-	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		// Nothing
-	}
-
-	@Override
-	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-		// TODO Configuration modifier
-	}
-
 }

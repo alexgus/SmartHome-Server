@@ -45,11 +45,13 @@ public class Controller {
 	
 	private Cron cron;
 	
+	private CommandHandlerImpl cmdHandler;
+	
 	private Controller(){
 		this.config = new Conf();
 		this.config.importConf();
-		
-		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS());
+		this.cmdHandler = new CommandHandlerImpl();
+		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
 	}
 
 	/**
@@ -58,12 +60,13 @@ public class Controller {
 	public void start(){
 		this.cron = new Cron();
 		this.mqtt.connect();
+
+		this.cmdHandler.setRingEventController(new RingEvent(this.mqtt));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent());
 		
 		try {
 			this.server = new SocketInput(this.getConfig().getServerPort());
-			this.server.setRingEventController(new RingEvent(this.mqtt));
-			this.server.setAddRingEventController(new AddRingEvent());
-			
+			this.server.setCmdHandler(this.cmdHandler);
 			
 			this.mainThread = new Thread(this.server);
 			this.mainThread.start();
@@ -73,6 +76,13 @@ public class Controller {
 		}
 		
 		this.stop();
+	}
+	
+	/**
+	 * Stop the server
+	 */
+	public void stopServer(){
+		this.server.setRunning(false);
 	}
 	
 	/**
