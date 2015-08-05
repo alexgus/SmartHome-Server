@@ -4,6 +4,10 @@
 package fr.utbm.to52.smarthome.model;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import it.sauronsoftware.cron4j.CronParser;
@@ -16,9 +20,11 @@ import it.sauronsoftware.cron4j.TaskTable;
  */
 public class Cron {
 
-	private static final String DEFAULT_CMD = "crontab -l -u ";
+	private static final String DEFAULT_CMD = "crontab -u ";
 	
 	private static final String DEFAULT_TAG = "#smart";
+	
+	private static final String DEFAULT_TMP_FILE = "/tmp/smart_crontab";
 	
 	private String tag;
 	
@@ -46,7 +52,7 @@ public class Cron {
 
 	private void fillCrontab() {
 		try {
-			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + this.user);
+			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + this.user + " -l");
 			@SuppressWarnings("resource")
 			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
 			
@@ -58,9 +64,45 @@ public class Cron {
 				line = reader.readLine();
 			}
 			
+			cronp.waitFor();
 			reader.close();
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Write the current crontab and load it
+	 */
+	public void apply(){
+		this.write();
+		this.load();
+	}
+	
+	@SuppressWarnings("resource")
+	private void write(){
+		File f = new File(DEFAULT_TMP_FILE);
+		try {
+			f.createNewFile();
+			
+			
+			FileWriter fw = new FileWriter(f.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(this.crontab.toString());
+			bw.close();
+			
+			f.delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void load(){
+		try {
+			Process cronp = Runtime.getRuntime().exec(DEFAULT_CMD + this.user + DEFAULT_TMP_FILE);
+			cronp.waitFor();
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
