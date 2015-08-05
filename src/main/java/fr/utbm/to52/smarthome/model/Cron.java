@@ -146,7 +146,13 @@ public class Cron {
 	 * @see it.sauronsoftware.cron4j.TaskTable#add(it.sauronsoftware.cron4j.SchedulingPattern, it.sauronsoftware.cron4j.Task)
 	 */
 	public void add(SchedulingPattern arg0, Task arg1) {
-		this.crontab.add(arg0, arg1);
+		// Test if is not already in
+		int i = 0;
+		while(i < this.crontab.size() 
+				&& !this.crontab.getSchedulingPattern(i).toString().contains(arg0.toString()))
+			++i;
+		if(i >= this.crontab.size())
+			this.crontab.add(arg0, arg1);
 	}
 
 	/**
