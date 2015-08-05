@@ -26,6 +26,8 @@ public class SocketInput implements Runnable{
 	private List<Socket> listSocket;
 
 	private Event ringEvent;
+	
+	private Event addRingEvent;
 
 	private boolean running;
 
@@ -67,6 +69,9 @@ public class SocketInput implements Runnable{
 									SocketInput.this.getRingEvent().inform(null);
 							}else if(command.equals(Controller.getInstance().getConfig().getServerCommandQuit())){
 								SocketInput.this.setRunning(false);
+							}else if(command.contains(Controller.getInstance().getConfig().getServerCommandAddRing())){
+								if(SocketInput.this.getAddRingEvent() != null)
+									SocketInput.this.getAddRingEvent().inform(command);
 							}else{
 								System.out.println("unhandled command : " + command);
 							}
@@ -93,6 +98,19 @@ public class SocketInput implements Runnable{
 		}
 	}
 	
+	
+	Event getAddRingEvent() {
+		return this.addRingEvent;
+	}
+	
+	/**
+	 * Set the add ring event
+	 * @param r The add ring event
+	 */
+	public void setAddRingEventController(Event r){
+		this.addRingEvent = r;
+	}
+
 	/**
 	 * Set the ring event 
 	 * @param r The ring event

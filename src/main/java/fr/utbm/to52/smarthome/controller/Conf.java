@@ -30,6 +30,8 @@ public class Conf {
 	
 	private String serverCommandRing;
 	
+	private String serverCommandAddRing;
+	
 	private String cronCommand;
 	
 	private String cronTMPFile;
@@ -64,6 +66,7 @@ public class Conf {
 		JSONObject Command = Server.getJSONObject("command");
 		this.setServerCommandQuit(Command.getString("quitAction"));
 		this.setServerCommandRing(Command.getString("ringAction"));
+		this.setServerCommandAddRing(Command.getString("addRingAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronCommand(cron.getString("command"));
@@ -177,6 +180,20 @@ public class Conf {
 	 */
 	public void setServerCommandQuit(String serverCommandQuit) {
 		this.serverCommandQuit = serverCommandQuit;
+	}
+
+	/**
+	 * @return the serverCommandAddRing
+	 */
+	public String getServerCommandAddRing() {
+		return this.serverCommandAddRing;
+	}
+
+	/**
+	 * @param serverCommandAddRing the serverCommandAddRing to set
+	 */
+	public void setServerCommandAddRing(String serverCommandAddRing) {
+		this.serverCommandAddRing = serverCommandAddRing;
 	}
 
 	/**

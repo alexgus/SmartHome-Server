@@ -55,11 +55,10 @@ public class Controller {
 		this.cron = new Cron();
 		this.mqtt.connect();
 		
-		this.addRing(Calendar.getInstance());
-		
 		try {
 			this.server = new SocketInput(this.getConfig().getServerPort());
 			this.server.setRingEventController(new RingEvent(this.mqtt));
+			this.server.setAddRingEventController(new AddRingEvent());
 			
 			
 			this.mainThread = new Thread(this.server);

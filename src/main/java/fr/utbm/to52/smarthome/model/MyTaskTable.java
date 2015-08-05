@@ -29,7 +29,10 @@ public class MyTaskTable extends TaskTable {
 			raw = "";
 			for(int j = 0 ; j < tmp.length ; ++j)
 				raw += tmp[j];
-			s += this.getSchedulingPattern(i) + "\t" + raw + "\n";
+			if(this.getSchedulingPattern(i).toString().contains("\t"))
+				s += this.getSchedulingPattern(i) + raw + "\n";
+			else
+				s += this.getSchedulingPattern(i) + "\t" +raw + "\n";
 		}
 		return s;
 	}
