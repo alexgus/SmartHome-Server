@@ -50,6 +50,11 @@
 			<artifactId>ical4j</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-calendar</artifactId>
+			<version>v3-rev133-1.20.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
