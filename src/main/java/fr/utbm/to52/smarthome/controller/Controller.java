@@ -1,15 +1,21 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 
+import fr.utbm.to52.smarthome.calendar.ICal;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
 import fr.utbm.to52.smarthome.model.Cron;
 import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
 import it.sauronsoftware.cron4j.ProcessTask;
+import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.SchedulingPattern;
+import net.fortuna.ical4j.model.ComponentList;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -44,6 +50,8 @@ public class Controller {
 	private Conf config;
 
 	private Cron cron;
+	
+	private Scheduler jcron;
 
 	private CommandHandlerImpl cmdHandler;
 
@@ -51,6 +59,7 @@ public class Controller {
 		this.config = new Conf();
 		this.config.importConf();
 		this.cmdHandler = new CommandHandlerImpl();
+		this.jcron = new Scheduler();
 		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
 	}
 
@@ -75,44 +84,63 @@ public class Controller {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		this.loadICal();
-		this.loadGCal();
-		this.loadCalDav();
-
-		this.stop();
-	}
-
-	private void loadGCal() {
-		// 
-	}
-
-	private void loadCalDav(){
-		//
-	}
-
-	private void loadICal() {
-		// 
+		
+		this.jcron.schedule("* * * * *", new Runnable() {
+			
+			private ICal c;
+			
+			public void run() {
+				try {
+					this.c = new ICal(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/public/basic.ics"));
+					this.c.load();
+					
+					Date now = new Date();
+					Calendar tomorrowMorning = Calendar.getInstance();
+					tomorrowMorning.setTime(now);
+					
+					tomorrowMorning.add(Calendar.DAY_OF_YEAR, 1);					
+					tomorrowMorning.set(Calendar.SECOND, 0);
+					tomorrowMorning.set(Calendar.MINUTE, 0);
+					tomorrowMorning.set(Calendar.HOUR, 0);
+					tomorrowMorning.set(Calendar.AM_PM, Calendar.AM);
+					
+					Calendar tomorrowNight = (Calendar) tomorrowMorning.clone();
+					tomorrowNight.set(Calendar.AM_PM, Calendar.PM);
+					tomorrowNight.add(Calendar.DAY_OF_YEAR, 1);
+					
+					System.out.println(tomorrowMorning.getTime());
+					System.out.println(tomorrowNight.getTime());
+					
+					ComponentList lc = this.c.get(tomorrowMorning.getTime(), tomorrowNight.getTime());
+					
+					if(lc.size() == 0)
+						System.out.println("No events");
+					else
+						System.out.println(lc);
+					
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		this.jcron.start();
 	}
 
 	/**
 	 * Stop the server
 	 */
-	public void stopServer(){
-		this.server.setRunning(false);
-	}
-
-	/**
-	 * Stop the controller and so the app
-	 */
 	public void stop(){
+		this.server.setRunning(false);
+		
 		try {
 			this.mainThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
+		this.jcron.stop();
 		this.mqtt.disconnect();
+		
 	}
 
 	/**

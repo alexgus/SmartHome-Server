@@ -136,11 +136,8 @@ public class ICal implements ICalendar {
 			Property p2 = c.getProperty(Property.DTEND);
 			DtEnd dEnd = (DtEnd) p2;
 			
-			boolean part1 = dBegin.getDate().after(begin);
-			boolean part2 = dBegin.getDate().before(end);
-			
-			if(part1 && part2
-					/*&& dEnd.getDate().before(end) && dEnd.getDate().after(begin)*/)
+			if(dBegin.getDate().after(begin) && dBegin.getDate().before(end)
+					&& dEnd.getDate().before(end) && dEnd.getDate().after(begin))
 				cFiltered.add(c);
 		}
 		

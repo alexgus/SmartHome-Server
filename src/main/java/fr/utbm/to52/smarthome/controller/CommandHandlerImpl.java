@@ -28,7 +28,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
 		}else if(cmd.equals(Controller.getInstance().getConfig().getCommandQuit())){
-			Controller.getInstance().stopServer();
+			Controller.getInstance().stop();
 		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
