@@ -84,40 +84,15 @@ public class Controller {
 	}
 
 	private void loadGCal() {
-		// https://developers.google.com/google-apps/calendar/quickstart/java
-		// https://developers.google.com/resources/api-libraries/documentation/calendar/v3/java/latest/
+		// 
 	}
 
 	private void loadCalDav(){
-		// http://build.mnode.org/projects/ical4j-connector/apidocs/
-		// http://blogs.nologin.es/rickyepoderi/index.php?/archives/14-Introducing-CalDAV-Part-I.html
-		// http://blogs.nologin.es/rickyepoderi/index.php?/archives/15-Introducing-CalDAV-Part-II.html
-		// http://blogs.nologin.es/rickyepoderi/uploads/IntroducingCalDAVPartII/sample.caldav.xml.zip
-
-
-		/*HttpClient client = new HttpClient(); 
-		
-		OptionsMethod options = new OptionsMethod("https://www.google.com/calendar/dav/alex.guyon78@gmail.com/events/");
-		try {
-			client.executeMethod(options);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(options.getStatusLine());
-		for (int i = 0; i < options.getResponseHeaders().length; i++) {
-			System.out.println(options.getResponseHeaders()[i].getName() + ": "
-					+ options.getResponseHeaders()[i].getValue());
-		}*/
+		//
 	}
 
 	private void loadICal() {
-		// http://build.mnode.org/projects/ical4j/apidocs/
-		/*try {
-			net.fortuna.ical4j.model.Calendar ical = Calendars.load(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/private-c99c6c281cf94c48e85f2155434f0423/basic.ics"));
-			System.out.println("finish loaded ical");
-		} catch (IOException | ParserException e) {
-			e.printStackTrace();
-		}*/
+		// 
 	}
 
 	/**
