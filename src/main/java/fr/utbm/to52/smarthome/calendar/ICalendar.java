@@ -16,7 +16,7 @@ public interface ICalendar {
 	/**
 	 * Get the calendar from the web
 	 */
-	public void importCalendar();
+	public void load();
 	
 	/**
 	 * Add an event to the calendar
