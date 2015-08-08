@@ -46,16 +46,21 @@ public class DateController implements Runnable {
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour0 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			
-			rangeHour0.set(Calendar.SECOND, 0);
-			rangeHour0.set(Calendar.MINUTE, 0);
-			rangeHour0.set(Calendar.HOUR, 0);
-			rangeHour0.set(Calendar.AM_PM, Calendar.AM);
-			rangeHour1.add(Calendar.DAY_OF_YEAR, 1);
+			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 6) // if soon in the morning
+				rangeHour0 = now;
+			else{
+				rangeHour0.set(Calendar.SECOND, 0);
+				rangeHour0.set(Calendar.MINUTE, 0);
+				rangeHour0.set(Calendar.HOUR, 0);
+				rangeHour0.set(Calendar.AM_PM, Calendar.AM);
+				rangeHour0.add(Calendar.DAY_OF_YEAR, 1);
+			}
+			
 			rangeHour1.set(Calendar.SECOND, 0);
 			rangeHour1.set(Calendar.MINUTE, 0);
 			rangeHour1.set(Calendar.HOUR, 12);
-			rangeHour0.set(Calendar.AM_PM, Calendar.PM);
-			rangeHour1.add(Calendar.DAY_OF_YEAR, 1);		
+			rangeHour1.set(Calendar.AM_PM, Calendar.PM);
+			rangeHour1.add(Calendar.DAY_OF_YEAR, 1);
 			
 			System.out.println("Executed");
 			
