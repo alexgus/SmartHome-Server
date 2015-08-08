@@ -46,7 +46,7 @@ public class DateController implements Runnable {
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour0 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			
-			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 6) // if soon in the morning
+			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 4) // if soon in the morning
 				rangeHour0 = now;
 			else{
 				rangeHour0.set(Calendar.SECOND, 0);
