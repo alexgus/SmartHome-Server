@@ -1,7 +1,6 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,9 +138,7 @@ public class Controller {
 							int dCs = cS.get(Calendar.DAY_OF_YEAR);
 							if(dToAdd == dCs){ // If earlier in the same day or latter
 								// suppress and replace
-								System.out.println("removed " + Controller.getInstance().getCron().lineToString(i));
 								Controller.getInstance().getCron().remove(i);
-								System.out.println("Added " + toAdd);
 								Controller.getInstance().addRing(toAdd);
 							}
 						}
@@ -152,10 +149,8 @@ public class Controller {
 							MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
 							Calendar cS = Calendar.getInstance();
 							cS.setTime(s.getDate());
-							if(tomorrowMorning.get(Calendar.DAY_OF_YEAR) == cS.get(Calendar.DAY_OF_YEAR)){
-								System.out.println("removed " + Controller.getInstance().getCron().lineToString(i));
+							if(tomorrowMorning.get(Calendar.DAY_OF_YEAR) == cS.get(Calendar.DAY_OF_YEAR))
 								Controller.getInstance().getCron().remove(i);
-							}
 						}
 					}
 					
