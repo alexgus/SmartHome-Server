@@ -42,6 +42,8 @@ public class Conf {
 	
 	private String cronTag;
 	
+	private String cronICalTag;
+	
 	private String alarmWakeUpTime;
 	
 	private List<String> alarmURL;
@@ -79,6 +81,7 @@ public class Conf {
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronCommand(cron.getString("command"));
 		this.setCronTag(cron.getString("tag"));
+		this.setCronICalTag(cron.getString("icalTag"));
 		this.setCronTMPFile(cron.getString("tmpFile"));
 		
 		JSONObject alarm = js.getJSONObject("alarm");
@@ -300,6 +303,20 @@ public class Conf {
 	 */
 	public void setAlarmURL(List<String> alarmURL) {
 		this.alarmURL = alarmURL;
+	}
+
+	/**
+	 * @return the cronICalTag
+	 */
+	public String getCronICalTag() {
+		return this.cronICalTag;
+	}
+
+	/**
+	 * @param cronICalTag the cronICalTag to set
+	 */
+	public void setCronICalTag(String cronICalTag) {
+		this.cronICalTag = cronICalTag;
 	}
 
 }
