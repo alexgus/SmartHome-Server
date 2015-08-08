@@ -10,12 +10,16 @@ import fr.utbm.to52.smarthome.calendar.ICal;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
 import fr.utbm.to52.smarthome.model.Cron;
+import fr.utbm.to52.smarthome.model.MySchedulingPattern;
 import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
 import it.sauronsoftware.cron4j.ProcessTask;
 import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.SchedulingPattern;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.DtStart;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -50,7 +54,7 @@ public class Controller {
 	private Conf config;
 
 	private Cron cron;
-	
+
 	private Scheduler jcron;
 
 	private CommandHandlerImpl cmdHandler;
@@ -108,17 +112,54 @@ public class Controller {
 					tomorrowNight.set(Calendar.AM_PM, Calendar.PM);
 					tomorrowNight.add(Calendar.DAY_OF_YEAR, 1);
 					
-					System.out.println(tomorrowMorning.getTime());
-					System.out.println(tomorrowNight.getTime());
-					
 					ComponentList lc = this.c.get(tomorrowMorning.getTime(), tomorrowNight.getTime());
 					
-					if(lc.size() == 0)
-						System.out.println("No events");
-					else
-						System.out.println(lc);
+					if(lc.size() != 0){
+						// Choose the earlier one
+						VEvent search = (VEvent) lc.getComponent(Component.VEVENT);
+						for (Object object : lc) {
+							if(((Component)object).getName() == Component.VEVENT){
+								if(search.getStartDate().getDate().after(
+										((VEvent)object).getStartDate().getDate()))
+									search = (VEvent) object;
+							}
+						}
+						
+						DtStart b = search.getStartDate();
+						Calendar toAdd = Calendar.getInstance();
+						toAdd.setTime(b.getDate());
+						toAdd.add(Calendar.HOUR, -1); // TODO conf
+						
+						boolean sameDayLineFound = false; 
+						for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
+							MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
+							Calendar cS = Calendar.getInstance();
+							cS.setTime(s.getDate());
+							int dToAdd = toAdd.get(Calendar.DAY_OF_YEAR);
+							int dCs = cS.get(Calendar.DAY_OF_YEAR);
+							if(dToAdd == dCs){ // If earlier in the same day or latter
+								// suppress and replace
+								System.out.println("removed " + Controller.getInstance().getCron().lineToString(i));
+								Controller.getInstance().getCron().remove(i);
+								System.out.println("Added " + toAdd);
+								Controller.getInstance().addRing(toAdd);
+							}
+						}
+						if(sameDayLineFound == false)
+							Controller.getInstance().addRing(toAdd);
+					}else{
+						for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
+							MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
+							Calendar cS = Calendar.getInstance();
+							cS.setTime(s.getDate());
+							if(tomorrowMorning.get(Calendar.DAY_OF_YEAR) == cS.get(Calendar.DAY_OF_YEAR)){
+								System.out.println("removed " + Controller.getInstance().getCron().lineToString(i));
+								Controller.getInstance().getCron().remove(i);
+							}
+						}
+					}
 					
-				} catch (MalformedURLException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -175,5 +216,19 @@ public class Controller {
 	 */
 	public void setConfig(Conf config) {
 		this.config = config;
+	}
+	
+	/**
+	 * @return the cron
+	 */
+	public Cron getCron() {
+		return this.cron;
+	}
+
+	/**
+	 * @param cron the cron to set
+	 */
+	public void setCron(Cron cron) {
+		this.cron = cron;
 	}
 }

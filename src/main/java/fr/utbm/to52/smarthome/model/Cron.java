@@ -182,6 +182,7 @@ public class Cron {
 	 */
 	public void remove(int arg0) throws IndexOutOfBoundsException {
 		this.crontab.remove(arg0);
+		this.apply();
 	}
 
 	/**
@@ -190,6 +191,15 @@ public class Cron {
 	 */
 	public int size() {
 		return this.crontab.size();
+	}
+	
+	/**
+	 * toString for precise Line of the crontab
+	 * @param i Line toString
+	 * @return String to the line
+	 */
+	public String lineToString(int i){
+		return (this.getSchedulingPattern(i) + " " + this.getTask(i));
 	}
 	
 }
