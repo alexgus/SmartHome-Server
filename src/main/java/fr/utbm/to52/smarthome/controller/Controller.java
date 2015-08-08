@@ -80,7 +80,9 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
-		this.jcron.schedule("* * * * *", new DateControler());
+		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
+			this.jcron.schedule("* * * * *", new DateController(i));
+		this.jcron.schedule("*/15 * * * *", new CronCleaner(this.getCron()));
 		this.jcron.start();
 	}
 
@@ -98,7 +100,6 @@ public class Controller {
 
 		this.jcron.stop();
 		this.mqtt.disconnect();
-		
 	}
 
 	/**

@@ -1,5 +1,9 @@
 package fr.utbm.to52.smarthome.controller;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import fr.utbm.to52.smarthome.util.BasicIO;
@@ -38,6 +42,10 @@ public class Conf {
 	
 	private String cronTag;
 	
+	private String alarmWakeUpTime;
+	
+	private List<String> alarmURL;
+	
 	/**
 	 * Import the default configuration file into this object
 	 */
@@ -72,6 +80,13 @@ public class Conf {
 		this.setCronCommand(cron.getString("command"));
 		this.setCronTag(cron.getString("tag"));
 		this.setCronTMPFile(cron.getString("tmpFile"));
+		
+		JSONObject alarm = js.getJSONObject("alarm");
+		this.setAlarmWakeUpTime(alarm.getString("wakeUpTimeBeforeEvent"));
+		this.alarmURL = new LinkedList<>();
+		JSONArray jsArr = alarm.getJSONArray("calendar");
+		for(int i = 0 ; i < jsArr.length() ; ++i)
+			this.alarmURL.add(jsArr.getString(i));
 	}
 
 	/**
@@ -257,6 +272,34 @@ public class Conf {
 	 */
 	public void setMQTTQOS(int mQTTQOS) {
 		this.MQTTQOS = mQTTQOS;
+	}
+
+	/**
+	 * @return the alarmWakeUpTime
+	 */
+	public String getAlarmWakeUpTime() {
+		return this.alarmWakeUpTime;
+	}
+
+	/**
+	 * @param alarmWakeUpTime the alarmWakeUpTime to set
+	 */
+	public void setAlarmWakeUpTime(String alarmWakeUpTime) {
+		this.alarmWakeUpTime = alarmWakeUpTime;
+	}
+
+	/**
+	 * @return the alarmURL
+	 */
+	public List<String> getAlarmURL() {
+		return this.alarmURL;
+	}
+
+	/**
+	 * @param alarmURL the alarmURL to set
+	 */
+	public void setAlarmURL(List<String> alarmURL) {
+		this.alarmURL = alarmURL;
 	}
 
 }
