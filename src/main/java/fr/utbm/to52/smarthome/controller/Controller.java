@@ -36,8 +36,19 @@ public class Controller {
 			singleton = new Controller();
 		return singleton;
 	}
+	
+	/**
+	 * Defining the source of the command is from network. tag configuration
+	 */
+	public static final int SOURCE_NET = 0;
+	
+	/**
+	 * Defining the source of the command is from ICAL. tagICal configuration
+	 */
+	public static final int SOURCE_ICAL = 1;
 
 	private SocketInput server;
+	
 	private Thread mainThread;
 
 	private MQTT mqtt;
@@ -105,10 +116,17 @@ public class Controller {
 	/**
 	 * Add ring in the crontab with the corresponding date
 	 * @param c The date to ring
+	 * @param INPUT Controller source
 	 */
-	public void addRing(Calendar c){
+	public void addRing(Calendar c, int INPUT){
 		String[] broker = this.config.getMQTTServer().split(":");
-		ProcessTask p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] + " #smart");
+		ProcessTask p;
+		if(INPUT == Controller.SOURCE_ICAL)
+			p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] 
+					+ " " + Controller.getInstance().getConfig().getCronICalTag());
+		else
+			p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] 
+					+ " " + Controller.getInstance().getConfig().getCronTag());
 
 		int min = c.get(Calendar.MINUTE);
 		int hour = c.get(Calendar.HOUR_OF_DAY);

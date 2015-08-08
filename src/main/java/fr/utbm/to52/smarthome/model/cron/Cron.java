@@ -26,6 +26,8 @@ public class Cron {
 	
 	private String tag;
 	
+	private String tagICal;
+	
 	private String pathTmpFile;
 	
 	private MyTaskTable crontab;
@@ -45,6 +47,7 @@ public class Cron {
 	 */
 	public Cron(String user){
 		this.tag = Controller.getInstance().getConfig().getCronTag();
+		this.tagICal = Controller.getInstance().getConfig().getCronICalTag();
 		this.command = Controller.getInstance().getConfig().getCronCommand();
 		this.pathTmpFile = Controller.getInstance().getConfig().getCronTMPFile();
 		this.user = user;
@@ -70,9 +73,11 @@ public class Cron {
 			String line = reader.readLine();
 			
 			while(line != null){
-				if(checkTag >= 0 && line.contains(this.tag))
+				if(checkTag >= 0 && 
+						(line.contains(this.tag) || line.contains(this.tagICal)))
 					CronParser.parseLine(tt, line);
-				else if(checkTag <= 0 && !line.contains(this.tag))
+				else if(checkTag <= 0 && 
+						(!line.contains(this.tag) || line.contains(this.tagICal)))
 					CronParser.parseLine(tt, line);
 				line = reader.readLine();
 			}

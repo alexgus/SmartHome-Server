@@ -88,12 +88,12 @@ public class DateController implements Runnable {
 					if(cS.getTime().after(toAdd.getTime())){ // If earlier in the same day or latter
 						// suppress and replace
 						Controller.getInstance().getCron().remove(i);
-						Controller.getInstance().addRing(toAdd);
+						Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
 						sameDayLineFound = true;
 					}
 				}
 				if(sameDayLineFound == false)
-					Controller.getInstance().addRing(toAdd);
+					Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
 			}
 			
 		} catch (Exception e) {
