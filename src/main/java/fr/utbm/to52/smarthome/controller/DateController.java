@@ -62,8 +62,6 @@ public class DateController implements Runnable {
 			rangeHour1.set(Calendar.AM_PM, Calendar.PM);
 			rangeHour1.add(Calendar.DAY_OF_YEAR, 1);
 			
-			System.out.println("Executed");
-			
 			// All events
 			/*rangeHour0.add(Calendar.HOUR, +wakeUpBeforeH);
 			rangeHour0.add(Calendar.MINUTE, +wakeUpBeforeM + 1); // +1 for being sure 
