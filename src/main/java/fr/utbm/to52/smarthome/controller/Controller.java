@@ -8,8 +8,8 @@ import java.util.Date;
 import fr.utbm.to52.smarthome.calendar.ICal;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
-import fr.utbm.to52.smarthome.model.Cron;
-import fr.utbm.to52.smarthome.model.MySchedulingPattern;
+import fr.utbm.to52.smarthome.model.cron.Cron;
+import fr.utbm.to52.smarthome.model.cron.MySchedulingPattern;
 import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
 import it.sauronsoftware.cron4j.ProcessTask;
@@ -94,7 +94,7 @@ public class Controller {
 			
 			public void run() {
 				try {
-					this.c = new ICal(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/public/basic.ics"));
+					this.c = new ICal(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/public/basic.ics")); // TODO conf
 					this.c.load();
 					
 					Date now = new Date();

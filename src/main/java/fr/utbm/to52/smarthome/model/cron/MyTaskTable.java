@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.model;
+package fr.utbm.to52.smarthome.model.cron;
 
 import it.sauronsoftware.cron4j.TaskTable;
 
