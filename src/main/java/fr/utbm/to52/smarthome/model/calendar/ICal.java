@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.calendar;
+package fr.utbm.to52.smarthome.model.calendar;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
