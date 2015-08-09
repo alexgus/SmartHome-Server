@@ -79,19 +79,24 @@ public class DateController implements Runnable {
 				toAdd.add(Calendar.HOUR, -wakeUpBeforeH);
 				toAdd.add(Calendar.MINUTE, -wakeUpBeforeM);
 				
-				boolean sameDayLineFound = false;
-				for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
-					MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
-					fr.utbm.to52.smarthome.model.calendar.Calendar cS = new fr.utbm.to52.smarthome.model.calendar.Calendar(s.getDate());
-					if(cS.getTime().after(toAdd.getTime())){ // If earlier in the same day or latter
-						// suppress and replace
-						Controller.getInstance().getCron().remove(i);
-						Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
-						sameDayLineFound = true;
-					}
-				}
-				if(sameDayLineFound == false)
+				if(Controller.getInstance().getCron().size() == 0)
 					Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
+				else{
+					for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
+						MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
+						fr.utbm.to52.smarthome.model.calendar.Calendar cS = new fr.utbm.to52.smarthome.model.calendar.Calendar(s.getDate());
+						cS.set(Calendar.MILLISECOND, 0);
+						cS.set(Calendar.SECOND, 0);
+						cS.set(Calendar.AM_PM, Calendar.AM);
+						toAdd.set(Calendar.MILLISECOND, 0);
+						toAdd.set(Calendar.SECOND, 0);
+							// suppress and replace
+						if(!cS.getTime().toString().equals(toAdd.getTime().toString())){ // If earlier in the same day or latter
+							Controller.getInstance().getCron().remove(i);
+							Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
+						}
+					}
+				}	
 			}
 			
 		} catch (Exception e) {

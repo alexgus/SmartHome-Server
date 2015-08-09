@@ -13,7 +13,6 @@ import fr.utbm.to52.smarthome.util.BasicIO;
 import it.sauronsoftware.cron4j.CronParser;
 import it.sauronsoftware.cron4j.SchedulingPattern;
 import it.sauronsoftware.cron4j.Task;
-import it.sauronsoftware.cron4j.TaskTable;
 
 /**
  * Represent the current crontab install on this system
@@ -77,7 +76,7 @@ public class Cron {
 						(line.contains(this.tag) || line.contains(this.tagICal)))
 					CronParser.parseLine(tt, line);
 				else if(checkTag <= 0 && 
-						(!line.contains(this.tag) || line.contains(this.tagICal)))
+						(!line.contains(this.tag) || !line.contains(this.tagICal)))
 					CronParser.parseLine(tt, line);
 				line = reader.readLine();
 			}
@@ -125,7 +124,7 @@ public class Cron {
 	 * Get The raw crontab
 	 * @return The raw crontab
 	 */
-	public TaskTable getCrontab() {
+	public MyTaskTable getCrontab() {
 		return this.crontab;
 	}
 	
@@ -158,6 +157,7 @@ public class Cron {
 			++i;
 		if(i >= this.crontab.size())
 			this.crontab.add(arg0, arg1);
+		this.apply();
 	}
 
 	/**

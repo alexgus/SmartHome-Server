@@ -72,8 +72,8 @@ public class Controller {
 	/**
 	 * Start the server
 	 */
-	public void start(){
-		this.cron = new Cron();
+	public void start(){		
+		this.confCron();
 
 		this.mqtt.connect();
 
@@ -91,10 +91,21 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
+		this.jcron.start();
+	}
+
+	private void confCron() {
+		this.cron = new Cron();
+		
+//		if(this.getConfig().getCronSource() == Conf.CRON_JAVA){ // Set old crontab to java
+//			for(int i = 0 ; i < this.cron.getCrontab().size() ; ++i)
+//				this.jcron.schedule(this.cron.getSchedulingPattern(i), this.cron.getTask(i));
+//		}
+		
 		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
 			this.jcron.schedule("* * * * *", new DateController(i));
-		this.jcron.schedule("*/15 * * * *", new CronCleaner(this.getCron()));
-		this.jcron.start();
+		
+		//this.jcron.schedule("*/2 * * * *", new CronCleaner(this.getCron()));
 	}
 
 	/**
@@ -135,7 +146,7 @@ public class Controller {
 
 		this.cron.add(new SchedulingPattern(min +" " + hour + " " + d + " " + m + " *" ), p);
 
-		this.cron.apply();
+		//this.cron.apply();
 	}
 
 	/**
@@ -166,5 +177,19 @@ public class Controller {
 	 */
 	public void setCron(Cron cron) {
 		this.cron = cron;
+	}
+
+	/**
+	 * @return the jcron
+	 */
+	public Scheduler getJcron() {
+		return this.jcron;
+	}
+
+	/**
+	 * @param jcron the jcron to set
+	 */
+	public void setJcron(Scheduler jcron) {
+		this.jcron = jcron;
 	}
 }

@@ -18,6 +18,16 @@ public class Conf {
 
 	private static final String DEFAULT_CONF_FILE = "smart.conf";
 	
+	/**
+	 * Use system cron (UNIX/LINUX/MACOS only)
+	 */
+	public static final String CRON_SYSTEM = "system";
+	
+	/**
+	 * Use java cron (Multiplatform)
+	 */
+	public static final String CRON_JAVA = "java";
+	
 	private String MQTTServer;
 	
 	private String MQTTID;
@@ -35,6 +45,8 @@ public class Conf {
 	private String commandRing;
 	
 	private String commandAddRing;
+	
+	private String cronSource;
 	
 	private String cronCommand;
 	
@@ -317,6 +329,20 @@ public class Conf {
 	 */
 	public void setCronICalTag(String cronICalTag) {
 		this.cronICalTag = cronICalTag;
+	}
+
+	/**
+	 * @return the cronSource
+	 */
+	public String getCronSource() {
+		return this.cronSource;
+	}
+
+	/**
+	 * @param cronSource the cronSource to set
+	 */
+	public void setCronSource(String cronSource) {
+		this.cronSource = cronSource;
 	}
 
 }
