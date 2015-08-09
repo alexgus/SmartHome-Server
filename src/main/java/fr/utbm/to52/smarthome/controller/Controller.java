@@ -105,7 +105,7 @@ public class Controller {
 		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
 			this.jcron.schedule("* * * * *", new DateController(i));
 		
-		//this.jcron.schedule("*/2 * * * *", new CronCleaner(this.getCron()));
+		this.jcron.schedule("*/2 * * * *", new CronCleaner(this.getCron()));
 	}
 
 	/**
