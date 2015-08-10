@@ -36,16 +36,16 @@ public class DateController implements Runnable {
 	@Override	
 	public void run() {
 		try {
+			// Load calendar
 			this.c = new ICal(new URL(Controller.getInstance().getConfig().getAlarmURL().get(this.iURL)));
 			this.c.load();
 			
-			int wakeUpBeforeH = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[0]);
-			int wakeUpBeforeM = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[1]);
-			
+			// Create instance of calendar
 			fr.utbm.to52.smarthome.model.calendar.Calendar now = new fr.utbm.to52.smarthome.model.calendar.Calendar();
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour0 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
 			
+			// Create range of date for the research
 			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 4) // if soon in the morning
 				rangeHour0 = now;
 			else{
@@ -62,37 +62,41 @@ public class DateController implements Runnable {
 			rangeHour1.set(Calendar.AM_PM, Calendar.PM);
 			rangeHour1.add(Calendar.DAY_OF_YEAR, 1);
 			
-			// All events
-			/*rangeHour0.add(Calendar.HOUR, +wakeUpBeforeH);
-			rangeHour0.add(Calendar.MINUTE, +wakeUpBeforeM + 1); // +1 for being sure 
-			
-			rangeHour1.add(Calendar.HOUR, +wakeUpBeforeH +20); // +20 : day of 20 hours for being sure to trigger // TODO Conf
-			rangeHour1.add(Calendar.MINUTE, +wakeUpBeforeM);*/
-			
 			// Get events from this range of time
 			ComponentList lc = this.c.get(rangeHour0.getTime(), rangeHour1.getTime());
 			
 			if(lc.size() != 0){ // If there's event
+				
 				// Choose the earlier one
 				fr.utbm.to52.smarthome.model.calendar.Calendar toAdd = new fr.utbm.to52.smarthome.model.calendar.Calendar(getEarlier(lc), 
 						fr.utbm.to52.smarthome.model.calendar.Calendar.START);
-				toAdd.add(Calendar.HOUR, -wakeUpBeforeH);
-				toAdd.add(Calendar.MINUTE, -wakeUpBeforeM);
+				toAdd = setWakeUpTime(toAdd);
 				
-				if(Controller.getInstance().getCron().size() == 0)
+				if(Controller.getInstance().getCron().size() == 0) // If no ring is scheduled
 					Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
-				else{
+				else{ 
+					// If there is others rings
+					// For each ring
 					for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
-						MySchedulingPattern s = new MySchedulingPattern(Controller.getInstance().getCron().getSchedulingPattern(i));
-						fr.utbm.to52.smarthome.model.calendar.Calendar cS = new fr.utbm.to52.smarthome.model.calendar.Calendar(s.getDate());
-						cS.set(Calendar.MILLISECOND, 0);
-						cS.set(Calendar.SECOND, 0);
-						cS.set(Calendar.AM_PM, Calendar.AM);
+						// Cast scheduling in Calendar object
+						fr.utbm.to52.smarthome.model.calendar.Calendar sched = 
+								new fr.utbm.to52.smarthome.model.calendar.Calendar(
+								new MySchedulingPattern(
+										Controller.getInstance().getCron().getSchedulingPattern(i))
+								.getDate());
+						
+						// tweak it
+						sched.set(Calendar.MILLISECOND, 0);
+						sched.set(Calendar.SECOND, 0);
+						sched.set(Calendar.AM_PM, Calendar.AM);
 						toAdd.set(Calendar.MILLISECOND, 0);
 						toAdd.set(Calendar.SECOND, 0);
-							// suppress and replace
-						if(!cS.getTime().toString().equals(toAdd.getTime().toString())){ // If earlier in the same day or latter
-							Controller.getInstance().getCron().remove(i);
+						
+						// suppress and replace
+						if(!sched.getTime().toString().equals(toAdd.getTime().toString())
+								&& sched.get(Calendar.DAY_OF_YEAR) == toAdd.get(Calendar.DAY_OF_YEAR)){ 
+							// If not the same schedule and the same day
+							Controller.getInstance().getCron().remove(i); // remove the old schedule
 							Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
 						}
 					}
@@ -119,6 +123,16 @@ public class DateController implements Runnable {
 			}
 		}
 		return search;
+	}
+	
+	private static fr.utbm.to52.smarthome.model.calendar.Calendar setWakeUpTime(fr.utbm.to52.smarthome.model.calendar.Calendar c){
+		int wakeUpBeforeH = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[0]);
+		int wakeUpBeforeM = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[1]);
+	
+		c.add(Calendar.HOUR, -wakeUpBeforeH);
+		c.add(Calendar.MINUTE, -wakeUpBeforeM);
+		
+		return c;
 	}
 	
 }
