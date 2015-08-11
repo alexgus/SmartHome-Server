@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.utbm.to52</groupId>
 	<artifactId>smarthome</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-alpha</version>
 	<name>smarthome TO52</name>
 
 	<repositories>
