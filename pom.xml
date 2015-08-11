@@ -4,8 +4,16 @@
 	<groupId>fr.utbm.to52</groupId>
 	<artifactId>smarthome</artifactId>
 	<version>1.0-alpha</version>
-	<name>smarthome TO52</name>
-
+	<name>smarthome-server</name>
+	<url>https://github.com/alexgus/SmartHome-Server</url>
+	<description>Used to connect your calendars to your alarm for waking at the right hour</description>
+		<issueManagement>
+		<system>github</system>
+		<url>https://github.com/alexgus/SmartHome-Server/issues</url>
+	</issueManagement>
+	<scm>
+		<developerConnection>Alexandre Guyon</developerConnection>
+	</scm>
 	<repositories>
 		<repository>
 			<id>Eclipse Paho Repo</id>
@@ -94,5 +102,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
