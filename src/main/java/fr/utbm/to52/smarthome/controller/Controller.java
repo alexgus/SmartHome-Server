@@ -105,7 +105,7 @@ public class Controller {
 		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
 			this.jcron.schedule("* * * * *", new DateController(i));
 		
-		this.jcron.schedule("*/2 * * * *", new CronCleaner(this.getCron()));
+		this.jcron.schedule("0 * * * *", new CronCleaner(this.getCron()));
 	}
 
 	/**
@@ -130,13 +130,17 @@ public class Controller {
 	 * @param INPUT Controller source
 	 */
 	public void addRing(Calendar c, int INPUT){
-		String[] broker = this.config.getMQTTServer().split(":");
 		ProcessTask p;
+		
+		String host = "localhost";
+		String port = Controller.getInstance().getConfig().getServerPort() + "";
+		String CMD = Controller.getInstance().getConfig().getCommandRing();
+		
 		if(INPUT == Controller.SOURCE_ICAL)
-			p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] 
+			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
 					+ " " + Controller.getInstance().getConfig().getCronICalTag());
 		else
-			p = new ProcessTask("echo Ring | nc " + broker[1].substring(2) + " " + broker[2] 
+			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
 					+ " " + Controller.getInstance().getConfig().getCronTag());
 
 		int min = c.get(Calendar.MINUTE);
