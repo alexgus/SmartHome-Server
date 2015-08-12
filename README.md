@@ -36,6 +36,6 @@ Receiving command MQTT and simple TCP connection :
      * `AAAA` : the year
      * `MM` : the month
      * `DD` : the day of the month
-     * `hh` : the hour
+     * `hh` : the hour (24 hours format)
      * `mm` : the minute
  * `Ring` command for trigger the alarm
