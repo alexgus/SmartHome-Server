@@ -20,6 +20,8 @@ Fully configurable with [smart.conf](https://github.com/alexgus/SmartHome-Server
 ### Compilation
 Just type `mvn install` at the root of this project. The executale jar file will be created in `target` folder with all its dependencies (required to run it corrrectly).
 
+For full installation script look [here.](https://github.com/alexgus/SmartHome "Doc installation")
+
 ### library used
  * cron4j
  * ical4j
@@ -39,3 +41,6 @@ Receiving command MQTT and simple TCP connection :
      * `hh` : the hour (24 hours format)
      * `mm` : the minute
  * `Ring` command for trigger the alarm
+
+### How it works
+Calendar are fetched and lines correponding to the wake up time (time of the fisrt event of the day - time choosen in configuration file) are placed in a crontab. The command corresponding to this line is a TCP frame send to the server for waking up the server. Once the frame is received by it, it publish `Ring` on MQTT topic choosen in the configuration file. 
