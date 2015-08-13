@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>fr.utbm.to52</groupId>
 		<artifactId>smarthome</artifactId>
-		<version>1.0-alpha</version>
+		<version>1.1-alpha</version>
 		<relativePath>../SmartHome</relativePath>
 	</parent>
 

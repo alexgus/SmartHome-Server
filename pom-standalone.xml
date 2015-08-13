@@ -5,6 +5,8 @@
 	<name>smarthome-server</name>
 	<url>https://github.com/alexgus/SmartHome-Server</url>
 	<description>Used to connect your calendars to your alarm for waking at the right hour</description>
+	<artifactId>smarthome</artifactId>
+	<version>1.1-alpha</version>
 	<issueManagement>
 		<system>github</system>
 		<url>https://github.com/alexgus/SmartHome-Server/issues</url>
@@ -138,6 +140,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<artifactId>smarthome</artifactId>
-	<version>1.0-alpha</version>
 </project>
