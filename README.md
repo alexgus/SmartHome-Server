@@ -20,7 +20,7 @@ Fully configurable with [smart.conf](https://github.com/alexgus/SmartHome-Server
 ### Compilation
 Just type `mvn install` at the root of this project. The executale jar file will be created in `target` folder with all its dependencies (required to run it corrrectly).
 
-For full installation script look [here.](https://github.com/alexgus/SmartHome "Doc installation")
+For full installation script and dependencies look [here.](https://github.com/alexgus/SmartHome "Doc installation")
 
 ### library used
  * cron4j
