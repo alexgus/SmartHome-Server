@@ -1,16 +1,15 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
-import fr.utbm.to52.smarthome.model.cron.Cron;
+import fr.utbm.to52.smarthome.model.cron.JavaCron;
+import fr.utbm.to52.smarthome.model.cron.RingCron;
+import fr.utbm.to52.smarthome.model.cron.SystemCron;
 import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
-import it.sauronsoftware.cron4j.ProcessTask;
 import it.sauronsoftware.cron4j.Scheduler;
-import it.sauronsoftware.cron4j.SchedulingPattern;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -55,7 +54,7 @@ public class Controller {
 
 	private Conf config;
 
-	private Cron cron;
+	private RingCron cron;
 
 	private Scheduler jcron;
 
@@ -95,12 +94,10 @@ public class Controller {
 	}
 
 	private void confCron() {
-		this.cron = new Cron();
-		
-//		if(this.getConfig().getCronSource() == Conf.CRON_JAVA){ // Set old crontab to java
-//			for(int i = 0 ; i < this.cron.getCrontab().size() ; ++i)
-//				this.jcron.schedule(this.cron.getSchedulingPattern(i), this.cron.getTask(i));
-//		}
+		if(Controller.getInstance().getConfig().getCronSource().equals(Conf.CRON_SYSTEM))
+			this.cron = new SystemCron();
+		else
+			this.cron = new JavaCron();
 		
 		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
 			this.jcron.schedule("* * * * *", new DateController(i));
@@ -125,35 +122,6 @@ public class Controller {
 	}
 
 	/**
-	 * Add ring in the crontab with the corresponding date
-	 * @param c The date to ring
-	 * @param INPUT Controller source
-	 */
-	public void addRing(Calendar c, int INPUT){
-		ProcessTask p;
-		
-		String host = "localhost";
-		String port = Controller.getInstance().getConfig().getServerPort() + "";
-		String CMD = Controller.getInstance().getConfig().getCommandRing();
-		
-		if(INPUT == Controller.SOURCE_ICAL)
-			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
-					+ " " + Controller.getInstance().getConfig().getCronICalTag());
-		else
-			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
-					+ " " + Controller.getInstance().getConfig().getCronTag());
-
-		int min = c.get(Calendar.MINUTE);
-		int hour = c.get(Calendar.HOUR_OF_DAY);
-		int d = c.get(Calendar.DAY_OF_MONTH);
-		int m = c.get(Calendar.MONTH) + 1;
-
-		this.cron.add(new SchedulingPattern(min +" " + hour + " " + d + " " + m + " *" ), p);
-
-		//this.cron.apply();
-	}
-
-	/**
 	 * Get the configuration of the application loaded
 	 * @return The configuration loaded.
 	 */
@@ -172,14 +140,14 @@ public class Controller {
 	/**
 	 * @return the cron
 	 */
-	public Cron getCron() {
+	public RingCron getCron() {
 		return this.cron;
 	}
 
 	/**
 	 * @param cron the cron to set
 	 */
-	public void setCron(Cron cron) {
+	public void setCron(RingCron cron) {
 		this.cron = cron;
 	}
 

@@ -91,6 +91,7 @@ public class Conf {
 		this.setCommandAddRing(Command.getString("addRingAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
+		this.setCronSource(cron.getString("source"));
 		this.setCronCommand(cron.getString("command"));
 		this.setCronTag(cron.getString("tag"));
 		this.setCronICalTag(cron.getString("icalTag"));

@@ -3,14 +3,7 @@
  */
 package fr.utbm.to52.smarthome.model.cron;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import fr.utbm.to52.smarthome.controller.Controller;
-import fr.utbm.to52.smarthome.util.BasicIO;
-import it.sauronsoftware.cron4j.CronParser;
 import it.sauronsoftware.cron4j.SchedulingPattern;
 import it.sauronsoftware.cron4j.Task;
 
@@ -19,19 +12,37 @@ import it.sauronsoftware.cron4j.Task;
  * @author Alexandre Guyon
  *
  */
-public class Cron {
+public abstract class Cron {
 
-	private String command;
+	/**
+	 * Command for reading and writing crontab
+	 */
+	protected String command;
 	
-	private String tag;
+	/**
+	 * Tag for smart app
+	 */
+	protected String tag;
 	
-	private String tagICal;
+	/**
+	 * Tag for smart app (Ical schedule)
+	 */
+	protected String tagICal;
 	
-	private String pathTmpFile;
+	/**
+	 * Path to the TMP file
+	 */
+	protected String pathTmpFile;
 	
-	private MyTaskTable crontab;
+	/**
+	 * Crontab model
+	 */
+	protected MyTaskTable crontab;
 	
-	private String user;
+	/**
+	 * Crontab of this user
+	 */
+	protected String user;
 	
 	/**
 	 * Default constructor. Use the user's crontab which launch the java process
@@ -51,74 +62,12 @@ public class Cron {
 		this.pathTmpFile = Controller.getInstance().getConfig().getCronTMPFile();
 		this.user = user;
 		this.crontab = new MyTaskTable();
-		this.fillCrontab();
 	}
-	
-	private void fillCrontab() {
-		this.fillCrontab(this.crontab);
-	}
-
-	private void fillCrontab(MyTaskTable crontab2) {
-		this.fillCrontab(crontab2, 1);
-	}
-
-	private void fillCrontab(MyTaskTable tt, int checkTag) {
-		try {
-			String CMD = this.command + " -l";
-			Process cronp = Runtime.getRuntime().exec(CMD);
-			@SuppressWarnings("resource")
-			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
-			
-			String line = reader.readLine();
-			
-			while(line != null){
-				if(checkTag >= 0 && 
-						(line.contains(this.tag) || line.contains(this.tagICal)))
-					CronParser.parseLine(tt, line);
-				else if(checkTag <= 0 && 
-						(!line.contains(this.tag) || !line.contains(this.tagICal)))
-					CronParser.parseLine(tt, line);
-				line = reader.readLine();
-			}
-			
-			cronp.waitFor();
-			reader.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 	
 	/**
-	 * Write the current crontab and load it
+	 * Apply changes
 	 */
-	public void apply(){
-		File f = new File(this.pathTmpFile);
-		try {
-			f.createNewFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-		
-		MyTaskTable tt = new MyTaskTable();
-		this.fillCrontab(tt,-1); // Fill this tab with all non tagged lines
-		
-		BasicIO.write(f.getAbsolutePath(), tt.toString() + "\n" + this.crontab.toString());
-		this.load();
-		
-		f.delete();
-	}
-	
-	private void load(){
-		try {
-			Process cronp = Runtime.getRuntime().exec(this.command + " " + this.pathTmpFile);
-			cronp.waitFor();
-		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+	protected abstract void apply();
 
 	/**
 	 * Get The raw crontab
@@ -134,6 +83,7 @@ public class Cron {
 	 */
 	public void setCrontab(MyTaskTable crontab) {
 		this.crontab = crontab;
+		this.apply();
 	}
 
 	/**

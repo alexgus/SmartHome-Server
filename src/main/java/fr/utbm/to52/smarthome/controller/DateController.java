@@ -73,7 +73,7 @@ public class DateController implements Runnable {
 				toAdd = setWakeUpTime(toAdd);
 				
 				if(Controller.getInstance().getCron().size() == 0) // If no ring is scheduled
-					Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
+					Controller.getInstance().getCron().addRing(toAdd,Controller.SOURCE_ICAL);
 				else{ 
 					// If there is others rings
 					// For each ring
@@ -97,7 +97,7 @@ public class DateController implements Runnable {
 								&& sched.get(Calendar.DAY_OF_YEAR) == toAdd.get(Calendar.DAY_OF_YEAR)){ 
 							// If not the same schedule and the same day
 							Controller.getInstance().getCron().remove(i); // remove the old schedule
-							Controller.getInstance().addRing(toAdd,Controller.SOURCE_ICAL);
+							Controller.getInstance().getCron().addRing(toAdd,Controller.SOURCE_ICAL);
 						}
 					}
 				}	

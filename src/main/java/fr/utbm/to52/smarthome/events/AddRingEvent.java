@@ -35,7 +35,7 @@ public class AddRingEvent implements Event {
 				Integer.parseInt(clock[0]), 
 				Integer.parseInt(clock[1]), 0); // Not enough precise for seconds due to cron
 		
-		Controller.getInstance().addRing(c,Controller.SOURCE_NET);
+		Controller.getInstance().getCron().addRing(c,Controller.SOURCE_NET);
 	}
 
 }
