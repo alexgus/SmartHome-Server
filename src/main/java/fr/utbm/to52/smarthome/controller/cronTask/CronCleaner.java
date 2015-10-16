@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller;
+package fr.utbm.to52.smarthome.controller.cronTask;
 
 import java.util.Date;
 

@@ -1,11 +1,12 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller;
+package fr.utbm.to52.smarthome.controller.cronTask;
 
 import java.net.URL;
 import java.util.Calendar;
 
+import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.model.calendar.ICal;
 import fr.utbm.to52.smarthome.model.cron.MySchedulingPattern;
 import net.fortuna.ical4j.model.Component;
