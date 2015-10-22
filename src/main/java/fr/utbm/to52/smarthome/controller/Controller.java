@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import fr.utbm.to52.smarthome.controller.cronTask.CronCleaner;
 import fr.utbm.to52.smarthome.controller.cronTask.DateController;
+import fr.utbm.to52.smarthome.controller.cronTask.MailCheck;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.LightEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
@@ -107,6 +108,7 @@ public class Controller {
 			this.jcron.schedule("* * * * *", new DateController(i));
 		
 		this.jcron.schedule("0 * * * *", new CronCleaner(this.getCron()));
+		this.jcron.schedule("0 * * * *", new MailCheck());
 	}
 
 	/**
