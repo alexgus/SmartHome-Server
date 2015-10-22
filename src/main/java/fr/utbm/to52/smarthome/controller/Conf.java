@@ -33,6 +33,8 @@ public class Conf {
 	private String MQTTID;
 
 	private String MQTTRingTopic;
+	
+	private String MQTTLightTopic;
 
 	private String MQTTRingPayload;
 
@@ -79,6 +81,7 @@ public class Conf {
 		this.setMQTTServer(MQTT.getString("server"));
 		this.setMQTTID(MQTT.getString("id"));
 		this.setMQTTRingTopic(MQTT.getString("topic"));
+		this.setMQTTLightTopic(MQTT.getString("topicLight"));
 		this.setMQTTRingPayload(MQTT.getString("payload"));
 		this.setMQTTRingQOS(MQTT.getInt("QOS"));
 		
@@ -159,6 +162,20 @@ public class Conf {
 	 */
 	public void setMQTTRingTopic(String mQTTRingTopic) {
 		this.MQTTRingTopic = mQTTRingTopic;
+	}
+
+	/**
+	 * @return the mQTTLightTopic
+	 */
+	public String getMQTTLightTopic() {
+		return this.MQTTLightTopic;
+	}
+
+	/**
+	 * @param mQTTLightTopic the mQTTLightTopic to set
+	 */
+	public void setMQTTLightTopic(String mQTTLightTopic) {
+		this.MQTTLightTopic = mQTTLightTopic;
 	}
 
 	/**
