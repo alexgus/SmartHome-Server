@@ -14,7 +14,7 @@ import fr.utbm.to52.smarthome.network.MQTT;
  */
 public class RingEvent implements Event {
 
-	private MQTT connection; 
+	private MQTT connection;  
 	
 	/**
 	 * Default constructor. Initialize with valid MQTT connection

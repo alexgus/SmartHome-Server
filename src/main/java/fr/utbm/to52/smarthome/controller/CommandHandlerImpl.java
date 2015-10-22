@@ -19,6 +19,8 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	
 	private Event addRingEvent;
 	
+	private Event lightEvent;
+	
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
@@ -27,6 +29,8 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 		if(cmd.equals(Controller.getInstance().getConfig().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
+			if(this.getLightEvent() != null)
+				this.getLightEvent().inform(null);
 		}else if(cmd.equals(Controller.getInstance().getConfig().getCommandQuit())){
 			Controller.getInstance().stop();
 		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
@@ -85,6 +89,20 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	 */
 	public Event getRingEvent(){
 		return this.ringEvent;
+	}
+
+	/**
+	 * @return the lightEvent
+	 */
+	public Event getLightEvent() {
+		return this.lightEvent;
+	}
+
+	/**
+	 * @param lightEvent the lightEvent to set
+	 */
+	public void setLightEvent(Event lightEvent) {
+		this.lightEvent = lightEvent;
 	}
 
 }

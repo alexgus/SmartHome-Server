@@ -5,6 +5,7 @@ import java.io.IOException;
 import fr.utbm.to52.smarthome.controller.cronTask.CronCleaner;
 import fr.utbm.to52.smarthome.controller.cronTask.DateController;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
+import fr.utbm.to52.smarthome.events.LightEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
 import fr.utbm.to52.smarthome.model.cron.JavaCron;
 import fr.utbm.to52.smarthome.model.cron.RingCron;
@@ -80,7 +81,8 @@ public class Controller {
 
 		this.cmdHandler.setRingEventController(new RingEvent(this.mqtt));
 		this.cmdHandler.setAddRingEventController(new AddRingEvent());
-
+		this.cmdHandler.setLightEvent(new LightEvent(this.mqtt));
+		
 		try {
 			this.server = new SocketInput(this.getConfig().getServerPort());
 			this.server.setCmdHandler(this.cmdHandler);
