@@ -13,6 +13,7 @@ import fr.utbm.to52.smarthome.model.cron.RingCron;
 import fr.utbm.to52.smarthome.model.cron.SystemCron;
 import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.network.SocketInput;
+import fr.utbm.to52.smarthome.oauth.GoogleAuth;
 import it.sauronsoftware.cron4j.Scheduler;
 
 /**
@@ -63,6 +64,8 @@ public class Controller {
 	private Scheduler jcron;
 
 	private CommandHandlerImpl cmdHandler;
+	
+	private GoogleAuth auth;
 
 	private Controller(){
 		this.config = new Conf();
@@ -70,6 +73,7 @@ public class Controller {
 		this.cmdHandler = new CommandHandlerImpl();
 		this.jcron = new Scheduler();
 		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
+		this.auth = new GoogleAuth(this.config.getGoogleApiKey(), this.config.getGoogleApiSecret(), this.config.getGoogleScope());
 	}
 
 	/**
@@ -108,7 +112,7 @@ public class Controller {
 			this.jcron.schedule("* * * * *", new DateController(i));
 		
 		this.jcron.schedule("0 * * * *", new CronCleaner(this.getCron()));
-		this.jcron.schedule("0 * * * *", new MailCheck());
+		this.jcron.schedule("* * * * *", new MailCheck(this.auth));
 	}
 
 	/**

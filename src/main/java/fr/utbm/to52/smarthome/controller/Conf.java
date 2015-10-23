@@ -62,6 +62,12 @@ public class Conf {
 	
 	private List<String> alarmURL;
 	
+	private String googleApiKey;
+	
+	private String googleApiSecret;
+	
+	private String googleScope;
+	
 	/**
 	 * Import the default configuration file into this object
 	 */
@@ -106,6 +112,11 @@ public class Conf {
 		JSONArray jsArr = alarm.getJSONArray("calendar");
 		for(int i = 0 ; i < jsArr.length() ; ++i)
 			this.alarmURL.add(jsArr.getString(i));
+		
+		JSONObject apiGoogle = js.getJSONObject("apiGoogle");
+		this.setGoogleApiKey(apiGoogle.getString("apiKey"));
+		this.setGoogleApiSecret(apiGoogle.getString("apiSecret"));
+		this.setGoogleScope(apiGoogle.getString("scope"));
 	}
 
 	/**
@@ -363,4 +374,46 @@ public class Conf {
 		this.cronSource = cronSource;
 	}
 
+	/**
+	 * @return the googleApiKey
+	 */
+	public String getGoogleApiKey() {
+		return this.googleApiKey;
+	}
+
+	/**
+	 * @param googleApiKey the googleApiKey to set
+	 */
+	public void setGoogleApiKey(String googleApiKey) {
+		this.googleApiKey = googleApiKey;
+	}
+
+	/**
+	 * @return the googleApiSecret
+	 */
+	public String getGoogleApiSecret() {
+		return this.googleApiSecret;
+	}
+
+	/**
+	 * @param googleApiSecret the googleApiSecret to set
+	 */
+	public void setGoogleApiSecret(String googleApiSecret) {
+		this.googleApiSecret = googleApiSecret;
+	}
+
+	/**
+	 * @return the googleScope
+	 */
+	public String getGoogleScope() {
+		return this.googleScope;
+	}
+
+	/**
+	 * @param googleScope the googleScope to set
+	 */
+	public void setGoogleScope(String googleScope) {
+		this.googleScope = googleScope;
+	}
+	
 }
