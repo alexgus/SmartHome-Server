@@ -23,13 +23,24 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.calendar.Calendar;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
-import com.google.api.services.gmail.model.Label;
-import com.google.api.services.gmail.model.ListLabelsResponse;
 
 @SuppressWarnings("javadoc")
 public class GoogleAuth {
+
+	private static final String APP_NAME = "Smart - Google Auth";
+
+	/** 
+	 * Global instance of the JSON factory. 
+	 */
+	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+
+	/** 
+	 * Global instance of the HTTP transport. 
+	 */
+	private static HttpTransport HTTP_TRANSPORT;
 
 	/**
 	 * ???
@@ -198,14 +209,6 @@ public class GoogleAuth {
 		return this.isConnected;
 	}
 
-	/** Global instance of the JSON factory. */
-	private static final JsonFactory JSON_FACTORY =
-			JacksonFactory.getDefaultInstance();
-
-	/** Global instance of the HTTP transport. */
-	private static HttpTransport HTTP_TRANSPORT;
-
-
 	/**
 	 * Private API key of the app
 	 */
@@ -221,36 +224,50 @@ public class GoogleAuth {
 	 * @return an authorized Gmail client service
 	 * @throws IOException
 	 */
-	private Gmail getGmailService() throws IOException {
+	public Gmail getGmailService() throws IOException {
 		Credential credential = this.googleCred;
 		return new Gmail.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-				.setApplicationName("Test GMAIL")
+				.setApplicationName(APP_NAME)
 				.build();
 	}
 
+	/**
+	 * Build and return an authorized Calendar client service.
+	 * @return an authorized Calendar client service
+	 * @throws IOException
+	 */
+	public Calendar getCalendarService() throws IOException {
+		Credential credential = this.googleCred;
+		return new Calendar.Builder(
+				HTTP_TRANSPORT, JSON_FACTORY, credential)
+				.setApplicationName(APP_NAME)
+				.build();
+	}
+
+	private static List<com.google.api.services.gmail.model.Thread> listThreadsMatchingQuery (Gmail service, String userId, String query) throws IOException {
+		return service.users().threads().list(userId).setQ(query).execute().getThreads();		
+	}
 
 	public static void main(String[] args) {
 		try {
 			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			ListLabelsResponse listResponse;
+			//ListLabelsResponse listResponse;
 			String user = "me";
-			
-			GoogleAuth g = new GoogleAuth(apiKeyDEMO,apiSecretDEMO,GmailScopes.GMAIL_LABELS);
+
+			GoogleAuth g = new GoogleAuth(apiKeyDEMO,apiSecretDEMO,GmailScopes.GMAIL_READONLY);
+
 			g.connect();
 
 			// Build a new authorized API client service.
 			Gmail service = g.getGmailService();
+			//Calendar c = g.getCalendarService();
+
+			List<com.google.api.services.gmail.model.Thread> l = listThreadsMatchingQuery(service,user,"after:2015/10/24 before:2015/10/27");
 			
-			listResponse = service.users().labels().list(user).execute();
-			List<Label> labels = listResponse.getLabels();
-			if (labels.size() == 0) {
-				System.out.println("No labels found.");
-			} else {
-				System.out.println("Labels:");
-				for (Label label : labels) {
-					System.out.printf("- %s\n", label.getName());
-				}
+			for (com.google.api.services.gmail.model.Thread thread : l) {
+				System.out.println(thread.toPrettyString());
 			}
+
 		} catch (GeneralSecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
