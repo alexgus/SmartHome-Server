@@ -54,11 +54,10 @@ public class Google2Api extends DefaultApi20 {
                 if (matcher.find()) {
                     String token = OAuthEncoder.decode(matcher.group(1));
                     return new Token(token, "", response);
-                } else {
-                    throw new OAuthException(
-                            "Response body is incorrect. Can't extract a token from this: '"
-                                    + response + "'", null);
                 }
+				throw new OAuthException(
+				        "Response body is incorrect. Can't extract a token from this: '"
+				                + response + "'", null);
             }
         };
     }
@@ -70,10 +69,9 @@ public class Google2Api extends DefaultApi20 {
             return String.format(SCOPED_AUTHORIZE_URL, config.getApiKey(),
                     OAuthEncoder.encode(config.getCallback()),
                     OAuthEncoder.encode(config.getScope()));
-        } else {
-            return String.format(AUTHORIZE_URL, config.getApiKey(),
-                    OAuthEncoder.encode(config.getCallback()));
         }
+		return String.format(AUTHORIZE_URL, config.getApiKey(),
+		        OAuthEncoder.encode(config.getCallback()));
     }
  
     @Override
