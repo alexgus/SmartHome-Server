@@ -68,6 +68,7 @@ public class SocketInput implements Runnable{
 							SocketInput.this.getCmdHandler().handle(command);
 							
 							this.s.close();
+							reader.close();
 							SocketInput.this.getListSocket().remove(this.s);
 						} catch (IOException e) {
 							e.printStackTrace();
