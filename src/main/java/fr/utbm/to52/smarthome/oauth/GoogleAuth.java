@@ -1,6 +1,12 @@
 package fr.utbm.to52.smarthome.oauth;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 import java.util.Scanner;
 
@@ -68,10 +74,20 @@ public class GoogleAuth {
 	private String apiSecret;
 
 	/**
+	 * Message printed when code is retrieved
+	 */
+	private static final String MSG_CODE_RETRIEVED = "You can now close this tab";
+	
+	/**
+	 * Port for callback URL
+	 */
+	private static final int PORT = 8090;
+	
+	/**
 	 * CallBack URL
 	 */
-	private String callbackUrl = "http://localhost:8090/"; // TODO get return code
-
+	private String callbackUrl = "http://localhost:" + PORT;
+	
 	/**
 	 * is this auth is currently on or not
 	 */
@@ -91,6 +107,11 @@ public class GoogleAuth {
 	 * Google credential
 	 */
 	private Credential googleCred;
+
+	/**
+	 * Code is automatically retrived or not
+	 */
+	private boolean codeAuto = true;
 
 	/**
 	 * Create authentication on google server
@@ -137,21 +158,62 @@ public class GoogleAuth {
 				.build()
 				.setFromTokenResponse(tokenResponse);
 	}
-
+	
 	@SuppressWarnings("resource")
+	private static String inputCodeServer() throws IOException{
+		ServerSocket serverCode = new ServerSocket(PORT);
+		Socket sock = serverCode.accept();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		String command = reader.readLine();
+		System.out.println(command);
+		
+		String[] tt = command.split(" ");
+		String code = tt[1].split("=")[1] + "#";
+		
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+		writer.write(MSG_CODE_RETRIEVED);
+		writer.flush();
+		
+		reader.close();
+		writer.close();
+		sock.close();
+		serverCode.close();
+		
+		return code;
+	}
+	
+	@SuppressWarnings("resource")
+	private static String inputCodeConsole(){
+		String code;
+		
+		Scanner scanner = new Scanner(System.in);
+		code = scanner.nextLine();
+		scanner.close();
+		
+		return code;
+	}
+
 	public boolean connect(){
 		Verifier verifier = null;
-
-		Scanner scanner = new Scanner(System.in);
+		String code;
+		
 		try{
 			String authorizationUrl = this.service.getAuthorizationUrl(EMPTY_TOKEN);
 
 			System.out.println(authorizationUrl);
 
-			System.out.println("Copy and paste the authorization code here");
-			System.out.print(">>");
-			verifier = new Verifier(scanner.nextLine());
-
+			if(this.codeAuto){
+				System.out.println("Copy URL to web browser");
+				code = inputCodeServer();
+			}else{
+				System.out.println("Copy and paste the authorization code here");
+				System.out.print(">>");
+				
+				code = inputCodeConsole();
+			}			
+			
+			verifier = new Verifier(code);
+			
 			// Trade the Request Token and Verfier for the Access Token
 			this.accessToken = this.service.getAccessToken(EMPTY_TOKEN, verifier);
 
@@ -161,8 +223,6 @@ public class GoogleAuth {
 		}catch(Exception e){
 			e.printStackTrace();
 			this.isConnected = false;
-		}finally{
-			scanner.close();
 		}
 
 		return this.isConnected;
@@ -222,6 +282,20 @@ public class GoogleAuth {
 	 */
 	public boolean isConnected() {
 		return this.isConnected;
+	}
+	
+	/**
+	 * Get the code automatically
+	 */
+	public void setAuto(){
+		this.codeAuto = true;
+	}
+	
+	/**
+	 * Get the code by user's console input
+	 */
+	public void setManual(){
+		this.codeAuto = false;
 	}
 
 	/**
