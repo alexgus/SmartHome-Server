@@ -1,10 +1,6 @@
-/**
- * 
- */
 package fr.utbm.to52.smarthome.oauth;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,6 +23,15 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 
+/**
+ * Helper class for creating valid google authentication.
+ * Print in console URL user must access and accept.
+ * Next return a code (in the redirected url, next granted
+ * access) inputed by the user to the console.
+ * 
+ * @author Alexandre Guyon
+ *
+ */
 @SuppressWarnings("javadoc")
 public class GoogleAuth {
 
@@ -47,6 +52,9 @@ public class GoogleAuth {
 	 */
 	private static final Token EMPTY_TOKEN = null;
 
+	/**
+	 * Scope to authenticate
+	 */
 	private String scope;
 
 	/**
@@ -62,20 +70,34 @@ public class GoogleAuth {
 	/**
 	 * CallBack URL
 	 */
-	private String callbackUrl = "http://localhost:80/";
+	private String callbackUrl = "http://localhost:8090/"; // TODO get return code
 
 	/**
 	 * is this auth is currently on or not
 	 */
 	private boolean isConnected = false;
 
+	/**
+	 * Access token of the successful auth
+	 */
 	private Token accessToken = null;
 
-	// Create OAuthService for Google OAuth 2.0
+	/**
+	 * OAuthService for Google OAuth 2.0
+	 */
 	private OAuthService service;
 
+	/**
+	 * Google credential
+	 */
 	private Credential googleCred;
 
+	/**
+	 * Create authentication on google server
+	 * @param apiKey Apikey of your app
+	 * @param apiSecret Api secret of your app
+	 * @param scope scope your app want to access
+	 */
 	public GoogleAuth(String apiKey, String apiSecret, String scope){
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
@@ -83,6 +105,12 @@ public class GoogleAuth {
 		this.service = new ServiceBuilder().provider(Google2Api.class)
 				.apiKey(this.apiKey).apiSecret(this.apiSecret).callback(this.callbackUrl)
 				.scope(this.scope).build();
+
+		try {
+			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("boxing")
@@ -94,8 +122,6 @@ public class GoogleAuth {
 		tok.setExpiresInSeconds(j.getLong("expires_in"));
 		tok.setRefreshToken(j.getString("refresh_token"));
 
-		/*return new GoogleCredential()
-				.setFromTokenResponse(tok);*/
 		return createCredentialWithRefreshToken(
 				new NetHttpTransport(), 
 				JacksonFactory.getDefaultInstance(), 
@@ -128,17 +154,6 @@ public class GoogleAuth {
 
 			// Trade the Request Token and Verfier for the Access Token
 			this.accessToken = this.service.getAccessToken(EMPTY_TOKEN, verifier);
-
-			// Now let's go and ask for a protected resource!
-			/*System.out.println("Now we're going to access a protected resource...");
-			OAuthRequest request = new OAuthRequest(Verb.GET,
-					PROTECTED_RESOURCE_URL);
-			service.signRequest(accessToken, request);
-			Response response = request.send();
-			System.out.println("Got it! Lets see what we found...");
-			System.out.println();
-			System.out.println(response.getCode());
-			System.out.println(response.getBody());*/
 
 			this.googleCred = createCredentialWithAccessTokenOnly(this.accessToken.getRawResponse());
 			System.out.println("refresh : " + this.googleCred);
@@ -212,12 +227,12 @@ public class GoogleAuth {
 	/**
 	 * Private API key of the app
 	 */
-	private static final String apiKeyDEMO = "592316576281-16bv97ssul5rcv6q39iun9mbt0v0er3t.apps.googleusercontent.com";
+	public static final String apiKeyDEMO = "592316576281-16bv97ssul5rcv6q39iun9mbt0v0er3t.apps.googleusercontent.com";
 
 	/**
 	 * Private secret of the app
 	 */
-	private static final String apiSecretDEMO = "zs1XpsstJpqz-C5gig9ZOuwQ";
+	public static final String apiSecretDEMO = "zs1XpsstJpqz-C5gig9ZOuwQ";
 
 	/**
 	 * Build and return an authorized Gmail client service.
@@ -244,35 +259,20 @@ public class GoogleAuth {
 				.build();
 	}
 
-	private static List<com.google.api.services.gmail.model.Thread> listThreadsMatchingQuery (Gmail service, String userId, String query) throws IOException {
-		return service.users().threads().list(userId).setQ(query).execute().getThreads();		
-	}
-
 	public static void main(String[] args) {
+		String user = "me";
+
+		GoogleAuth g = new GoogleAuth(apiKeyDEMO,apiSecretDEMO,GmailScopes.GMAIL_READONLY);
+		g.connect();
+
+		List<com.google.api.services.gmail.model.Thread> l;
 		try {
-			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			//ListLabelsResponse listResponse;
-			String user = "me";
+			l = g.getGmailService().users().threads().list(user).setQ("after:2015/10/24 before:2015/10/27").execute().getThreads();
 
-			GoogleAuth g = new GoogleAuth(apiKeyDEMO,apiSecretDEMO,GmailScopes.GMAIL_READONLY);
-
-			g.connect();
-
-			// Build a new authorized API client service.
-			Gmail service = g.getGmailService();
-			//Calendar c = g.getCalendarService();
-
-			List<com.google.api.services.gmail.model.Thread> l = listThreadsMatchingQuery(service,user,"after:2015/10/24 before:2015/10/27");
-			
-			for (com.google.api.services.gmail.model.Thread thread : l) {
+			for (com.google.api.services.gmail.model.Thread thread : l)
 				System.out.println(thread.toPrettyString());
-			}
-
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }
