@@ -3,30 +3,27 @@
  */
 package fr.utbm.to52.smarthome.controller.cronTask;
 
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
-import org.scribe.model.Verb;
+import java.io.IOException;
+import java.util.List;
+import java.util.TimerTask;
 
-import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
+import com.google.api.services.gmail.model.Message;
+
+import fr.utbm.to52.smarthome.services.mail.GmailHelper;
 
 /**
  * @author Alexandre Guyon
  *
  */
-public class MailCheck implements Runnable {
+public class MailCheck extends TimerTask {
 
-	private GoogleAuth auth;
-	
-	private static final String PROTECTED_RESOURCE_URL = "https://www.googleapis.com/oauth2/v2/userinfo?alt=json";
-	private static final String RESOURCE_GET_URL = "https://www.googleapis.com/gmail/v1/users/userId/drafts/id?alt=json";
+	private GmailHelper mail;
 	
 	/**
-	 * @param o Google Auth
+	 * @param g Google mail helper
 	 */
-	public MailCheck(GoogleAuth o) {
-		if(!o.isConnected())
-			o.connect();
-		this.auth = o;
+	public MailCheck(GmailHelper g) {
+		this.mail = g;
 	}
 
 	/* (non-Javadoc)
@@ -34,25 +31,21 @@ public class MailCheck implements Runnable {
 	 */
 	@Override
 	public void run() {
-		System.out.println("Running mail check");
-		System.out.println("Now we're going to access a protected resource...");
-		OAuthRequest request = new OAuthRequest(Verb.GET,
-				PROTECTED_RESOURCE_URL);
-		this.auth.getService().signRequest(this.auth.getAccessToken(), request);
-		Response response = request.send();
-		System.out.println("Got it! Lets see what we found...");
-		System.out.println();
-		System.out.println(response.getCode());
-		System.out.println(response.getBody());
-		
-		request = new OAuthRequest(Verb.GET,
-				RESOURCE_GET_URL);
-		this.auth.getService().signRequest(this.auth.getAccessToken(), request);
-		response = request.send();
-		System.out.println("Got it! Lets see what we found...");
-		System.out.println();
-		System.out.println(response.getCode());
-		System.out.println(response.getBody());
+		try {
+			List<Message> lm = this.mail.getMailQuery("is:unread");
+			
+			for (Message message : lm) {
+				if(message != null){
+					String id = message.getId();
+
+					System.out.println(this.mail.getMessage(id));
+					System.out.println("-----------------------");
+				}
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

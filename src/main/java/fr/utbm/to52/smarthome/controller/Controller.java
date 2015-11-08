@@ -11,6 +11,9 @@ import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
 import fr.utbm.to52.smarthome.services.com.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
+import fr.utbm.to52.smarthome.services.mail.GmailService;
+
+// TODO Suppress cron4j (replace with java Timer)
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -49,7 +52,7 @@ public class Controller extends AbstractService{
 
 	private ClockService clock;
 	
-	//private GoogleAuth auth;
+	private GmailService mail;
 	
 	private Controller(){		
 		this.cmdHandler = new CommandHandlerImpl();
@@ -65,7 +68,8 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		//this.auth = new GoogleAuth(this.config.getGoogleApiKey(), this.config.getGoogleApiSecret(), this.config.getGoogleScope());
+		this.mail = new GmailService();
+		this.lService.add(this.mail);
 	}
 
 	@Override

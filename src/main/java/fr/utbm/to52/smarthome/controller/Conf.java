@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import fr.utbm.to52.smarthome.util.BasicIO;
 
+// TODO re-organize import
+
 /**
  * This class is used to parse the configuration file.
  * This is also used to store all this values.
