@@ -34,7 +34,7 @@ see pom.xml for full list
 
 ### Server
 Receiving command MQTT and simple TCP connection :
- * `AddRing [AAAA-MM-DDHhhMmm]` : command for adding event with
+ * `AddRing {"date" : "AAAA-MM-DDHhhMmm"}` : command for adding event with
      * `AAAA` : the year
      * `MM` : the month
      * `DD` : the day of the month
