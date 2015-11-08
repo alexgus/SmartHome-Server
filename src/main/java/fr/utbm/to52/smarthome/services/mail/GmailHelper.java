@@ -29,7 +29,7 @@ import fr.utbm.to52.smarthome.oauth.GoogleAuth;
  * @author Alexandre Guyon
  *
  */
-public class GmailServices {
+public class GmailHelper {
 
 	/**
 	 * User email
@@ -45,7 +45,7 @@ public class GmailServices {
 	 * Use gmail services
 	 * @param g Gmail object from given google's API
 	 */
-	public GmailServices(Gmail g) {
+	public GmailHelper(Gmail g) {
 		this.gservices = g;
 	}
 
@@ -159,7 +159,7 @@ public class GmailServices {
 		g.connect();
 
 		try {
-			GmailServices mail = new GmailServices(g.getGmailService());
+			GmailHelper mail = new GmailHelper(g.getGmailService());
 
 			List<Message> lm = mail.getMailQuery("after:2015/10/24 before:2015/10/27");
 
