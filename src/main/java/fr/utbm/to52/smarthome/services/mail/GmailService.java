@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import com.google.api.services.gmail.GmailScopes;
 
-import fr.utbm.to52.smarthome.oauth.GoogleAuth;
 import fr.utbm.to52.smarthome.services.AbstractService;
+import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
 
 /**
  * @author Alexandre Guyon

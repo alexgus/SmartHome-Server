@@ -7,7 +7,7 @@ import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Verb;
 
-import fr.utbm.to52.smarthome.oauth.GoogleAuth;
+import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
 
 /**
  * @author Alexandre Guyon

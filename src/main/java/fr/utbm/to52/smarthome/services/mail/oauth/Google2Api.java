@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.oauth;
+package fr.utbm.to52.smarthome.services.mail.oauth;
 
 
 import java.util.regex.Matcher;

@@ -23,7 +23,7 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 import com.google.api.services.gmail.model.Message;
 
-import fr.utbm.to52.smarthome.oauth.GoogleAuth;
+import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
 
 /**
  * @author Alexandre Guyon
