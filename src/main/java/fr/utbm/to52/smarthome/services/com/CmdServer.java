@@ -6,7 +6,6 @@ package fr.utbm.to52.smarthome.services.com;
 import java.io.IOException;
 
 import fr.utbm.to52.smarthome.controller.CommandHandler;
-import fr.utbm.to52.smarthome.network.SocketInput;
 import fr.utbm.to52.smarthome.services.AbstractService;
 
 /**

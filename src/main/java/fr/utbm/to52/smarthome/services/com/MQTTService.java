@@ -5,7 +5,6 @@ package fr.utbm.to52.smarthome.services.com;
 
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 
-import fr.utbm.to52.smarthome.network.MQTT;
 import fr.utbm.to52.smarthome.services.AbstractService;
 
 /**

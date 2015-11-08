@@ -7,7 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fr.utbm.to52.smarthome.controller.Controller;
-import fr.utbm.to52.smarthome.network.MQTT;
+import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
  * @author Alexandre Guyon
