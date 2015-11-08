@@ -86,6 +86,18 @@ public class MQTT{
 	}
 	
 	/**
+	 * Subscribe to specified topic
+	 * @param topic Topic to subscribe
+	 */
+	public void subscribe(String topic){
+		try {
+			this.client.subscribe(topic);
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Publish MQTT message on a topic
 	 * @param topic The topic to post
 	 * @param message The message to post
