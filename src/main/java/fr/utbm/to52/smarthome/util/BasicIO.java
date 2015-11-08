@@ -52,13 +52,16 @@ public class BasicIO {
 	 * @param content The content to write
 	 */
 	@SuppressWarnings("resource")
-	public static void write(String path, String content){ 
+	public static void write(String path, String content){
 		try {
 			
 			FileWriter fw = new FileWriter(path);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
+			bw.flush();
+			fw.flush();
 			bw.close();
+			fw.close();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
