@@ -10,10 +10,9 @@ import org.json.JSONObject;
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.cron.RingCron;
 
-// FIXME ADD code for adding ring (what does the parser do ?)
 /**
  * This event add ring to cron from user input in JSON
- * <code></code>
+ * <code>AddRing {"date" : "AAAA-MM-DDHhhMmm"}</code>
  * @author Alexandre Guyon
  *
  */

@@ -1,5 +1,7 @@
 package fr.utbm.to52.smarthome.events;
 
+// TODO add system event (ex light) and user event (user can launch)
+
 /**
  * This used to send a basic event. 
  * @author Alexandre Guyon
