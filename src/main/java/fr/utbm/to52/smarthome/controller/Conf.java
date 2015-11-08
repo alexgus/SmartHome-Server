@@ -16,6 +16,19 @@ import fr.utbm.to52.smarthome.util.BasicIO;
  */
 public class Conf {
 
+	/**
+	 * Defining the source of the command is from network. tag configuration
+	 */
+	public static final int SOURCE_NET = 0;
+	
+	/**
+	 * Defining the source of the command is from ICAL. tagICal configuration
+	 */
+	public static final int SOURCE_ICAL = 1;
+	
+	/**
+	 * Default config file
+	 */
 	private static final String DEFAULT_CONF_FILE = "smart.conf";
 	
 	/**

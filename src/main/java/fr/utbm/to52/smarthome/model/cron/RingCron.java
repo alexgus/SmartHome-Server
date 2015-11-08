@@ -5,6 +5,7 @@ package fr.utbm.to52.smarthome.model.cron;
 
 import java.util.Calendar;
 
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Controller;
 import it.sauronsoftware.cron4j.ProcessTask;
 import it.sauronsoftware.cron4j.SchedulingPattern;
@@ -48,7 +49,7 @@ public abstract class RingCron extends Cron {
 		String port = Controller.getInstance().getConfig().getServerPort() + "";
 		String CMD = Controller.getInstance().getConfig().getCommandRing();
 		
-		if(INPUT == Controller.SOURCE_ICAL)
+		if(INPUT == Conf.SOURCE_ICAL)
 			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
 					+ " " + Controller.getInstance().getConfig().getCronICalTag());
 		else

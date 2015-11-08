@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.services;
+package fr.utbm.to52.smarthome.services.mail;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

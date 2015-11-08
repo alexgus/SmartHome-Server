@@ -1,20 +1,16 @@
 package fr.utbm.to52.smarthome.controller;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import fr.utbm.to52.smarthome.controller.cronTask.CronCleaner;
-import fr.utbm.to52.smarthome.controller.cronTask.DateController;
-import fr.utbm.to52.smarthome.controller.cronTask.MailCheck;
 import fr.utbm.to52.smarthome.events.AddRingEvent;
 import fr.utbm.to52.smarthome.events.LightEvent;
 import fr.utbm.to52.smarthome.events.RingEvent;
-import fr.utbm.to52.smarthome.model.cron.JavaCron;
-import fr.utbm.to52.smarthome.model.cron.RingCron;
-import fr.utbm.to52.smarthome.model.cron.SystemCron;
-import fr.utbm.to52.smarthome.network.MQTT;
-import fr.utbm.to52.smarthome.network.SocketInput;
-import fr.utbm.to52.smarthome.oauth.GoogleAuth;
-import it.sauronsoftware.cron4j.Scheduler;
+import fr.utbm.to52.smarthome.services.AbstractService;
+import fr.utbm.to52.smarthome.services.Service;
+import fr.utbm.to52.smarthome.services.clock.ClockService;
+import fr.utbm.to52.smarthome.services.com.CmdServer;
+import fr.utbm.to52.smarthome.services.com.MQTTService;
 
 /**
  * This controller is a singleton. For getting an instance from it 
@@ -24,7 +20,7 @@ import it.sauronsoftware.cron4j.Scheduler;
  * @author Alexandre Guyon
  *
  */
-public class Controller {
+public class Controller extends AbstractService{
 
 	/**
 	 * Singleton instance for this controller 
@@ -40,138 +36,54 @@ public class Controller {
 			singleton = new Controller();
 		return singleton;
 	}
-	
-	/**
-	 * Defining the source of the command is from network. tag configuration
-	 */
-	public static final int SOURCE_NET = 0;
-	
-	/**
-	 * Defining the source of the command is from ICAL. tagICal configuration
-	 */
-	public static final int SOURCE_ICAL = 1;
-
-	private SocketInput server;
-	
-	private Thread mainThread;
-
-	private MQTT mqtt;
-
-	private Conf config;
-
-	private RingCron cron;
-
-	private Scheduler jcron;
 
 	private CommandHandlerImpl cmdHandler;
 	
-	private GoogleAuth auth;
+	private List<Service> lService;
+	
+	// Services
+	
+	private MQTTService MQTT;
 
-	private Controller(){
-		this.config = new Conf();
-		this.config.importConf();
+	private CmdServer server;
+
+	private ClockService clock;
+	
+	//private GoogleAuth auth;
+	
+	private Controller(){		
 		this.cmdHandler = new CommandHandlerImpl();
-		this.jcron = new Scheduler();
-		this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
-		this.auth = new GoogleAuth(this.config.getGoogleApiKey(), this.config.getGoogleApiSecret(), this.config.getGoogleScope());
+		
+		this.lService = new ArrayList<>();
+		
+		this.MQTT = new MQTTService(this.cmdHandler);
+		this.lService.add(this.MQTT);
+		
+		this.server = new CmdServer(this.cmdHandler);
+		this.lService.add(this.server);
+		
+		this.clock = new ClockService();
+		this.lService.add(this.clock);
+		
+		//this.auth = new GoogleAuth(this.config.getGoogleApiKey(), this.config.getGoogleApiSecret(), this.config.getGoogleScope());
+		
+		this.cmdHandler.setRingEventController(new RingEvent(this.MQTT.getMqtt()));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.clock.getCron()));
+		this.cmdHandler.setLightEvent(new LightEvent(this.MQTT.getMqtt()));
 	}
 
-	/**
-	 * Start the server
-	 */
-	public void start(){		
-		this.confCron();
-
-		this.mqtt.connect();
-
-		this.cmdHandler.setRingEventController(new RingEvent(this.mqtt));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent());
-		this.cmdHandler.setLightEvent(new LightEvent(this.mqtt));
-		
-		try {
-			this.server = new SocketInput(this.getConfig().getServerPort());
-			this.server.setCmdHandler(this.cmdHandler);
-
-			this.mainThread = new Thread(this.server);
-			this.mainThread.start();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+	@Override
+	public void start(){
+		for (Service service : this.lService) {
+			service.setUp(this.config);
+			service.start();
 		}
-		
-		this.jcron.start();
-	}
-
-	private void confCron() {
-		if(Controller.getInstance().getConfig().getCronSource().equals(Conf.CRON_SYSTEM))
-			this.cron = new SystemCron();
-		else
-			this.cron = new JavaCron();
-		
-		for(int i = 0 ; i < this.getConfig().getAlarmURL().size() ; ++i)
-			this.jcron.schedule("* * * * *", new DateController(i));
-		
-		this.jcron.schedule("0 * * * *", new CronCleaner(this.getCron()));
-		this.jcron.schedule("* * * * *", new MailCheck(this.auth));
-	}
-
-	/**
-	 * Stop the server
-	 */
-	public void stop(){
-		this.server.setRunning(false);
-		
-		try {
-			this.mainThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		this.jcron.stop();
-		this.mqtt.disconnect();
-	}
-
-	/**
-	 * Get the configuration of the application loaded
-	 * @return The configuration loaded.
-	 */
-	public Conf getConfig() {
-		return this.config;
-	}
-
-	/**
-	 * Set to the controller a special configuration
-	 * @param config The configuration to set to the controller.
-	 */
-	public void setConfig(Conf config) {
-		this.config = config;
 	}
 	
-	/**
-	 * @return the cron
-	 */
-	public RingCron getCron() {
-		return this.cron;
+	@Override
+	public void stop() {
+		for (Service service : this.lService)
+			service.stop();
 	}
 
-	/**
-	 * @param cron the cron to set
-	 */
-	public void setCron(RingCron cron) {
-		this.cron = cron;
-	}
-
-	/**
-	 * @return the jcron
-	 */
-	public Scheduler getJcron() {
-		return this.jcron;
-	}
-
-	/**
-	 * @param jcron the jcron to set
-	 */
-	public void setJcron(Scheduler jcron) {
-		this.jcron = jcron;
-	}
 }

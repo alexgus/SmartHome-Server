@@ -6,9 +6,11 @@ package fr.utbm.to52.smarthome.controller.cronTask;
 import java.net.URL;
 import java.util.Calendar;
 
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.model.calendar.ICal;
 import fr.utbm.to52.smarthome.model.cron.MySchedulingPattern;
+import fr.utbm.to52.smarthome.model.cron.RingCron;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -23,12 +25,16 @@ public class DateController implements Runnable {
 	
 	private int iURL;
 	
+	private RingCron rcron;
+	
 	/**
 	 * Load the given URL and handle cron event for it
+	 * @param r The ring cron object for adding ring to it
 	 * @param url URL in the pool to load
 	 */
-	public DateController(int url) {
+	public DateController(RingCron r, int url) {
 		this.iURL = url;
+		this.rcron = r;
 	}
 	
 	/* (non-Javadoc)
@@ -73,18 +79,16 @@ public class DateController implements Runnable {
 						fr.utbm.to52.smarthome.model.calendar.Calendar.START);
 				toAdd = setWakeUpTime(toAdd);
 				
-				if(Controller.getInstance().getCron().size() == 0) // If no ring is scheduled
-					Controller.getInstance().getCron().addRing(toAdd,Controller.SOURCE_ICAL);
+				if(this.rcron.size() == 0) // If no ring is scheduled
+					this.rcron.addRing(toAdd,Conf.SOURCE_ICAL);
 				else{ 
 					// If there is others rings
 					// For each ring
-					for(int i = 0 ; i < Controller.getInstance().getCron().size() ; ++i){
+					for(int i = 0 ; i < this.rcron.size() ; ++i){
 						// Cast scheduling in Calendar object
 						fr.utbm.to52.smarthome.model.calendar.Calendar sched = 
 								new fr.utbm.to52.smarthome.model.calendar.Calendar(
-								new MySchedulingPattern(
-										Controller.getInstance().getCron().getSchedulingPattern(i))
-								.getDate());
+								new MySchedulingPattern(this.rcron.getSchedulingPattern(i)).getDate());
 						
 						// tweak it
 						sched.set(Calendar.MILLISECOND, 0);
@@ -97,8 +101,8 @@ public class DateController implements Runnable {
 						if(!sched.getTime().toString().equals(toAdd.getTime().toString())
 								&& sched.get(Calendar.DAY_OF_YEAR) == toAdd.get(Calendar.DAY_OF_YEAR)){ 
 							// If not the same schedule and the same day
-							Controller.getInstance().getCron().remove(i); // remove the old schedule
-							Controller.getInstance().getCron().addRing(toAdd,Controller.SOURCE_ICAL);
+							this.rcron.remove(i); // remove the old schedule
+							this.rcron.addRing(toAdd,Conf.SOURCE_ICAL);
 						}
 					}
 				}	

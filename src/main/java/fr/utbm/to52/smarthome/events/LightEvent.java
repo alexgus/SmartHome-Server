@@ -6,7 +6,6 @@ package fr.utbm.to52.smarthome.events;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.network.MQTT;
 
@@ -43,8 +42,8 @@ public class LightEvent implements Event {
 			
 			@Override
 			public void run() {
-				LightEvent.this.connection.publish(Controller.getInstance().getConfig().getMQTTLightTopic(), Integer.toString(LightEvent.this.lightIntensity));
-				LightEvent.this.lightIntensity += LightEvent.this.step;
+				LightEvent.this.getConnection().publish(Controller.getInstance().getConfig().getMQTTLightTopic(), Integer.toString(LightEvent.this.getLightIntensity()));
+				LightEvent.this.setLightIntensity(Math.round(LightEvent.this.getLightIntensity() + LightEvent.this.step));
 			}
 		};
 		this.schedLight.scheduleAtFixedRate(lightIncrease, 0, this.rate);
@@ -58,10 +57,38 @@ public class LightEvent implements Event {
 			
 			@Override
 			public void run() {
-				LightEvent.this.schedLight.cancel();
+				LightEvent.this.getLightScheduler().cancel();
 			}
 		};
 		cancelTask.schedule(t, this.rate * (this.maxIntesity/this.step));
 	}
 
+	/**
+	 * @return Get the current light scheduler
+	 */
+	public Timer getLightScheduler(){
+		return this.schedLight;
+	}
+	
+	/**
+	 * @param i Light intensity to set
+	 */
+	public void setLightIntensity(int i){
+		this.lightIntensity = i;
+	}
+	
+	/**
+	 * @return The current light intensity
+	 */
+	public int getLightIntensity(){
+		return this.lightIntensity;
+	}
+	
+	/**
+	 * @return The current MQTT conneciton
+	 */
+	public MQTT getConnection(){
+		return this.connection;
+	}
+	
 }

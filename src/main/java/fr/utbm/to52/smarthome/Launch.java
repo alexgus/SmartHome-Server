@@ -1,5 +1,6 @@
 package fr.utbm.to52.smarthome;
 
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Controller;
 
 /**
@@ -14,6 +15,9 @@ public class Launch {
 	 * @param args Nothing in args
 	 */
 	public static void main(String[] args){
+		Conf c = new Conf();
+		c.importConf();
+		Controller.getInstance().setUp(c);
 		Controller.getInstance().start();
 	}
 }
