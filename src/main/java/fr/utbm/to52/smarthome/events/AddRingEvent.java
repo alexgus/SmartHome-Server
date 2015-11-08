@@ -33,7 +33,7 @@ public class AddRingEvent implements Event {
 	public void inform(Object o) {
 		String s = (String) o;
 	
-		String s0 = s.split(" ")[1];
+		String s0 = s.substring(s.indexOf(" "));
 		JSONObject json = new JSONObject(s0);
 		String data = json.getString("date");
 		String[] data2 = data.split("H");

@@ -66,10 +66,6 @@ public class Controller extends AbstractService{
 		this.lService.add(this.clock);
 		
 		//this.auth = new GoogleAuth(this.config.getGoogleApiKey(), this.config.getGoogleApiSecret(), this.config.getGoogleScope());
-		
-		this.cmdHandler.setRingEventController(new RingEvent(this.MQTT.getMqtt()));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.clock.getCron()));
-		this.cmdHandler.setLightEvent(new LightEvent(this.MQTT.getMqtt()));
 	}
 
 	@Override
@@ -78,6 +74,14 @@ public class Controller extends AbstractService{
 			service.setUp(this.config);
 			service.start();
 		}
+		
+		this.enableEvent();
+	}
+	
+	private void enableEvent(){
+		this.cmdHandler.setRingEventController(new RingEvent(this.MQTT.getMqtt()));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.clock.getCron()));
+		this.cmdHandler.setLightEvent(new LightEvent(this.MQTT.getMqtt()));
 	}
 	
 	@Override
