@@ -1,4 +1,4 @@
-package fr.utbm.to52.smarthome.oauth;
+package fr.utbm.to52.smarthome.oauth.copy;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
