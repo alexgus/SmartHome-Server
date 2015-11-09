@@ -58,11 +58,12 @@ public class MQTT{
 	/**
 	 * Connect to the broker
 	 */
+	@SuppressWarnings("unused")
 	public void connect(){
 		 try {
 			this.client.connect();
 		} catch (MqttException e) {
-			e.printStackTrace();
+			System.err.println("No MQTT server found at : " + this.broker);
 		}
 	}
 	

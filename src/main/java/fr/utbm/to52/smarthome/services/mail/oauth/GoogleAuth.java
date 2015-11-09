@@ -29,6 +29,8 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.GmailScopes;
 
+import fr.utbm.to52.smarthome.services.com.NextPortException;
+
 // TODO add disconnect
 
 /**
@@ -86,9 +88,19 @@ public class GoogleAuth {
 	private static final int PORT = 8090;
 	
 	/**
+	 * Protocol of callback URL
+	 */
+	private static final String PROTOCOL = "http";
+	
+	/**
+	 * Host of the callback url
+	 */
+	private static final String HOST = "localhost";
+	
+	/**
 	 * CallBack URL
 	 */
-	private String callbackUrl = "http://localhost:" + PORT;
+	private String callbackUrl = PROTOCOL + "://" + HOST + ":" + PORT;
 	
 	/**
 	 * is this auth is currently on or not
@@ -161,9 +173,21 @@ public class GoogleAuth {
 				.setFromTokenResponse(tokenResponse);
 	}
 	
-	@SuppressWarnings("resource")
-	private static String inputCodeServer() throws IOException{
-		ServerSocket serverCode = new ServerSocket(PORT);
+	private static String inputCodeServer() throws IOException, NextPortException{
+		return inputCodeServer(PORT);
+	}
+	
+	@SuppressWarnings({ "resource", "unused" })
+	private static String inputCodeServer(int p) throws IOException, NextPortException{
+
+		ServerSocket serverCode = new ServerSocket();
+		
+		try {
+			serverCode = new ServerSocket(p);
+		} catch (IOException e) {
+			throw new NextPortException(PORT + 1); 
+		}
+		
 		Socket sock = serverCode.accept();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 		String command = reader.readLine();
@@ -188,6 +212,9 @@ public class GoogleAuth {
 	private static String inputCodeConsole(){
 		String code;
 		
+		System.out.println("Copy and paste the authorization code here");
+		System.out.print(">>");
+		
 		Scanner scanner = new Scanner(System.in);
 		code = scanner.nextLine();
 		scanner.close();
@@ -195,24 +222,42 @@ public class GoogleAuth {
 		return code;
 	}
 
+	@SuppressWarnings("unused")
 	public boolean connect(){
 		Verifier verifier = null;
 		String code;
 		
 		try{
-			String authorizationUrl = this.service.getAuthorizationUrl(EMPTY_TOKEN);
-
-			System.out.println(authorizationUrl);
 
 			if(this.codeAuto){
 				System.out.println("Copy URL to web browser");
-				code = inputCodeServer();
-			}else{
-				System.out.println("Copy and paste the authorization code here");
-				System.out.print(">>");
 				
+				String authorizationUrl = this.service.getAuthorizationUrl(EMPTY_TOKEN);
+				System.out.println(authorizationUrl);
+				
+				try{
+					code = inputCodeServer();
+				}catch(NextPortException n){
+					try {
+						System.err.println("URL not valid, try this link below, caused by socket running on the same port ("+ PORT +")");
+						
+						this.callbackUrl =  PROTOCOL + "://" + HOST + ":" + n.getPort();
+						
+						this.service = new ServiceBuilder().provider(Google2Api.class)
+								.apiKey(this.apiKey).apiSecret(this.apiSecret).callback(this.callbackUrl)
+								.scope(this.scope).build();
+						
+						authorizationUrl = this.service.getAuthorizationUrl(EMPTY_TOKEN);
+						System.out.println(authorizationUrl);
+						
+						code = inputCodeServer(n.getPort());
+					} catch (NextPortException e) {
+						System.err.println("Does not succeed to open server callback. Request code by user input.");
+						code = inputCodeConsole();
+					}
+				}
+			}else
 				code = inputCodeConsole();
-			}			
 			
 			verifier = new Verifier(code);
 			
@@ -222,7 +267,7 @@ public class GoogleAuth {
 			this.googleCred = createCredentialWithAccessTokenOnly(this.accessToken.getRawResponse());
 			System.out.println("refresh : " + this.googleCred);
 			this.isConnected = true;
-		}catch(Exception e){
+		}catch(IOException e){
 			e.printStackTrace();
 			this.isConnected = false;
 		}

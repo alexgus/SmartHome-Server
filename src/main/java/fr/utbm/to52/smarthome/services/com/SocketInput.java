@@ -36,10 +36,18 @@ public class SocketInput implements Runnable{
 	 * For receiving event you need to register callback !
 	 * @param port Port you want to open the server on
 	 * @throws IOException Throw IO Exception when error happens
+	 * @throws NextPortException Open server on next port if already in use
 	 */
-	public SocketInput(int port) throws IOException{
+	@SuppressWarnings("unused")
+	public SocketInput(int port) throws IOException, NextPortException{
 		this.setListSocket(new LinkedList<Socket>());
-		this.server = new ServerSocket(port);
+		try{
+			this.server = new ServerSocket(port);
+		}catch(java.net.BindException e){
+			System.err.println("Server already launched. Launch it on the next port");
+			this.server = new ServerSocket(port + 1);
+			throw new NextPortException(port + 1);
+		}
 	}
 
 	@Override

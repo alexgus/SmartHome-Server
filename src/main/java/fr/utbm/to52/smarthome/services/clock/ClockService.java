@@ -36,7 +36,6 @@ public class ClockService extends AbstractService {
 		this.mainCron = new Scheduler();
 		// TODO see sched deamon
 		this.sched = new Timer();
-		this.cleaner = new CronCleaner(this.cron);
 	}
 	
 	public void setUp(Conf c) {
@@ -50,6 +49,7 @@ public class ClockService extends AbstractService {
 		for(int i = 0 ; i < this.config.getAlarmURL().size() ; ++i)
 			this.mainCron.schedule("* * * * *", new DateController(this.cron, i));
 		
+		this.cleaner = new CronCleaner(this.cron);
 		// TODO add Constant/config
 		this.sched.scheduleAtFixedRate(this.cleaner, 0, 60 * 1000 * 60);
 	}

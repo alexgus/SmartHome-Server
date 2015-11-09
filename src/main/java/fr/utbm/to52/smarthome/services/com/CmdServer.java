@@ -29,6 +29,7 @@ public class CmdServer extends AbstractService{
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	public void start() {
 		try {
 			this.server = new SocketInput(this.config.getServerPort());
@@ -39,6 +40,9 @@ public class CmdServer extends AbstractService{
 
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (NextPortException e) {
+			this.config.setServerPort(this.config.getServerPort() + 1);
+			System.err.println("Server opened at " + this.config.getServerPort() + " port.");
 		}
 	}
 
