@@ -3,8 +3,6 @@
  */
 package fr.utbm.to52.smarthome.model.calendar;
 
-import java.util.Date;
-
 import fr.utbm.to52.smarthome.model.location.Location;
 
 /**
@@ -13,9 +11,9 @@ import fr.utbm.to52.smarthome.model.location.Location;
  */
 public class Event {
 
-	private Date begin;
+	private DateCalendar begin;
 	
-	private Date end;
+	private DateCalendar end;
 	
 	private String title;
 	
@@ -31,28 +29,28 @@ public class Event {
 	/**
 	 * @return the begin
 	 */
-	public Date getBegin() {
+	public DateCalendar getBegin() {
 		return this.begin;
 	}
 
 	/**
 	 * @param begin the begin to set
 	 */
-	public void setBegin(Date begin) {
+	public void setBegin(DateCalendar begin) {
 		this.begin = begin;
 	}
 
 	/**
 	 * @return the end
 	 */
-	public Date getEnd() {
+	public DateCalendar getEnd() {
 		return this.end;
 	}
 
 	/**
 	 * @param end the end to set
 	 */
-	public void setEnd(Date end) {
+	public void setEnd(DateCalendar end) {
 		this.end = end;
 	}
 
