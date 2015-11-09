@@ -3,6 +3,8 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Session;
+
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
@@ -12,6 +14,7 @@ import fr.utbm.to52.smarthome.services.clock.ClockService;
 import fr.utbm.to52.smarthome.services.com.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
 import fr.utbm.to52.smarthome.services.mail.GmailService;
+import fr.utbm.to52.smarthome.util.HibernateUtil;
 
 
 /**
@@ -41,6 +44,8 @@ public class Controller extends AbstractService{
 
 	private CommandHandlerImpl cmdHandler;
 	
+	private Session hbmSess;
+	
 	private List<Service> lService;
 	
 	// Services
@@ -53,7 +58,9 @@ public class Controller extends AbstractService{
 	
 	private GmailService mail;
 	
-	private Controller(){		
+	private Controller(){	
+		this.hbmSess = HibernateUtil.getSessionFactory().openSession();
+		
 		this.cmdHandler = new CommandHandlerImpl();
 		
 		this.lService = new ArrayList<>();
