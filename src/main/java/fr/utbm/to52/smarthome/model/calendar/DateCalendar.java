@@ -13,7 +13,7 @@ import net.fortuna.ical4j.model.component.VEvent;
  * @author Alexandre Guyon
  *
  */
-public class Calendar extends GregorianCalendar{
+public class DateCalendar extends GregorianCalendar{
 
 	private static final long serialVersionUID = 3731532859771209791L;
 
@@ -30,7 +30,7 @@ public class Calendar extends GregorianCalendar{
 	/**
 	 * Create now calendar
 	 */
-	public Calendar(){
+	public DateCalendar(){
 		super();
 		this.setTime(new Date());
 	}
@@ -39,7 +39,7 @@ public class Calendar extends GregorianCalendar{
 	 * Get Calendar from date
 	 * @param d Date to create calendar
 	 */
-	public Calendar(Date d){
+	public DateCalendar(Date d){
 		super();
 		this.setTime(d);
 	}
@@ -47,9 +47,9 @@ public class Calendar extends GregorianCalendar{
 	/**
 	 * Create calendar from vevent.
 	 * @param ev Event to set
-	 * @param endOrStart endOrStart @see {@link Calendar#START} and @see {@link Calendar#END}
+	 * @param endOrStart endOrStart @see {@link DateCalendar#START} and @see {@link DateCalendar#END}
 	 */
-	public Calendar(VEvent ev, int endOrStart){
+	public DateCalendar(VEvent ev, int endOrStart){
 		Date d;
 		if(endOrStart == END)
 			d = ev.getEndDate().getDate();

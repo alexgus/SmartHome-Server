@@ -51,9 +51,9 @@ public class DateController extends TimerTask {
 			this.c.load();
 			
 			// Create instance of calendar
-			fr.utbm.to52.smarthome.model.calendar.Calendar now = new fr.utbm.to52.smarthome.model.calendar.Calendar();
-			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour0 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
-			fr.utbm.to52.smarthome.model.calendar.Calendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.Calendar) now.clone();
+			fr.utbm.to52.smarthome.model.calendar.DateCalendar now = new fr.utbm.to52.smarthome.model.calendar.DateCalendar();
+			fr.utbm.to52.smarthome.model.calendar.DateCalendar rangeHour0 = (fr.utbm.to52.smarthome.model.calendar.DateCalendar) now.clone();
+			fr.utbm.to52.smarthome.model.calendar.DateCalendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.DateCalendar) now.clone();
 			
 			// Create range of date for the research
 			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 4) // if soon in the morning
@@ -78,8 +78,8 @@ public class DateController extends TimerTask {
 			if(lc.size() != 0){ // If there's event
 				
 				// Choose the earlier one
-				fr.utbm.to52.smarthome.model.calendar.Calendar toAdd = new fr.utbm.to52.smarthome.model.calendar.Calendar(getEarlier(lc), 
-						fr.utbm.to52.smarthome.model.calendar.Calendar.START);
+				fr.utbm.to52.smarthome.model.calendar.DateCalendar toAdd = new fr.utbm.to52.smarthome.model.calendar.DateCalendar(getEarlier(lc), 
+						fr.utbm.to52.smarthome.model.calendar.DateCalendar.START);
 				toAdd = setWakeUpTime(toAdd);
 				
 				if(this.rcron.size() == 0) // If no ring is scheduled
@@ -89,8 +89,8 @@ public class DateController extends TimerTask {
 					// For each ring
 					for(int i = 0 ; i < this.rcron.size() ; ++i){
 						// Cast scheduling in Calendar object
-						fr.utbm.to52.smarthome.model.calendar.Calendar sched = 
-								new fr.utbm.to52.smarthome.model.calendar.Calendar(
+						fr.utbm.to52.smarthome.model.calendar.DateCalendar sched = 
+								new fr.utbm.to52.smarthome.model.calendar.DateCalendar(
 								new MySchedulingPattern(this.rcron.getSchedulingPattern(i)).getDate());
 						
 						// tweak it
@@ -133,7 +133,7 @@ public class DateController extends TimerTask {
 		return search;
 	}
 	
-	private static fr.utbm.to52.smarthome.model.calendar.Calendar setWakeUpTime(fr.utbm.to52.smarthome.model.calendar.Calendar c){
+	private static fr.utbm.to52.smarthome.model.calendar.DateCalendar setWakeUpTime(fr.utbm.to52.smarthome.model.calendar.DateCalendar c){
 		int wakeUpBeforeH = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[0]);
 		int wakeUpBeforeM = Integer.parseInt(Controller.getInstance().getConfig().getAlarmWakeUpTime().split("h")[1]);
 	
