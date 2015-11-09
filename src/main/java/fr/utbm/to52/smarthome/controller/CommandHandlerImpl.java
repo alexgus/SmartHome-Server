@@ -56,7 +56,6 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
 		if(arg0.equals(Controller.getInstance().getConfig().getMQTTRingTopic()))
 			this.handle(arg1.toString());
-		// TODO Else throw exception
 	}
 	
 	/**

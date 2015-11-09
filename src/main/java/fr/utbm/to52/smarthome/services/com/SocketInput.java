@@ -88,7 +88,6 @@ public class SocketInput implements Runnable{
 				Thread t = new Thread(r);
 				t.start();	
 				
-				// TODO Ugly, not multi user
 				try {
 					t.join();
 				} catch (InterruptedException e) {

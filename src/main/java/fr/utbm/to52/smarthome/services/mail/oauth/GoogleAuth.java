@@ -31,7 +31,7 @@ import com.google.api.services.gmail.GmailScopes;
 
 import fr.utbm.to52.smarthome.services.com.NextPortException;
 
-// TODO add disconnect
+// TODO add reconnect (expiration)
 
 /**
  * Helper class for creating valid google authentication.
