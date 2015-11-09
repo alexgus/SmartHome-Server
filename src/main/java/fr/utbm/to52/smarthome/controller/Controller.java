@@ -3,9 +3,9 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.utbm.to52.smarthome.events.AddRingEvent;
-import fr.utbm.to52.smarthome.events.LightEvent;
-import fr.utbm.to52.smarthome.events.RingEvent;
+import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
+import fr.utbm.to52.smarthome.controller.events.LightEvent;
+import fr.utbm.to52.smarthome.controller.events.RingEvent;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.events;
+package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Calendar;
 

@@ -1,4 +1,4 @@
-package fr.utbm.to52.smarthome.events;
+package fr.utbm.to52.smarthome.controller.events;
 
 // TODO add system event (ex light) and user event (user can launch)
 

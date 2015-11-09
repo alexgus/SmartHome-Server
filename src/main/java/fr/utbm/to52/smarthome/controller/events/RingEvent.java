@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.events;
+package fr.utbm.to52.smarthome.controller.events;
 
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.services.com.MQTT;
