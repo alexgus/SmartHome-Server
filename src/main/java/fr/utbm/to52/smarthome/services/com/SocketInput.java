@@ -96,6 +96,11 @@ public class SocketInput implements Runnable{
 				}
 			}
 		}
+		try {
+			this.server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
