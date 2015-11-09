@@ -5,6 +5,8 @@ package fr.utbm.to52.smarthome.services;
 
 import fr.utbm.to52.smarthome.controller.Conf;
 
+// TODO add dependencies to other services
+
 /**
  * @author Alexandre Guyon
  *
