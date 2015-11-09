@@ -3,6 +3,9 @@
  */
 package fr.utbm.to52.smarthome.services.clock;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.cronTask.CronCleaner;
 import fr.utbm.to52.smarthome.controller.cronTask.DateController;
@@ -18,6 +21,10 @@ import it.sauronsoftware.cron4j.Scheduler;
  */
 public class ClockService extends AbstractService {
 	
+	private Timer sched;
+	
+	private TimerTask cleaner;
+	
 	private RingCron cron;
 	
 	private Scheduler mainCron;
@@ -27,6 +34,9 @@ public class ClockService extends AbstractService {
 	 */
 	public ClockService() {
 		this.mainCron = new Scheduler();
+		// TODO see sched deamon
+		this.sched = new Timer();
+		this.cleaner = new CronCleaner(this.cron);
 	}
 	
 	public void setUp(Conf c) {
@@ -40,7 +50,8 @@ public class ClockService extends AbstractService {
 		for(int i = 0 ; i < this.config.getAlarmURL().size() ; ++i)
 			this.mainCron.schedule("* * * * *", new DateController(this.cron, i));
 		
-		this.mainCron.schedule("0 * * * *", new CronCleaner(this.getCron()));
+		// TODO add Constant/config
+		this.sched.scheduleAtFixedRate(this.cleaner, 0, 60 * 1000 * 60);
 	}
 	
 

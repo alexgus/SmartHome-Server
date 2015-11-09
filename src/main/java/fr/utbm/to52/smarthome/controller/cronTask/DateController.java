@@ -5,6 +5,7 @@ package fr.utbm.to52.smarthome.controller.cronTask;
 
 import java.net.URL;
 import java.util.Calendar;
+import java.util.TimerTask;
 
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Controller;
@@ -15,11 +16,13 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 
+// TODO Delete cron. Re-write cron to encapsulate Timer instead of cron 
+
 /**
  * 
  * @author Alexandre Guyon
  */
-public class DateController implements Runnable {
+public class DateController extends TimerTask {
 
 	private ICal c;
 	
