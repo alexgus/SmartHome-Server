@@ -7,8 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import fr.utbm.to52.smarthome.controller.Conf;
-import fr.utbm.to52.smarthome.controller.cronTask.CronCleaner;
-import fr.utbm.to52.smarthome.controller.cronTask.DateController;
+import fr.utbm.to52.smarthome.controller.periodicTask.CronCleaner;
+import fr.utbm.to52.smarthome.controller.periodicTask.DateController;
 import fr.utbm.to52.smarthome.model.cron.JavaCron;
 import fr.utbm.to52.smarthome.model.cron.RingCron;
 import fr.utbm.to52.smarthome.model.cron.SystemCron;

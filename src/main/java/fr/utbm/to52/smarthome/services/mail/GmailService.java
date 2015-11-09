@@ -9,7 +9,7 @@ import java.util.Timer;
 import com.google.api.services.gmail.GmailScopes;
 
 import fr.utbm.to52.smarthome.controller.Conf;
-import fr.utbm.to52.smarthome.controller.cronTask.MailCheck;
+import fr.utbm.to52.smarthome.controller.periodicTask.MailCheck;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
 

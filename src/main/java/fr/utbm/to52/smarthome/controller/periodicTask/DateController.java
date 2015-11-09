@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller.cronTask;
+package fr.utbm.to52.smarthome.controller.periodicTask;
 
 import java.net.URL;
 import java.util.Calendar;
