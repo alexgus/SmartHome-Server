@@ -30,6 +30,8 @@ public class MQTTService extends AbstractService {
 		if(this.mqtt == null)
 			this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
 		this.mqtt.connect();
+		
+		this.mqtt.subscribe(this.config.getMQTTRingTopic());
 	}
 
 	@Override
