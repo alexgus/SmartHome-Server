@@ -9,8 +9,6 @@ import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
 import fr.utbm.to52.smarthome.controller.events.QuitEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
-import fr.utbm.to52.smarthome.repository.DAO;
-import fr.utbm.to52.smarthome.repository.NoteDAO;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
@@ -49,8 +47,6 @@ public class Controller extends AbstractService{
 	
 	private List<Service> lService;
 	
-	private List<DAO<?>> lDAO;
-	
 	// Services
 	
 	private MQTTService MQTT;
@@ -63,16 +59,11 @@ public class Controller extends AbstractService{
 	
 	private HibernateService hbm;
 	
-	// DAO
-	
-	private NoteDAO noteDao;
-	
 	private Controller(){
 		
 		this.cmdHandler = new CommandHandlerImpl();
 		
 		this.lService = new ArrayList<>();
-		this.lDAO = new ArrayList<>();
 		
 		this.MQTT = new MQTTService(this.cmdHandler);
 		this.lService.add(this.MQTT);
@@ -88,9 +79,6 @@ public class Controller extends AbstractService{
 		
 		this.hbm = new HibernateService();
 		this.lService.add(this.hbm);
-		
-		this.noteDao = new NoteDAO();
-		this.lDAO.add(this.noteDao);
 	}
 
 	@Override
@@ -98,10 +86,6 @@ public class Controller extends AbstractService{
 		for (Service service : this.lService) {
 			service.setUp(this.config);
 			service.start();
-		}
-		
-		for (DAO<?> dao : this.lDAO) {
-			dao.setUp(this.hbm.getHbm());
 		}
 		
 		this.enableEvent();
@@ -113,7 +97,7 @@ public class Controller extends AbstractService{
 		this.cmdHandler.setRingEventController(new RingEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
 		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddNote(new AddNoteEvent(this.hbm.getHbm(), this.noteDao));
+		this.cmdHandler.setAddNote(new AddNoteEvent(this.hbm.getHbm(), this.hbm.getNoteDao()));
 	}
 	
 	@Override
