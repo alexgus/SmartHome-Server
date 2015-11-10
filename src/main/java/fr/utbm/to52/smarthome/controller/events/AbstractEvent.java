@@ -34,7 +34,7 @@ public abstract class AbstractEvent implements Event {
 	 * @param c Class event
 	 * @param payload Payload to store
 	 */
-	protected void registerEvent(Class c, Object payload){
+	protected void registerEvent(Class<?> c, Object payload){
 		StorableEvent s = new StorableEvent();
 		s.setDate(new Date());
 		s.setEventName(c.getName());

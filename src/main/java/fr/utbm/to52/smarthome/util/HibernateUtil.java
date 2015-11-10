@@ -15,7 +15,6 @@ import fr.utbm.to52.smarthome.model.calendar.DateCalendar;
 import fr.utbm.to52.smarthome.model.calendar.Event;
 import fr.utbm.to52.smarthome.model.location.Location;
 import fr.utbm.to52.smarthome.model.note.Note;
-import fr.utbm.to52.smarthome.model.note.Tag;
 import fr.utbm.to52.smarthome.model.task.Task;
 
 /**
@@ -40,7 +39,6 @@ public class HibernateUtil {
         	
         	cfg.addAnnotatedClass(Note.class)
     			.addAnnotatedClass(Location.class)
-        		.addAnnotatedClass(Tag.class)
         		.addAnnotatedClass(Event.class)
         		.addAnnotatedClass(Task.class)
         		.addAnnotatedClass(StorableEvent.class);
@@ -81,10 +79,9 @@ public class HibernateUtil {
 	 */
     @SuppressWarnings("unused")
 	public static void main(String[] args){
-    	Tag t = new Tag("testTag");
     	
     	Note n = new Note("coucou");
-    	n.setTag(t);
+    	n.setTag("testTag");
     	
     	Location l = new Location();
 		l.setLoc("Belfort");

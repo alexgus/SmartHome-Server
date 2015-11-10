@@ -63,6 +63,8 @@ public class Conf {
 	
 	private String commandAddRing;
 	
+	private String commandAddNote;
+	
 	private String cronSource;
 	
 	private String cronCommand;
@@ -113,6 +115,7 @@ public class Conf {
 		this.setCommandQuit(Command.getString("quitAction"));
 		this.setCommandRing(Command.getString("ringAction"));
 		this.setCommandAddRing(Command.getString("addRingAction"));
+		this.setCommandAddNote(Command.getString("addNoteAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronSource(cron.getString("source"));
@@ -430,5 +433,20 @@ public class Conf {
 	public void setGoogleScope(String googleScope) {
 		this.googleScope = googleScope;
 	}
+
+	/**
+	 * @return the commandAddNote
+	 */
+	public String getCommandAddNote() {
+		return this.commandAddNote;
+	}
+
+	/**
+	 * @param commandAddNote the commandAddNote to set
+	 */
+	public void setCommandAddNote(String commandAddNote) {
+		this.commandAddNote = commandAddNote;
+	}
+	
 	
 }

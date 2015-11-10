@@ -25,6 +25,8 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	
 	private Event quitEvent;
 	
+	private Event addNote;
+	
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
@@ -40,6 +42,9 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
+		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddNote())){
+			if(this.getAddNote() != null)
+				this.getAddNote().inform(cmd);
 		}else{
 			this.noSuchCommand.inform(cmd);
 		}
@@ -134,6 +139,20 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	 */
 	public void setNoSuchCommand(Event noSuchCommand) {
 		this.noSuchCommand = noSuchCommand;
+	}
+
+	/**
+	 * @return the addNote
+	 */
+	public Event getAddNote() {
+		return this.addNote;
+	}
+
+	/**
+	 * @param addNote the addNote to set
+	 */
+	public void setAddNote(Event addNote) {
+		this.addNote = addNote;
 	}
 
 }

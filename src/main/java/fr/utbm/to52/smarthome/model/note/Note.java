@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -34,8 +33,7 @@ public class Note {
 	
 	private Date date;
 
-	@ManyToOne
-	private Tag tag;
+	private String tag;
 
 	private String note;
 
@@ -43,7 +41,7 @@ public class Note {
 	 * Default constructor
 	 */
 	public Note(){
-		
+		this.date = new Date();
 	}
 	
 	/**
@@ -80,14 +78,14 @@ public class Note {
 	/**
 	 * @return the tag
 	 */
-	public Tag getTag() {
+	public String getTag() {
 		return this.tag;
 	}
 
 	/**
 	 * @param tag the tag to set
 	 */
-	public void setTag(Tag tag) {
+	public void setTag(String tag) {
 		this.tag = tag;
 	}
 
