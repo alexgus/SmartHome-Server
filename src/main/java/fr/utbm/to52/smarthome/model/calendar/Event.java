@@ -44,13 +44,6 @@ public class Event {
 	@OneToOne
 	@Type(type = "java.lang.String")
 	private Location loc;
-	
-	/**
-	 * 
-	 */
-	public Event() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * @return the begin

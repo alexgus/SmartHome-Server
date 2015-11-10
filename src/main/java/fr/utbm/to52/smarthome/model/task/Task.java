@@ -20,14 +20,6 @@ public class Task extends Event {
 	
 	@OneToOne
 	private Note note;
-	
-	
-	/**
-	 * 
-	 */
-	public Task() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * @return the note
