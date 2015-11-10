@@ -13,7 +13,7 @@ import fr.utbm.to52.smarthome.repository.DAO;
  * @author Alexandre Guyon
  *
  */
-public class AddNote extends AbstractEvent { // FIXME Addnote specific event (uses of DAO)
+public class AddNoteEvent extends AbstractEvent { // FIXME Addnote specific event (uses of DAO)
 
 	private DAO n;
 	
@@ -21,7 +21,7 @@ public class AddNote extends AbstractEvent { // FIXME Addnote specific event (us
 	 * @param s {@link AbstractEvent}
 	 * @param d DAO to addnote
 	 */
-	public AddNote(Session s, DAO<?> d) {
+	public AddNoteEvent(Session s, DAO<?> d) {
 		super(s);
 		this.n = d;
 	}

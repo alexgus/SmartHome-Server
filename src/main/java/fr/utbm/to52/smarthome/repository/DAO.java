@@ -10,7 +10,7 @@ import org.hibernate.Session;
  * @author Alexandre Guyon
  * @param <D> Data to save
  */
-public interface DAO<D> {
+public interface DAO<D>{
 
 	/**
 	 * @param data Save data D

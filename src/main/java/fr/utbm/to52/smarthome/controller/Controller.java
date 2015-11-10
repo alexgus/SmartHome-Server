@@ -3,7 +3,7 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.utbm.to52.smarthome.controller.events.AddNote;
+import fr.utbm.to52.smarthome.controller.events.AddNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
@@ -94,7 +94,7 @@ public class Controller extends AbstractService{
 	}
 
 	@Override
-	public void start(){ // FIXME DAO is a specific service
+	public void start(){ // FIXME DAO is a specific service of hibernate
 		for (Service service : this.lService) {
 			service.setUp(this.config);
 			service.start();
@@ -113,7 +113,7 @@ public class Controller extends AbstractService{
 		this.cmdHandler.setRingEventController(new RingEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
 		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddNote(new AddNote(this.hbm.getHbm(), this.noteDao));
+		this.cmdHandler.setAddNote(new AddNoteEvent(this.hbm.getHbm(), this.noteDao));
 	}
 	
 	@Override
