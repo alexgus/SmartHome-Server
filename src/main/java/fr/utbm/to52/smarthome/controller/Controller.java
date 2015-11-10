@@ -5,6 +5,8 @@ import java.util.List;
 
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
+import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
+import fr.utbm.to52.smarthome.controller.events.QuitEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.Service;
@@ -88,6 +90,8 @@ public class Controller extends AbstractService{
 	}
 	
 	private void enableEvent(){
+		this.cmdHandler.setQuitEvent(new QuitEvent(this.hbm.getHbm()));
+		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.hbm.getHbm()));
 		this.cmdHandler.setRingEventController(new RingEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
 		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));

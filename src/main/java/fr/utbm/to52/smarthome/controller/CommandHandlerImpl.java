@@ -15,11 +15,15 @@ import fr.utbm.to52.smarthome.controller.events.Event;
  */
 public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 
+	private Event noSuchCommand;
+	
 	private Event ringEvent;
 	
 	private Event addRingEvent;
 	
 	private Event lightEvent;
+	
+	private Event quitEvent;
 	
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
@@ -32,12 +36,12 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 			if(this.getLightEvent() != null)
 				this.getLightEvent().inform(null);
 		}else if(cmd.equals(Controller.getInstance().getConfig().getCommandQuit())){
-			Controller.getInstance().stop();
+			this.quitEvent.inform(null);
 		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
 		}else{
-			System.out.println("unhandled command : " + cmd);
+			this.noSuchCommand.inform(cmd);
 		}
 	}
 
@@ -102,6 +106,34 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	 */
 	public void setLightEvent(Event lightEvent) {
 		this.lightEvent = lightEvent;
+	}
+
+	/**
+	 * @return the quitEvent
+	 */
+	public Event getQuitEvent() {
+		return this.quitEvent;
+	}
+
+	/**
+	 * @param quitEvent the quitEvent to set
+	 */
+	public void setQuitEvent(Event quitEvent) {
+		this.quitEvent = quitEvent;
+	}
+
+	/**
+	 * @return the noSuchCommand
+	 */
+	public Event getNoSuchCommand() {
+		return this.noSuchCommand;
+	}
+
+	/**
+	 * @param noSuchCommand the noSuchCommand to set
+	 */
+	public void setNoSuchCommand(Event noSuchCommand) {
+		this.noSuchCommand = noSuchCommand;
 	}
 
 }
