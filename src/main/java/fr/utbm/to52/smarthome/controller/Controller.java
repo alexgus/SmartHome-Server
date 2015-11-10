@@ -3,8 +3,6 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
-
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
@@ -13,6 +11,7 @@ import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
 import fr.utbm.to52.smarthome.services.com.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
+import fr.utbm.to52.smarthome.services.hibernate.HibernateService;
 import fr.utbm.to52.smarthome.services.mail.GmailService;
 
 
@@ -43,8 +42,6 @@ public class Controller extends AbstractService{
 
 	private CommandHandlerImpl cmdHandler;
 	
-	private Session hbmSess;
-	
 	private List<Service> lService;
 	
 	// Services
@@ -57,9 +54,10 @@ public class Controller extends AbstractService{
 	
 	private GmailService mail;
 	
-	
+	private HibernateService hbm;
 	
 	private Controller(){
+		
 		this.cmdHandler = new CommandHandlerImpl();
 		
 		this.lService = new ArrayList<>();
@@ -75,6 +73,9 @@ public class Controller extends AbstractService{
 		
 		this.mail = new GmailService();
 		this.lService.add(this.mail);
+		
+		this.hbm = new HibernateService();
+		this.lService.add(this.hbm);
 	}
 
 	@Override
@@ -83,14 +84,13 @@ public class Controller extends AbstractService{
 			service.setUp(this.config);
 			service.start();
 		}
-		
 		this.enableEvent();
 	}
 	
 	private void enableEvent(){
-		this.cmdHandler.setRingEventController(new RingEvent(this.hbmSess, this.MQTT.getMqtt()));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbmSess, this.clock.getCron()));
-		this.cmdHandler.setLightEvent(new LightEvent(this.hbmSess, this.MQTT.getMqtt()));
+		this.cmdHandler.setRingEventController(new RingEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
+		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
 	}
 	
 	@Override
