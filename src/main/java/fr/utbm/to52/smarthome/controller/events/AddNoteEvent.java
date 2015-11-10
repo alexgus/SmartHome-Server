@@ -13,17 +13,14 @@ import fr.utbm.to52.smarthome.repository.DAO;
  * @author Alexandre Guyon
  *
  */
-public class AddNoteEvent extends AbstractEvent { // FIXME Addnote specific event (uses of DAO)
-
-	private DAO n;
+public class AddNoteEvent extends AbstractDAOEvent<Note> {
 	
 	/**
 	 * @param s {@link AbstractEvent}
-	 * @param d DAO to addnote
+	 * @param d {@link AbstractDAOEvent}
 	 */
-	public AddNoteEvent(Session s, DAO<?> d) {
-		super(s);
-		this.n = d;
+	public AddNoteEvent(Session s, DAO<Note> d) {
+		super(s,d);
 	}
 
 	/* (non-Javadoc)
@@ -42,7 +39,7 @@ public class AddNoteEvent extends AbstractEvent { // FIXME Addnote specific even
 		n1.setNote(j.getString("note"));
 		n1.setTag(j.getString("tag"));
 		
-		this.n.save(n1);
+		this.dao.save(n1);
 	}
 
 }

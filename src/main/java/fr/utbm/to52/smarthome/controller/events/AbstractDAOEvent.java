@@ -1,0 +1,31 @@
+/**
+ * 
+ */
+package fr.utbm.to52.smarthome.controller.events;
+
+import org.hibernate.Session;
+
+import fr.utbm.to52.smarthome.repository.DAO;
+
+/**
+ * @author Alexandre Guyon
+ * @param <N> To insert
+ *
+ */
+public abstract class AbstractDAOEvent<N> extends AbstractEvent {
+
+	/**
+	 * Using this DAO;
+	 */
+	protected DAO<N> dao;
+	
+	/**
+	 * @param s {@link AbstractEvent}
+	 * @param d Corresponding DAO
+	 */
+	public AbstractDAOEvent(Session s, DAO<N> d) {
+		super(s);
+		this.dao = d;
+	}
+
+}
