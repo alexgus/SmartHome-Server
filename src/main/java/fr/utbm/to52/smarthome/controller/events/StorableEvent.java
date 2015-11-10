@@ -14,6 +14,8 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.GenericGenerator;
 
+// TODO add client id / source of the event, message
+
 /**
  * @author Alexandre Guyon
  *
