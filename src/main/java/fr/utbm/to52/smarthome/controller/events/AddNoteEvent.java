@@ -23,23 +23,12 @@ public class AddNoteEvent extends AbstractDAOEvent<Note> {
 		super(s,d);
 	}
 
-	/* (non-Javadoc)
-	 * @see fr.utbm.to52.smarthome.controller.events.AbstractEvent#inform(java.lang.Object)
-	 */
 	@Override
-	public void inform(Object o) {
-		this.registerEvent(getClass(), o);
-		
-		String cmdline = (String) o;
-		String json = cmdline.substring(cmdline.indexOf(" "));
-		
-		JSONObject j = new JSONObject(json);
-
+	public void informCmd(JSONObject data) {
 		Note n1 = new Note();
-		n1.setNote(j.getString("note"));
-		n1.setTag(j.getString("tag"));
+		n1.setNote(data.getString("note"));
+		n1.setTag(data.getString("tag"));
 		
 		this.dao.save(n1);
 	}
-
 }
