@@ -3,6 +3,8 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
+import org.hibernate.Session;
+
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
@@ -12,15 +14,17 @@ import fr.utbm.to52.smarthome.services.com.MQTT;
  * @author Alexandre Guyon
  *
  */
-public class RingEvent implements Event {
+public class RingEvent extends AbstractEvent{
 
 	private MQTT connection;  
 	
 	/**
 	 * Default constructor. Initialize with valid MQTT connection
+	 * @param s Hibernate session
 	 * @param c A valid MQTT connection
 	 */
-	public RingEvent(MQTT c) {
+	public RingEvent(Session s, MQTT c) {
+		super(s);
 		this.connection = c;
 	}
 	
@@ -30,6 +34,8 @@ public class RingEvent implements Event {
 	 */
 	@Override
 	public void inform(Object o) {
+		this.registerEvent(getClass(), o);
+		
         this.connection.publish(Controller.getInstance().getConfig().getMQTTRingTopic(), 
         		Controller.getInstance().getConfig().getMQTTRingPayload());
 	}

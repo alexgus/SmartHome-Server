@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.model.note;
+package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Date;
 
@@ -9,7 +9,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -20,92 +19,34 @@ import org.hibernate.annotations.GenericGenerator;
  *
  */
 @Entity
-@Table(name="Note")
-public class Note {
-	
+@Table(name="Event")
+public class StorableEvent {
+
 	@Id @GeneratedValue(generator = "uuid")
 	@GenericGenerator(name="uuid", strategy="uuid2")
 	private String id;
-
+	
     @Version
     @GeneratedValue
     @Column(name="_rev")
     private String revision;
-	
-	private Date date;
+    
+    /**
+     * Date of the creation of the event
+     */
+    protected Date date;
+    
+    /**
+     * Event name
+     */
+    protected String eventName;
+    
+    /**
+     * Payload of the event
+     */
+    protected String payload; 
 
-	@ManyToOne
-	private Tag tag;
-
-	private String note;
-
-	/**
-	 * Default constructor
-	 */
-	public Note(){
-		
-	}
-	
-	/**
-	 * @param note The note to create
-	 */
-	public Note(String note) {
-		this.note = note;
-		this.date = new Date();
-	}
-
-	/**
-	 * @param d The date to create the note
-	 * @param s The string in the note
-	 */
-	public Note(Date d, String s){
-		this.date = d;
-		this.note = s;
-	}
-
-	/**
-	 * @return the date
-	 */
-	public Date getDate() {
-		return this.date;
-	}
-
-	/**
-	 * @param date the date to set
-	 */
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	/**
-	 * @return the tag
-	 */
-	public Tag getTag() {
-		return this.tag;
-	}
-
-	/**
-	 * @param tag the tag to set
-	 */
-	public void setTag(Tag tag) {
-		this.tag = tag;
-	}
-
-	/**
-	 * @return the note
-	 */
-	public String getNote() {
-		return this.note;
-	}
-
-	/**
-	 * @param note the note to set
-	 */
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	/**
+    /**
 	 * @return the id
 	 */
 	public String getId() {
@@ -133,6 +74,48 @@ public class Note {
 		this.revision = revision;
 	}
 
+	/**
+	 * @return the eventName
+	 */
+	public String getEventName() {
+		return this.eventName;
+	}
+
+	/**
+	 * @param eventName the eventName to set
+	 */
+	public void setEventName(String eventName) {
+		this.eventName = eventName;
+	}
+
+	/**
+	 * @return the date
+	 */
+	public Date getDate() {
+		return this.date;
+	}
+
+	/**
+	 * @param date the date to set
+	 */
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	/**
+	 * @return the payload
+	 */
+	public String getPayload() {
+		return this.payload;
+	}
+
+	/**
+	 * @param payload the payload to set
+	 */
+	public void setPayload(String payload) {
+		this.payload = payload;
+	}
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -141,10 +124,10 @@ public class Note {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
+		result = prime * result + ((this.eventName == null) ? 0 : this.eventName.hashCode());
 		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		result = prime * result + ((this.note == null) ? 0 : this.note.hashCode());
+		result = prime * result + ((this.payload == null) ? 0 : this.payload.hashCode());
 		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
-		result = prime * result + ((this.tag == null) ? 0 : this.tag.hashCode());
 		return result;
 	}
 
@@ -159,31 +142,31 @@ public class Note {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Note other = (Note) obj;
+		StorableEvent other = (StorableEvent) obj;
 		if (this.date == null) {
 			if (other.date != null)
 				return false;
 		} else if (!this.date.equals(other.date))
+			return false;
+		if (this.eventName == null) {
+			if (other.eventName != null)
+				return false;
+		} else if (!this.eventName.equals(other.eventName))
 			return false;
 		if (this.id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!this.id.equals(other.id))
 			return false;
-		if (this.note == null) {
-			if (other.note != null)
+		if (this.payload == null) {
+			if (other.payload != null)
 				return false;
-		} else if (!this.note.equals(other.note))
+		} else if (!this.payload.equals(other.payload))
 			return false;
 		if (this.revision == null) {
 			if (other.revision != null)
 				return false;
 		} else if (!this.revision.equals(other.revision))
-			return false;
-		if (this.tag == null) {
-			if (other.tag != null)
-				return false;
-		} else if (!this.tag.equals(other.tag))
 			return false;
 		return true;
 	}
@@ -193,7 +176,8 @@ public class Note {
 	 */
 	@Override
 	public String toString() {
-		return "Note [id=" + this.id + ", revision=" + this.revision + ", date=" + this.date + ", tag=" + this.tag + ", note=" + this.note + "]";
+		return "StorableEvent [id=" + this.id + ", revision=" + this.revision + ", date=" + this.date + ", eventName=" + this.eventName
+				+ ", payload=" + this.payload + "]";
 	}
 
 }

@@ -3,19 +3,24 @@
  */
 package fr.utbm.to52.smarthome.model.task;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import fr.utbm.to52.smarthome.model.calendar.Event;
-import fr.utbm.to52.smarthome.model.location.Location;
 import fr.utbm.to52.smarthome.model.note.Note;
 
 /**
  * @author Alexandre Guyon
  *
  */
+@Entity
+@Table(name="Task")
 public class Task extends Event {
-
+	
+	@OneToOne
 	private Note note;
 	
-	private Location loc;
 	
 	/**
 	 * 
@@ -38,19 +43,6 @@ public class Task extends Event {
 		this.note = note;
 	}
 
-	/**
-	 * @return the loc
-	 */
-	public Location getLoc() {
-		return this.loc;
-	}
-
-	/**
-	 * @param loc the loc to set
-	 */
-	public void setLoc(Location loc) {
-		this.loc = loc;
-	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -59,7 +51,6 @@ public class Task extends Event {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.loc == null) ? 0 : this.loc.hashCode());
 		result = prime * result + ((this.note == null) ? 0 : this.note.hashCode());
 		return result;
 	}
@@ -76,11 +67,6 @@ public class Task extends Event {
 		if (getClass() != obj.getClass())
 			return false;
 		Task other = (Task) obj;
-		if (this.loc == null) {
-			if (other.loc != null)
-				return false;
-		} else if (!this.loc.equals(other.loc))
-			return false;
 		if (this.note == null) {
 			if (other.note != null)
 				return false;
@@ -94,7 +80,7 @@ public class Task extends Event {
 	 */
 	@Override
 	public String toString() {
-		return "Task [note=" + this.note + ", loc=" + this.loc + "]";
+		return "Task [event " + super.toString() + ", note=" + this.note + "]";
 	}
 
 }

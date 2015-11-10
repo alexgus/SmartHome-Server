@@ -14,7 +14,6 @@ import fr.utbm.to52.smarthome.services.clock.ClockService;
 import fr.utbm.to52.smarthome.services.com.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
 import fr.utbm.to52.smarthome.services.mail.GmailService;
-import fr.utbm.to52.smarthome.util.HibernateUtil;
 
 
 /**
@@ -58,9 +57,9 @@ public class Controller extends AbstractService{
 	
 	private GmailService mail;
 	
-	private Controller(){	
-		this.hbmSess = HibernateUtil.getSessionFactory().openSession();
-		
+	
+	
+	private Controller(){
 		this.cmdHandler = new CommandHandlerImpl();
 		
 		this.lService = new ArrayList<>();
@@ -89,9 +88,9 @@ public class Controller extends AbstractService{
 	}
 	
 	private void enableEvent(){
-		this.cmdHandler.setRingEventController(new RingEvent(this.MQTT.getMqtt()));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.clock.getCron()));
-		this.cmdHandler.setLightEvent(new LightEvent(this.MQTT.getMqtt()));
+		this.cmdHandler.setRingEventController(new RingEvent(this.hbmSess, this.MQTT.getMqtt()));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbmSess, this.clock.getCron()));
+		this.cmdHandler.setLightEvent(new LightEvent(this.hbmSess, this.MQTT.getMqtt()));
 	}
 	
 	@Override

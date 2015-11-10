@@ -6,6 +6,8 @@ package fr.utbm.to52.smarthome.controller.events;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.hibernate.Session;
+
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
@@ -13,7 +15,7 @@ import fr.utbm.to52.smarthome.services.com.MQTT;
  * @author Alexandre Guyon
  *
  */
-public class LightEvent implements Event {
+public class LightEvent extends AbstractEvent {
 
 	private MQTT connection; 
 
@@ -27,9 +29,11 @@ public class LightEvent implements Event {
 	
 	/**
 	 * Create lightEvent for increasing intensity of the light smoothly 
+	 * @param s Hibernate session
 	 * @param c The MQTT connection to use
 	 */
-	public LightEvent(MQTT c) {
+	public LightEvent(Session s, MQTT c) {
+		super(s);
 		this.connection = c;
 	}
 
@@ -38,6 +42,8 @@ public class LightEvent implements Event {
 	 */
 	@Override
 	public void inform(Object o) {
+		this.registerEvent(getClass(), o);
+		
         TimerTask lightIncrease = new TimerTask() {
 			
 			@Override
