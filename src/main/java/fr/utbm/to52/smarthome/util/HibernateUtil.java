@@ -4,8 +4,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.transaction.TransactionManager;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.ogm.OgmSession;
+import org.hibernate.ogm.OgmSessionFactory;
 import org.hibernate.ogm.cfg.OgmConfiguration;
 import org.jboss.jandex.Main;
 
@@ -25,13 +25,12 @@ import fr.utbm.to52.smarthome.model.task.Task;
  */
 public class HibernateUtil {
     
-	private static final SessionFactory sessionFactory = buildSessionFactory();
-    
+	private static final OgmSessionFactory sessionFactory = buildSessionFactory();
     
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("smarthome-persistance");
     
     @SuppressWarnings("deprecation")
-	private static SessionFactory buildSessionFactory() {
+	private static OgmSessionFactory buildSessionFactory() {
         try {
             // Create the SessionFactory from hibernate.cfg.xml
         	OgmConfiguration cfg = new OgmConfiguration();
@@ -51,7 +50,7 @@ public class HibernateUtil {
     /**
      * @return Session factiry to create or get back hibernate session
      */
-    public static SessionFactory getSessionFactory() {
+    public static OgmSessionFactory getSessionFactory() {
         return sessionFactory;
     }
     
@@ -93,7 +92,7 @@ public class HibernateUtil {
 		tk.setLoc(l);
 		tk.setNote(n);
 		
-		Session hbmSess = HibernateUtil.getSessionFactory().openSession();
+		OgmSession hbmSess = HibernateUtil.getSessionFactory().openSession();
 		
 		AddRingEvent a = new AddRingEvent(hbmSess, null);
 		try{

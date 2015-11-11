@@ -5,6 +5,7 @@ import java.util.List;
 
 import fr.utbm.to52.smarthome.controller.events.AddNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
+import fr.utbm.to52.smarthome.controller.events.GetNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
 import fr.utbm.to52.smarthome.controller.events.QuitEvent;
@@ -74,8 +75,8 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		this.mail = new GmailService();
-		this.lService.add(this.mail);
+		/*this.mail = new GmailService();
+		this.lService.add(this.mail);*/
 		
 		this.hbm = new HibernateService();
 		this.lService.add(this.hbm);
@@ -98,6 +99,7 @@ public class Controller extends AbstractService{
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
 		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddNote(new AddNoteEvent(this.hbm.getHbm(), this.hbm.getNoteDao()));
+		this.cmdHandler.setGetNote(new GetNoteEvent(this.hbm.getHbm(), this.hbm.getNoteDao()));
 	}
 	
 	@Override

@@ -6,7 +6,7 @@ package fr.utbm.to52.smarthome.services.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Session;
+import org.hibernate.ogm.OgmSession;
 
 import fr.utbm.to52.smarthome.repository.DAO;
 import fr.utbm.to52.smarthome.repository.NoteDAO;
@@ -20,7 +20,7 @@ import fr.utbm.to52.smarthome.util.HibernateUtil;
  */
 public class HibernateService extends AbstractService {
 
-	private Session hbm;
+	private OgmSession hbm;
 	
 	private List<DAO<?>> lDAO = new ArrayList<>();
 	
@@ -54,14 +54,14 @@ public class HibernateService extends AbstractService {
 	/**
 	 * @return the hbm
 	 */
-	public Session getHbm() {
+	public OgmSession getHbm() {
 		return this.hbm;
 	}
 
 	/**
 	 * @param hbm the hbm to set
 	 */
-	public void setHbm(Session hbm) {
+	public void setHbm(OgmSession hbm) {
 		this.hbm = hbm;
 	}
 

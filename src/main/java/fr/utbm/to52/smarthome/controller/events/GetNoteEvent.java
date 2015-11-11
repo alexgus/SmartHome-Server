@@ -3,6 +3,8 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
+import java.util.List;
+
 import org.hibernate.ogm.OgmSession;
 import org.json.JSONObject;
 
@@ -13,22 +15,27 @@ import fr.utbm.to52.smarthome.repository.DAO;
  * @author Alexandre Guyon
  *
  */
-public class AddNoteEvent extends AbstractDAOEvent<Note> {
-	
+public class GetNoteEvent extends AbstractDAOEvent<Note> {
+
 	/**
 	 * @param s {@link AbstractEvent}
 	 * @param d {@link AbstractDAOEvent}
 	 */
-	public AddNoteEvent(OgmSession s, DAO<Note> d) {
+	public GetNoteEvent(OgmSession s, DAO<Note> d) {
 		super(s,d);
 	}
-
+	
 	@Override
-	public void informCmd(JSONObject data) {
-		Note n1 = new Note();
-		n1.setNote(data.getString("note"));
-		n1.setTag(data.getString("tag"));
+	protected void informCmd(JSONObject data) {
+		List<Note> ln = this.dao.getData();
 		
-		this.dao.save(n1);
+		System.out.println(data);
+		System.out.println(ln);
+		// TODO Get note
+		// if args
+			// Launch correct methods from DAO
+		
 	}
+
+
 }

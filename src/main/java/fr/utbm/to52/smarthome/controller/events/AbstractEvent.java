@@ -5,7 +5,7 @@ package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Date;
 
-import org.hibernate.Session;
+import org.hibernate.ogm.OgmSession;
 
 /**
  * @author Alexandre Guyon
@@ -13,13 +13,13 @@ import org.hibernate.Session;
  */
 public abstract class AbstractEvent implements Event {
 	
-	private Session hbm;
+	private OgmSession hbm;
 	
 	/**
 	 * Set the hibernate session to the event
 	 * @param s Event to session
 	 */
-	public AbstractEvent(Session s) {
+	public AbstractEvent(OgmSession s) {
 		this.hbm = s;
 	}
     

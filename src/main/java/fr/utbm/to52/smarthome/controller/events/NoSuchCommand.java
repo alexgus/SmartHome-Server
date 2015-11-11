@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.Session;
+import org.hibernate.ogm.OgmSession;
 
 /**
  * @author Alexandre Guyon
@@ -14,7 +14,7 @@ public class NoSuchCommand extends AbstractEvent {
 	/**
 	 * @param s {@link AbstractEvent}
 	 */
-	public NoSuchCommand(Session s) {
+	public NoSuchCommand(OgmSession s) {
 		super(s);
 	}
 
