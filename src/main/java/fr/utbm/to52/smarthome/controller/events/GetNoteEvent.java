@@ -27,12 +27,10 @@ public class GetNoteEvent extends AbstractDAOEvent<Note> {
 	
 	@Override
 	protected void informCmd(JSONObject data) {
-		List<Note> ln = this.dao.getData();
-		
-		System.out.println(data);
-		System.out.println(ln);
-		// TODO Get note
-		// if args
+		if(data.length() == 0){
+			List<Note> ln = this.dao.getData();
+			System.out.println(ln);
+		}//else
 			// Launch correct methods from DAO
 		
 	}
