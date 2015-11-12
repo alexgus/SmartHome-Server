@@ -43,5 +43,12 @@ public abstract class AbstractEvent implements Event {
 		
 		this.couch.save(s);		
 	}
+	
+	/**
+	 * @return Return couchdb client
+	 */
+	protected CouchDbClient getCouchDb() {
+		return this.couch;
+	}
 
 }

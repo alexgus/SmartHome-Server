@@ -27,11 +27,22 @@ public interface DAO<D>{
 	public List<D> getData();
 	
 	/**
+	 * @return The raw data from the database
+	 */
+	public String getRawData();
+	
+	/**
 	 * Get all the data from this type with this criteria (aspect)
 	 * @param criteria JSON criteria
 	 * @return Collection of data
 	 */
 	public List<D> getData(JSONObject criteria);
+	
+	/**
+	 * @param criteria JSON criteria
+	 * @return Raw data from the database 
+	 */
+	public String getRawData(JSONObject criteria);
 	
 	/**
 	 * Set up access to hibernate session

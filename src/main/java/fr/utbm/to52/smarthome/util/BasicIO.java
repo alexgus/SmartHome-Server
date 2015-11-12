@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * Basic static function for IO
@@ -22,30 +24,63 @@ public class BasicIO {
 	 * @param file The file to read
 	 * @return String of the file
 	 */
+	@SuppressWarnings("resource")
 	public static String readFile(String file){
 		File f = new File(file);
 		String content = "";
-		
+
 		if(f.exists() && f.canRead()){
 			try {
-				@SuppressWarnings("resource")
-				BufferedReader reader = new BufferedReader(new FileReader(f));
-				
-				String line = null;
-				do{
-					line = reader.readLine();
-					if(line != null)
-						content += line;
-				}while(line != null);
-				reader.close();
+				content = readBufferedReader(new BufferedReader(new FileReader(f)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
+		return content;
+	}
+
+	/**
+	 * Read input stream
+	 * @param is The input stream to read
+	 * @return String corresponding to the stream
+	 */
+	public static String readInputStream(InputStream is){
+		return readInputStreamReader(new InputStreamReader(is));
+	}
+	
+	/**
+	 * Read input stream
+	 * @param is The input stream reader to read
+	 * @return String corresponding to the stream
+	 */
+	public static String readInputStreamReader(InputStreamReader is){
+		return readBufferedReader(new BufferedReader(is));
+	}
+
+	/**
+	 * Read buffered reader
+	 * @param reader The buffered reader reader to read
+	 * @return String corresponding to the stream
+	 */
+	public static String readBufferedReader(BufferedReader reader){
+		String content = "";
+		try{
+			String line = null;
+			do{
+				line = reader.readLine();
+				if(line != null)
+					content += line;
+			}while(line != null);
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return content;
 	}
 	
+
+
 	/**
 	 * Write content to a file
 	 * @param path The path to the file
@@ -54,7 +89,7 @@ public class BasicIO {
 	@SuppressWarnings("resource")
 	public static void write(String path, String content){
 		try {
-			
+
 			FileWriter fw = new FileWriter(path);
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(content);
@@ -62,10 +97,10 @@ public class BasicIO {
 			fw.flush();
 			bw.close();
 			fw.close();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

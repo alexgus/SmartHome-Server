@@ -75,8 +75,8 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		/*this.mail = new GmailService();
-		this.lService.add(this.mail);*/
+		this.mail = new GmailService();
+		this.lService.add(this.mail);
 		
 		this.couch = new CouchdbService();
 		this.lService.add(this.couch);
@@ -99,7 +99,7 @@ public class Controller extends AbstractService{
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.couch.getSession(), this.clock.getCron()));
 		this.cmdHandler.setLightEvent(new LightEvent(this.couch.getSession(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddNote(new AddNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
-		this.cmdHandler.setGetNote(new GetNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
+		this.cmdHandler.setGetNote(new GetNoteEvent(this.couch.getSession(), this.couch.getNoteDao(), this.MQTT.getMqtt()));
 	}
 	
 	@Override

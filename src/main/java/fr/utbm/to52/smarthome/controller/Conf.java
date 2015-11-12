@@ -86,7 +86,9 @@ public class Conf {
 	private String googleApiSecret;
 	
 	private String googleScope;
-	
+
+	private String topicAnswerSuffix;
+
 	/**
 	 * Import the default configuration file into this object
 	 */
@@ -114,6 +116,7 @@ public class Conf {
 		this.setServerPort(Server.getInt("port"));
 		
 		JSONObject Command = js.getJSONObject("command");
+		this.setTopicAnswerSuffix("topicAnswerSuffix");
 		this.setCommandQuit(Command.getString("quitAction"));
 		this.setCommandRing(Command.getString("ringAction"));
 		this.setCommandAddRing(Command.getString("addRingAction"));
@@ -463,6 +466,20 @@ public class Conf {
 	 */
 	public void setCommandGetNote(String commandGetNote) {
 		this.commandGetNote = commandGetNote;
+	}
+	
+	/**
+	 * @return the topicAnswerSuffix
+	 */
+	public String getTopicAnswerSuffix() {
+		return this.topicAnswerSuffix;
+	}
+
+	/**
+	 * @param topicAnswerSuffix the topicAnswerSuffix to set
+	 */
+	public void setTopicAnswerSuffix(String topicAnswerSuffix) {
+		this.topicAnswerSuffix = topicAnswerSuffix;
 	}
 	
 	
