@@ -5,15 +5,13 @@ package fr.utbm.to52.smarthome.model.note;
 
 import java.util.Date;
 
+import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
+
 /**
  * @author Alexandre Guyon
  *
  */
-public class Note {
-	
-	private String _id;
-
-    private String _rev;
+public class Note extends StorableEntity{
 	
 	private Date date;
 
@@ -25,6 +23,7 @@ public class Note {
 	 * Default constructor
 	 */
 	public Note(){
+		super(Note.class.getName());
 		this.date = new Date();
 	}
 	
@@ -32,6 +31,7 @@ public class Note {
 	 * @param note The note to create
 	 */
 	public Note(String note) {
+		super(Note.class.getName());
 		this.note = note;
 		this.date = new Date();
 	}
@@ -41,6 +41,7 @@ public class Note {
 	 * @param s The string in the note
 	 */
 	public Note(Date d, String s){
+		super(Note.class.getName());
 		this.date = d;
 		this.note = s;
 	}
@@ -87,34 +88,6 @@ public class Note {
 		this.note = note;
 	}
 
-	/**
-	 * @return the id
-	 */
-	public String getId() {
-		return this._id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(String id) {
-		this._id = id;
-	}
-
-	/**
-	 * @return the revision
-	 */
-	public String getRevision() {
-		return this._rev;
-	}
-
-	/**
-	 * @param revision the revision to set
-	 */
-	public void setRevision(String revision) {
-		this._rev = revision;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -123,9 +96,7 @@ public class Note {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-		result = prime * result + ((this._id == null) ? 0 : this._id.hashCode());
 		result = prime * result + ((this.note == null) ? 0 : this.note.hashCode());
-		result = prime * result + ((this._rev == null) ? 0 : this._rev.hashCode());
 		result = prime * result + ((this.tag == null) ? 0 : this.tag.hashCode());
 		return result;
 	}
@@ -147,20 +118,10 @@ public class Note {
 				return false;
 		} else if (!this.date.equals(other.date))
 			return false;
-		if (this._id == null) {
-			if (other._id != null)
-				return false;
-		} else if (!this._id.equals(other._id))
-			return false;
 		if (this.note == null) {
 			if (other.note != null)
 				return false;
 		} else if (!this.note.equals(other.note))
-			return false;
-		if (this._rev == null) {
-			if (other._rev != null)
-				return false;
-		} else if (!this._rev.equals(other._rev))
 			return false;
 		if (this.tag == null) {
 			if (other.tag != null)
@@ -175,7 +136,7 @@ public class Note {
 	 */
 	@Override
 	public String toString() {
-		return "Note [id=" + this._id + ", revision=" + this._rev + ", date=" + this.date + ", tag=" + this.tag + ", note=" + this.note + "]";
+		return "Note [date=" + this.date + ", tag=" + this.tag + ", note=" + this.note + "]";
 	}
 
 }
