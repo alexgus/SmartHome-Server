@@ -6,8 +6,6 @@ package fr.utbm.to52.smarthome.repository;
 import java.util.List;
 
 import org.json.JSONObject;
-import org.lightcouch.CouchDbDesign;
-import org.lightcouch.DesignDocument;
 
 import fr.utbm.to52.smarthome.model.note.Note;
 
@@ -21,11 +19,7 @@ public class NoteDAO extends AbstractDAO<Note> {
 	
 	public void setUp(org.lightcouch.CouchDbClient s) {
 		super.setUp(s);
-		
-		CouchDbDesign d = s.design();
-		d.synchronizeAllWithDb();
-		DesignDocument ds = d.getFromDesk(NoteDAO.designDoc);
-		s.design().synchronizeWithDb(ds);
+		s.design().synchronizeWithDb(s.design().getFromDesk(NoteDAO.designDoc));
 	}
 	
 	
