@@ -3,6 +3,11 @@
  */
 package fr.utbm.to52.smarthome.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -13,8 +18,10 @@ import fr.utbm.to52.smarthome.controller.events.Event;
  * @author Alexandre Guyon
  *
  */
-public class CommandHandlerImpl implements CommandHandler, MqttCallback {
+public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnable{
 
+	private Collection<String> lCmd = Collections.synchronizedCollection(new ArrayList<String>());
+	
 	private Event noSuchCommand;
 	
 	private Event ringEvent;
@@ -31,11 +38,39 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback {
 	
 	private Event getLogBook;
 	
+	@Override
+	public void run() {
+		List<String> handledCommand = new ArrayList<>();
+		
+		while(true){ // FIXME UGLY loop
+			synchronized (this.lCmd) {
+				for (String cmd : this.lCmd) {
+					this.handleQueuedCmd(new String(cmd));
+					handledCommand.add(cmd);
+				}
+			}
+			
+			for (String cmdOk : handledCommand)
+				this.lCmd.remove(cmdOk);
+			
+			try {
+				Thread.sleep(500); // TODO Add constant
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
 	@Override
-	public void handle(String cmd) {
+	public synchronized void handle(String cmd){
+		this.lCmd.add(cmd);
+	}
+	
+	
+	private void handleQueuedCmd(String cmd) {
 		if(cmd.equals(Controller.getInstance().getConfig().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);

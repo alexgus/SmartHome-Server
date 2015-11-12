@@ -47,6 +47,8 @@ public class Controller extends AbstractService{
 
 	private CommandHandlerImpl cmdHandler;
 	
+	private Thread tCmdhandler;
+	
 	private List<Service> lService;
 	
 	// Services
@@ -64,6 +66,7 @@ public class Controller extends AbstractService{
 	private Controller(){
 		
 		this.cmdHandler = new CommandHandlerImpl();
+		this.tCmdhandler = new Thread(this.cmdHandler);
 		
 		this.lService = new ArrayList<>();
 		
@@ -91,6 +94,7 @@ public class Controller extends AbstractService{
 		}
 		
 		this.enableEvent();
+		this.tCmdhandler.start();
 	}
 	
 	private void enableEvent(){

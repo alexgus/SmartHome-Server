@@ -52,7 +52,7 @@ public class LightEvent extends AbstractEvent {
 				LightEvent.this.setLightIntensity(Math.round(LightEvent.this.getLightIntensity() + LightEvent.this.step));
 			}
 		};
-		this.schedLight.scheduleAtFixedRate(lightIncrease, 0, this.rate);
+		this.schedLight.scheduleAtFixedRate(lightIncrease, 0, this.rate); // FIXME When two call is done quickly --> Crash
 		
 		this.scheduleCancel();
 	}
