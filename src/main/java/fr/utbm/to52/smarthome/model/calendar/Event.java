@@ -4,16 +4,13 @@
 package fr.utbm.to52.smarthome.model.calendar;
 
 import fr.utbm.to52.smarthome.model.location.Location;
+import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
 
 /**
  * @author Alexandre Guyon
  *
  */
-public class Event {
-
-	private String _id;
-	
-    private String _rev;
+public class Event extends StorableEntity{
 	
 	private DateCalendar begin;
 	
@@ -22,6 +19,21 @@ public class Event {
 	private String title;
 
 	private Location loc;
+
+	/**
+	 * Default constructor
+	 */
+	public Event() {
+		super(Event.class.getName());
+	}
+	
+	/**
+	 * {@link StorableEntity}
+	 * @param table {@link StorableEntity}
+	 */
+	public Event(String table){
+		super(table);
+	}
 
 	/**
 	 * @return the begin
@@ -79,46 +91,16 @@ public class Event {
 		this.loc = loc;
 	}
 
-	/**
-	 * @return the id
-	 */
-	public String get_id() {
-		return this._id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void set_id(String id) {
-		this._id = id;
-	}
-
-	/**
-	 * @return the revision
-	 */
-	public String get_rev() {
-		return this._rev;
-	}
-
-	/**
-	 * @param revision the revision to set
-	 */
-	public void set_rev(String revision) {
-		this._rev = revision;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((this.begin == null) ? 0 : this.begin.hashCode());
 		result = prime * result + ((this.end == null) ? 0 : this.end.hashCode());
-		result = prime * result + ((this._id == null) ? 0 : this._id.hashCode());
 		result = prime * result + ((this.loc == null) ? 0 : this.loc.hashCode());
-		result = prime * result + ((this._rev == null) ? 0 : this._rev.hashCode());
 		result = prime * result + ((this.title == null) ? 0 : this.title.hashCode());
 		return result;
 	}
@@ -130,7 +112,7 @@ public class Event {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -145,20 +127,10 @@ public class Event {
 				return false;
 		} else if (!this.end.equals(other.end))
 			return false;
-		if (this._id == null) {
-			if (other._id != null)
-				return false;
-		} else if (!this._id.equals(other._id))
-			return false;
 		if (this.loc == null) {
 			if (other.loc != null)
 				return false;
 		} else if (!this.loc.equals(other.loc))
-			return false;
-		if (this._rev == null) {
-			if (other._rev != null)
-				return false;
-		} else if (!this._rev.equals(other._rev))
 			return false;
 		if (this.title == null) {
 			if (other.title != null)
@@ -173,8 +145,6 @@ public class Event {
 	 */
 	@Override
 	public String toString() {
-		return "Event [id=" + this._id + ", revision=" + this._rev + ", begin=" + this.begin + ", end=" + this.end + ", title=" + this.title
-				+ ", loc=" + this.loc + "]";
+		return "Event [begin=" + this.begin + ", end=" + this.end + ", title=" + this.title + ", loc=" + this.loc + "]";
 	}
-
 }

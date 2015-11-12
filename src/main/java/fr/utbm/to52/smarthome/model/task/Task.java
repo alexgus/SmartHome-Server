@@ -13,6 +13,13 @@ import fr.utbm.to52.smarthome.model.note.Note;
 public class Task extends Event {
 	
 	private Note note;
+	
+	/**
+	 * Default constructor
+	 */
+	public Task() {
+		super(Task.class.getName());
+	}
 
 	/**
 	 * @return the note

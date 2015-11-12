@@ -3,21 +3,21 @@
  */
 package fr.utbm.to52.smarthome.model.location;
 
+import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
+
 /**
  * @author Alexandre Guyon
  *
  */
-public class Location {
-	
-    private String revision;
+public class Location extends StorableEntity{
 	
 	private String loc;
 	
 	/**
-	 * 
+	 * Default constructor
 	 */
 	public Location() {
-		
+		super(Location.class.getName());
 	}
 
 	/**
@@ -34,29 +34,14 @@ public class Location {
 		this.loc = loc;
 	}
 
-	/**
-	 * @return the revision
-	 */
-	public String getRevision() {
-		return this.revision;
-	}
-
-	/**
-	 * @param revision the revision to set
-	 */
-	public void setRevision(String revision) {
-		this.revision = revision;
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((this.loc == null) ? 0 : this.loc.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
 		return result;
 	}
 
@@ -67,7 +52,7 @@ public class Location {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -76,11 +61,6 @@ public class Location {
 			if (other.loc != null)
 				return false;
 		} else if (!this.loc.equals(other.loc))
-			return false;
-		if (this.revision == null) {
-			if (other.revision != null)
-				return false;
-		} else if (!this.revision.equals(other.revision))
 			return false;
 		return true;
 	}
@@ -92,5 +72,4 @@ public class Location {
 	public String toString() {
 		return "Location [loc=" + this.loc + "]";
 	}
-
 }
