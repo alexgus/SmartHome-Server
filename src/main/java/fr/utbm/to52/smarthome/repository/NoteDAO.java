@@ -28,9 +28,10 @@ public class NoteDAO extends AbstractDAO<Note> {
 		this.couch.save(data);
 	}
 
+	@SuppressWarnings("boxing")
 	@Override
 	public List<Note> getData() {
-		return this.couch.view(NoteDAO.designDoc+ "/list").query(Note.class);
+		return this.couch.view(NoteDAO.designDoc+ "/list").includeDocs(true).query(Note.class);
 	}
 
 	@Override

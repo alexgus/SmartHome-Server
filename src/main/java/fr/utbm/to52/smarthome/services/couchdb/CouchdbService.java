@@ -38,12 +38,17 @@ public class CouchdbService extends AbstractService {
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.services.AbstractService#start()
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public void start() {
+		try{
 		this.session = new CouchDbClient();
 		
 		for (DAO<?> dao : this.lDAO) 
 			dao.setUp(this.session);
+		}catch(org.lightcouch.CouchDbException e){
+			System.err.println("No couchdb server found. Service not started");
+		}
 	}
 
 	/* (non-Javadoc)
