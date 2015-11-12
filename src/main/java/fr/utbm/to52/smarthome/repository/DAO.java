@@ -5,8 +5,8 @@ package fr.utbm.to52.smarthome.repository;
 
 import java.util.List;
 
-import org.hibernate.ogm.OgmSession;
 import org.json.JSONObject;
+import org.lightcouch.CouchDbClient;
 
 /**
  * 
@@ -37,6 +37,6 @@ public interface DAO<D>{
 	 * Set up access to hibernate session
 	 * @param s Opened session to hibernate
 	 */
-	public void setUp(OgmSession s);
+	public void setUp(CouchDbClient s);
 	
 }

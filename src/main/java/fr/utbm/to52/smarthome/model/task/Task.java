@@ -3,10 +3,6 @@
  */
 package fr.utbm.to52.smarthome.model.task;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import fr.utbm.to52.smarthome.model.calendar.Event;
 import fr.utbm.to52.smarthome.model.note.Note;
 
@@ -14,11 +10,8 @@ import fr.utbm.to52.smarthome.model.note.Note;
  * @author Alexandre Guyon
  *
  */
-@Entity
-@Table(name="Task")
 public class Task extends Event {
 	
-	@OneToOne
 	private Note note;
 
 	/**

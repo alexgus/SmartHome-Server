@@ -5,31 +5,15 @@ package fr.utbm.to52.smarthome.model.note;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
-import org.hibernate.annotations.GenericGenerator;
-
 /**
  * @author Alexandre Guyon
  *
  */
-@Entity
-@Table(name="Note")
 public class Note {
 	
-	@Id @GeneratedValue(generator = "uuid")
-	@GenericGenerator(name="uuid", strategy="uuid2")
-	private String id;
+	private String _id;
 
-    @Version
-    @GeneratedValue
-    @Column(name="_rev")
-    private String revision;
+    private String _rev;
 	
 	private Date date;
 
@@ -107,28 +91,28 @@ public class Note {
 	 * @return the id
 	 */
 	public String getId() {
-		return this.id;
+		return this._id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
-		this.id = id;
+		this._id = id;
 	}
 
 	/**
 	 * @return the revision
 	 */
 	public String getRevision() {
-		return this.revision;
+		return this._rev;
 	}
 
 	/**
 	 * @param revision the revision to set
 	 */
 	public void setRevision(String revision) {
-		this.revision = revision;
+		this._rev = revision;
 	}
 
 	/* (non-Javadoc)
@@ -139,9 +123,9 @@ public class Note {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this._id == null) ? 0 : this._id.hashCode());
 		result = prime * result + ((this.note == null) ? 0 : this.note.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this._rev == null) ? 0 : this._rev.hashCode());
 		result = prime * result + ((this.tag == null) ? 0 : this.tag.hashCode());
 		return result;
 	}
@@ -163,20 +147,20 @@ public class Note {
 				return false;
 		} else if (!this.date.equals(other.date))
 			return false;
-		if (this.id == null) {
-			if (other.id != null)
+		if (this._id == null) {
+			if (other._id != null)
 				return false;
-		} else if (!this.id.equals(other.id))
+		} else if (!this._id.equals(other._id))
 			return false;
 		if (this.note == null) {
 			if (other.note != null)
 				return false;
 		} else if (!this.note.equals(other.note))
 			return false;
-		if (this.revision == null) {
-			if (other.revision != null)
+		if (this._rev == null) {
+			if (other._rev != null)
 				return false;
-		} else if (!this.revision.equals(other.revision))
+		} else if (!this._rev.equals(other._rev))
 			return false;
 		if (this.tag == null) {
 			if (other.tag != null)
@@ -191,7 +175,7 @@ public class Note {
 	 */
 	@Override
 	public String toString() {
-		return "Note [id=" + this.id + ", revision=" + this.revision + ", date=" + this.date + ", tag=" + this.tag + ", note=" + this.note + "]";
+		return "Note [id=" + this._id + ", revision=" + this._rev + ", date=" + this.date + ", tag=" + this.tag + ", note=" + this.note + "]";
 	}
 
 }

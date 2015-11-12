@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 /**
  * @author Alexandre Guyon
@@ -14,7 +14,7 @@ public class NoSuchCommand extends AbstractEvent {
 	/**
 	 * @param s {@link AbstractEvent}
 	 */
-	public NoSuchCommand(OgmSession s) {
+	public NoSuchCommand(CouchDbClient s) {
 		super(s);
 	}
 

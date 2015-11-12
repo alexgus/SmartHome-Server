@@ -3,27 +3,14 @@
  */
 package fr.utbm.to52.smarthome.model.location;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
 /**
  * @author Alexandre Guyon
  *
  */
-@Entity
-@Table(name="Location")
 public class Location {
-
-    @Version
-    @GeneratedValue
-    @Column(name="_rev")
+	
     private String revision;
 	
-	@Id
 	private String loc;
 	
 	/**

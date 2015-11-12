@@ -3,8 +3,8 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.ogm.OgmSession;
 import org.json.JSONObject;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
@@ -19,7 +19,7 @@ public class AddNoteEvent extends AbstractDAOEvent<Note> {
 	 * @param s {@link AbstractEvent}
 	 * @param d {@link AbstractDAOEvent}
 	 */
-	public AddNoteEvent(OgmSession s, DAO<Note> d) {
+	public AddNoteEvent(CouchDbClient s, DAO<Note> d) {
 		super(s,d);
 	}
 

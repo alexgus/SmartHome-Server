@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Controller;
 
@@ -16,7 +16,7 @@ public class QuitEvent extends AbstractEvent {
 	/**
 	 * @param s {@link AbstractEvent}
 	 */
-	public QuitEvent(OgmSession s) {
+	public QuitEvent(CouchDbClient s) {
 		super(s);
 	}
 

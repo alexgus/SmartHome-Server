@@ -5,7 +5,7 @@ package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Date;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 /**
  * @author Alexandre Guyon
@@ -13,14 +13,14 @@ import org.hibernate.ogm.OgmSession;
  */
 public abstract class AbstractEvent implements Event {
 	
-	private OgmSession hbm;
+	private CouchDbClient couch;
 	
 	/**
 	 * Set the hibernate session to the event
 	 * @param s Event to session
 	 */
-	public AbstractEvent(OgmSession s) {
-		this.hbm = s;
+	public AbstractEvent(CouchDbClient s) {
+		this.couch = s;
 	}
     
 	/* (non-Javadoc)
@@ -41,13 +41,7 @@ public abstract class AbstractEvent implements Event {
 		if(payload != null)
 			s.setPayload(payload.toString());
 		
-		this.hbm.beginTransaction();
-		
-		this.hbm.save(s);
-		this.hbm.flush();
-		
-		this.hbm.getTransaction().commit();
-		
+		this.couch.save(s);		
 	}
 
 }

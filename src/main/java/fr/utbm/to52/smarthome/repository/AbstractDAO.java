@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.repository;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 /**
  * @author Alexandre Guyon
@@ -15,10 +15,10 @@ public abstract class AbstractDAO<D> implements DAO<D> {
 	/**
 	 * Configured hibernate session
 	 */
-	protected OgmSession hbmSess;
+	protected CouchDbClient couch;
 	
-	public void setUp(OgmSession s){
-		this.hbmSess = s;
+	public void setUp(CouchDbClient s){
+		this.couch = s;
 	}
 
 }

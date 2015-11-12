@@ -3,8 +3,8 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.ogm.OgmSession;
 import org.json.JSONObject;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.repository.DAO;
 
@@ -24,7 +24,7 @@ public abstract class AbstractDAOEvent<N> extends AbstractEvent {
 	 * @param s {@link AbstractEvent}
 	 * @param d Corresponding DAO
 	 */
-	public AbstractDAOEvent(OgmSession s, DAO<N> d) {
+	public AbstractDAOEvent(CouchDbClient s, DAO<N> d) {
 		super(s);
 		this.dao = d;
 	}

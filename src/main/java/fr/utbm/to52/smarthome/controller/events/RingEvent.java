@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.services.com.MQTT;
@@ -23,7 +23,7 @@ public class RingEvent extends AbstractEvent{
 	 * @param s Hibernate session
 	 * @param c A valid MQTT connection
 	 */
-	public RingEvent(OgmSession s, MQTT c) {
+	public RingEvent(CouchDbClient s, MQTT c) {
 		super(s);
 		this.connection = c;
 	}

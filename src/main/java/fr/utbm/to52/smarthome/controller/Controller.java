@@ -15,7 +15,7 @@ import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
 import fr.utbm.to52.smarthome.services.com.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
-import fr.utbm.to52.smarthome.services.hibernate.HibernateService;
+import fr.utbm.to52.smarthome.services.couchdb.CouchdbService;
 import fr.utbm.to52.smarthome.services.mail.GmailService;
 
 
@@ -58,7 +58,7 @@ public class Controller extends AbstractService{
 	
 	private GmailService mail;
 	
-	private HibernateService hbm;
+	private CouchdbService couch;
 	
 	private Controller(){
 		
@@ -75,11 +75,11 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		/*this.mail = new GmailService();
-		this.lService.add(this.mail);*/
+		this.mail = new GmailService();
+		this.lService.add(this.mail);
 		
-		this.hbm = new HibernateService();
-		this.lService.add(this.hbm);
+		this.couch = new CouchdbService();
+		this.lService.add(this.couch);
 	}
 
 	@Override
@@ -93,13 +93,13 @@ public class Controller extends AbstractService{
 	}
 	
 	private void enableEvent(){
-		this.cmdHandler.setQuitEvent(new QuitEvent(this.hbm.getHbm()));
-		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.hbm.getHbm()));
-		this.cmdHandler.setRingEventController(new RingEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.hbm.getHbm(), this.clock.getCron()));
-		this.cmdHandler.setLightEvent(new LightEvent(this.hbm.getHbm(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddNote(new AddNoteEvent(this.hbm.getHbm(), this.hbm.getNoteDao()));
-		this.cmdHandler.setGetNote(new GetNoteEvent(this.hbm.getHbm(), this.hbm.getNoteDao()));
+		this.cmdHandler.setQuitEvent(new QuitEvent(this.couch.getSession()));
+		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.couch.getSession()));
+		this.cmdHandler.setRingEventController(new RingEvent(this.couch.getSession(), this.MQTT.getMqtt()));
+		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.couch.getSession(), this.clock.getCron()));
+		this.cmdHandler.setLightEvent(new LightEvent(this.couch.getSession(), this.MQTT.getMqtt()));
+		this.cmdHandler.setAddNote(new AddNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
+		this.cmdHandler.setGetNote(new GetNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
 	}
 	
 	@Override

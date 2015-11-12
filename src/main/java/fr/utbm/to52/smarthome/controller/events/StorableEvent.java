@@ -5,33 +5,19 @@ package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
-import org.hibernate.annotations.GenericGenerator;
-
 // TODO add client id / source of the event, message
 
 /**
  * @author Alexandre Guyon
  *
  */
-@Entity
-@Table(name="Event")
 public class StorableEvent {
 
-	@Id @GeneratedValue(generator = "uuid")
-	@GenericGenerator(name="uuid", strategy="uuid2")
-	private String id;
+	private String _id;
 	
-    @Version
-    @GeneratedValue
-    @Column(name="_rev")
-    private String revision;
+    private String _rev;
+    
+    // TODO add table name
     
     /**
      * Date of the creation of the event
@@ -51,29 +37,29 @@ public class StorableEvent {
     /**
 	 * @return the id
 	 */
-	public String getId() {
-		return this.id;
+	public String get_id() {
+		return this._id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void set_id(String id) {
+		this._id = id;
 	}
 
 	/**
 	 * @return the revision
 	 */
-	public String getRevision() {
-		return this.revision;
+	public String get_rev() {
+		return this._rev;
 	}
 
 	/**
 	 * @param revision the revision to set
 	 */
-	public void setRevision(String revision) {
-		this.revision = revision;
+	public void set_rev(String revision) {
+		this._rev = revision;
 	}
 
 	/**
@@ -127,9 +113,9 @@ public class StorableEvent {
 		int result = 1;
 		result = prime * result + ((this.date == null) ? 0 : this.date.hashCode());
 		result = prime * result + ((this.eventName == null) ? 0 : this.eventName.hashCode());
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this._id == null) ? 0 : this._id.hashCode());
 		result = prime * result + ((this.payload == null) ? 0 : this.payload.hashCode());
-		result = prime * result + ((this.revision == null) ? 0 : this.revision.hashCode());
+		result = prime * result + ((this._rev == null) ? 0 : this._rev.hashCode());
 		return result;
 	}
 
@@ -155,20 +141,20 @@ public class StorableEvent {
 				return false;
 		} else if (!this.eventName.equals(other.eventName))
 			return false;
-		if (this.id == null) {
-			if (other.id != null)
+		if (this._id == null) {
+			if (other._id != null)
 				return false;
-		} else if (!this.id.equals(other.id))
+		} else if (!this._id.equals(other._id))
 			return false;
 		if (this.payload == null) {
 			if (other.payload != null)
 				return false;
 		} else if (!this.payload.equals(other.payload))
 			return false;
-		if (this.revision == null) {
-			if (other.revision != null)
+		if (this._rev == null) {
+			if (other._rev != null)
 				return false;
-		} else if (!this.revision.equals(other.revision))
+		} else if (!this._rev.equals(other._rev))
 			return false;
 		return true;
 	}
@@ -178,7 +164,7 @@ public class StorableEvent {
 	 */
 	@Override
 	public String toString() {
-		return "StorableEvent [id=" + this.id + ", revision=" + this.revision + ", date=" + this.date + ", eventName=" + this.eventName
+		return "StorableEvent [id=" + this._id + ", revision=" + this._rev + ", date=" + this.date + ", eventName=" + this.eventName
 				+ ", payload=" + this.payload + "]";
 	}
 

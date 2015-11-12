@@ -5,8 +5,8 @@ package fr.utbm.to52.smarthome.controller.events;
 
 import java.util.Calendar;
 
-import org.hibernate.ogm.OgmSession;
 import org.json.JSONObject;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.cron.RingCron;
@@ -26,7 +26,7 @@ public class AddRingEvent extends AbstractEvent {
 	 * @param s Hibernate session
 	 * @param r The ring cron to object to add a date 
 	 */
-	public AddRingEvent(OgmSession s, RingCron r) {
+	public AddRingEvent(CouchDbClient s, RingCron r) {
 		super(s);
 		this.rcron = r;
 	}

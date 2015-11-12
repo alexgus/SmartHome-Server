@@ -6,7 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.hibernate.ogm.OgmSession;
+import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Controller;
 import fr.utbm.to52.smarthome.services.com.MQTT;
@@ -32,7 +32,7 @@ public class LightEvent extends AbstractEvent {
 	 * @param s Hibernate session
 	 * @param c The MQTT connection to use
 	 */
-	public LightEvent(OgmSession s, MQTT c) {
+	public LightEvent(CouchDbClient s, MQTT c) {
 		super(s);
 		this.connection = c;
 	}
