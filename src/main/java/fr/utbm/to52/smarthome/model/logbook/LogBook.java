@@ -6,15 +6,23 @@ package fr.utbm.to52.smarthome.model.logbook;
 import java.util.List;
 
 import fr.utbm.to52.smarthome.model.note.Note;
+import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
 
 /**
  * @author Alexandre Guyon
  *
  */
-public class LogBook {
+public class LogBook extends StorableEntity{
 
 	List<Note> lNote;
 
+	/**
+	 * {@link StorableEntity}
+	 */
+	public LogBook() {
+		super(LogBook.class.getName());
+	}
+	
 	/**
 	 * @return the lNote
 	 */

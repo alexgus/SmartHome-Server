@@ -67,6 +67,8 @@ public class Conf {
 	
 	private String commandGetNote;
 	
+	private String commandGetLogBook;
+	
 	private String cronSource;
 	
 	private String cronCommand;
@@ -122,6 +124,7 @@ public class Conf {
 		this.setCommandAddRing(Command.getString("addRingAction"));
 		this.setCommandAddNote(Command.getString("addNoteAction"));
 		this.setCommandGetNote(Command.getString("getNoteAction"));
+		this.setCommandGetLogBook(Command.getString("getLogBookAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronSource(cron.getString("source"));
@@ -480,6 +483,20 @@ public class Conf {
 	 */
 	public void setTopicAnswerSuffix(String topicAnswerSuffix) {
 		this.topicAnswerSuffix = topicAnswerSuffix;
+	}
+
+	/**
+	 * @return the commandGetLogBook
+	 */
+	public String getCommandGetLogBook() {
+		return this.commandGetLogBook;
+	}
+
+	/**
+	 * @param commandGetLogBook the commandGetLogBook to set
+	 */
+	public void setCommandGetLogBook(String commandGetLogBook) {
+		this.commandGetLogBook = commandGetLogBook;
 	}
 	
 	

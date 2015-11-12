@@ -10,6 +10,7 @@ import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
+import fr.utbm.to52.smarthome.repository.LogBookDAO;
 import fr.utbm.to52.smarthome.repository.NoteDAO;
 import fr.utbm.to52.smarthome.services.AbstractService;
 
@@ -25,6 +26,8 @@ public class CouchdbService extends AbstractService {
 	
 	private NoteDAO note = null;
 	
+	private LogBookDAO logbook = null;
+
 	/**
 	 * Create a couchdb service
 	 */
@@ -33,6 +36,9 @@ public class CouchdbService extends AbstractService {
 		
 		this.note = new NoteDAO();
 		this.lDAO.add(this.note);
+		
+		this.logbook = new LogBookDAO();
+		this.lDAO.add(this.logbook);
 	}
 	
 	/* (non-Javadoc)
@@ -71,6 +77,20 @@ public class CouchdbService extends AbstractService {
 	 */
 	public DAO<Note> getNoteDao() {
 		return this.note;
+	}
+	
+	/**
+	 * @return the logbook
+	 */
+	public LogBookDAO getLogbookDAO() {
+		return this.logbook;
+	}
+
+	/**
+	 * @param logbook the logbook to set
+	 */
+	public void setLogbookDAO(LogBookDAO logbook) {
+		this.logbook = logbook;
 	}
 
 }
