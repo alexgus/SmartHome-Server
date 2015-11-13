@@ -6,7 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.json.JSONObject;
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.repository.DAO;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
@@ -35,7 +35,7 @@ public abstract class AbstractDAOComEvent<N> extends AbstractDAOEvent<N> {
 	 * @param data JSONobject to answer
 	 */
 	protected void publish(String topic, JSONObject data){
-		this.mqtt.publish("/" + topic + "/" + Controller.getInstance().getConfig().getTopicAnswerSuffix(), data.toString());
+		this.mqtt.publish("/" + topic + "/" + Conf.getInstance().getTopicAnswerSuffix(), data.toString());
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class AbstractDAOComEvent<N> extends AbstractDAOEvent<N> {
 	 * @param data String to send
 	 */
 	protected void publish(String topic, String data){
-		this.mqtt.publish("/" + topic + "/" + Controller.getInstance().getConfig().getTopicAnswerSuffix(), data);
+		this.mqtt.publish("/" + topic + "/" + Conf.getInstance().getTopicAnswerSuffix(), data);
 	}
 	
 	/**

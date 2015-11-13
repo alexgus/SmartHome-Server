@@ -6,7 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.json.JSONObject;
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.logbook.LogBook;
 import fr.utbm.to52.smarthome.repository.DAO;
 
@@ -33,7 +33,7 @@ public class GetLogBookEvent extends AbstractDAOComEvent<LogBook> {
 		else // Launch correct methods from DAO
 			s = this.dao.getRawData(data);
 		
-		this.publishRawData(Controller.getInstance().getConfig().getCommandGetLogBook(), s);
+		this.publishRawData(Conf.getInstance().getCommandGetLogBook(), s);
 	}
 
 }

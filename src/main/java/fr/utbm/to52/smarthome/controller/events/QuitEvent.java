@@ -13,11 +13,16 @@ import fr.utbm.to52.smarthome.controller.Controller;
  */
 public class QuitEvent extends AbstractEvent {
 
+	private Controller controller;
+	
 	/**
+	 * Create QuitEvent
+	 * @param c Controller to stop
 	 * @param s {@link AbstractEvent}
 	 */
-	public QuitEvent(CouchDbClient s) {
+	public QuitEvent(Controller c, CouchDbClient s) {
 		super(s);
+		this.controller = c;
 	}
 
 	/* (non-Javadoc)
@@ -27,7 +32,7 @@ public class QuitEvent extends AbstractEvent {
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-		Controller.getInstance().stop();
+		this.controller.stop();
 	}
 
 }

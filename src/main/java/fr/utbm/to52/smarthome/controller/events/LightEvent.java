@@ -8,7 +8,7 @@ import java.util.TimerTask;
 
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
@@ -48,7 +48,7 @@ public class LightEvent extends AbstractEvent {
 			
 			@Override
 			public void run() {
-				LightEvent.this.getConnection().publish(Controller.getInstance().getConfig().getMQTTLightTopic(), Integer.toString(LightEvent.this.getLightIntensity()));
+				LightEvent.this.getConnection().publish(Conf.getInstance().getMQTTLightTopic(), Integer.toString(LightEvent.this.getLightIntensity()));
 				LightEvent.this.setLightIntensity(Math.round(LightEvent.this.getLightIntensity() + LightEvent.this.step));
 			}
 		};

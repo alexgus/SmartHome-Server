@@ -160,7 +160,7 @@ public class GoogleAuth {
 		return createCredentialWithRefreshToken(
 				new NetHttpTransport(), 
 				JacksonFactory.getDefaultInstance(), 
-				new GoogleClientSecrets().setInstalled(new GoogleClientSecrets.Details().setClientId(this.apiKey)), // FIXME Crappyyyyy !!!
+				new GoogleClientSecrets().setInstalled(new GoogleClientSecrets.Details().setClientId(this.apiKey)), // Google hack
 				tok);
 	}
 

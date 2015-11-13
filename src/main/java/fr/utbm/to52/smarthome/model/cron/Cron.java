@@ -3,7 +3,7 @@
  */
 package fr.utbm.to52.smarthome.model.cron;
 
-import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.controller.Conf;
 import it.sauronsoftware.cron4j.SchedulingPattern;
 import it.sauronsoftware.cron4j.Task;
 
@@ -56,10 +56,10 @@ public abstract class Cron {
 	 * @param user The user you want the crontab to be loaded
 	 */
 	public Cron(String user){
-		this.tag = Controller.getInstance().getConfig().getCronTag();
-		this.tagICal = Controller.getInstance().getConfig().getCronICalTag();
-		this.command = Controller.getInstance().getConfig().getCronCommand();
-		this.pathTmpFile = Controller.getInstance().getConfig().getCronTMPFile();
+		this.tag = Conf.getInstance().getCronTag();
+		this.tagICal = Conf.getInstance().getCronICalTag();
+		this.command = Conf.getInstance().getCronCommand();
+		this.pathTmpFile = Conf.getInstance().getCronTMPFile();
 		this.user = user;
 		this.crontab = new MyTaskTable();
 	}

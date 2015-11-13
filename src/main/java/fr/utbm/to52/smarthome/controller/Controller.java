@@ -30,21 +30,8 @@ import fr.utbm.to52.smarthome.services.mail.GmailService;
  */
 public class Controller extends AbstractService{
 
-	/**
-	 * Singleton instance for this controller 
-	 */
-	private static Controller singleton = null;
-
-	/**
-	 * Get an instance from the controller. The first call initialize it with the default configuration file.
-	 * @return Singleton instance of this controller
-	 */
-	public static Controller getInstance(){
-		if(singleton == null)
-			singleton = new Controller();
-		return singleton;
-	}
-
+	private boolean running;
+	
 	private CommandHandlerImpl cmdHandler;
 	
 	private Thread tCmdhandler;
@@ -63,9 +50,12 @@ public class Controller extends AbstractService{
 	
 	private CouchdbService couch;
 	
-	private Controller(){
+	/**
+	 * Default instance of a controller
+	 */
+	public Controller(){
 		
-		this.cmdHandler = new CommandHandlerImpl();
+		this.cmdHandler = new CommandHandlerImpl(this);
 		this.tCmdhandler = new Thread(this.cmdHandler);
 		
 		this.lService = new ArrayList<>();
@@ -79,15 +69,15 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		/*this.mail = new GmailService();
-		this.lService.add(this.mail);*/
-		
 		this.couch = new CouchdbService();
 		this.lService.add(this.couch);
+		
+		this.mail = new GmailService();
+		this.lService.add(this.mail);// TODO Non blocking service
 	}
 
 	@Override
-	public void start(){ // FIXME DAO is a specific service of hibernate
+	public void start(){
 		for (Service service : this.lService) {
 			service.setUp(this.config);
 			service.start();
@@ -95,10 +85,12 @@ public class Controller extends AbstractService{
 		
 		this.enableEvent();
 		this.tCmdhandler.start();
+		
+		this.running = true;
 	}
 	
-	private void enableEvent(){
-		this.cmdHandler.setQuitEvent(new QuitEvent(this.couch.getSession()));
+	private void enableEvent(){ // TODO make DAO singleton
+		this.cmdHandler.setQuitEvent(new QuitEvent(this, this.couch.getSession()));
 		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.couch.getSession()));
 		this.cmdHandler.setRingEventController(new RingEvent(this.couch.getSession(), this.MQTT.getMqtt()));
 		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.couch.getSession(), this.clock.getCron()));
@@ -110,8 +102,22 @@ public class Controller extends AbstractService{
 	
 	@Override
 	public void stop() {
+		this.running = false;
 		for (Service service : this.lService)
 			service.stop();
+		
+		try{
+			this.tCmdhandler.join();
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
 	}
+
+	/**
+	 * @return the running
+	 */
+	public boolean isRunning() {
+		return this.running;
+	}	
 
 }

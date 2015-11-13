@@ -17,7 +17,8 @@ public class Launch {
 	public static void main(String[] args){
 		Conf c = new Conf();
 		c.importConf();
-		Controller.getInstance().setUp(c);
-		Controller.getInstance().start();
+		Controller cont = new Controller();
+		cont.setUp(c);
+		cont.start();
 	}
 }

@@ -6,7 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.json.JSONObject;
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.Controller;
+import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
 import fr.utbm.to52.smarthome.services.com.MQTT;
@@ -34,7 +34,7 @@ public class GetNoteEvent extends AbstractDAOComEvent<Note> {
 		else // Launch correct methods from DAO
 			s = this.dao.getRawData(data);
 		
-		this.publishRawData(Controller.getInstance().getConfig().getCommandGetNote(), s);
+		this.publishRawData(Conf.getInstance().getCommandGetNote(), s);
 	}
 
 

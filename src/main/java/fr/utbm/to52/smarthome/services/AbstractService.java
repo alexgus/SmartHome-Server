@@ -37,13 +37,5 @@ public abstract class AbstractService implements Service {
 	 */
 	@Override
 	public abstract void stop();
-
-	// FIXME Suppress this getter (add weakreference)
-	/**
-	 * @return the config
-	 */
-	public Conf getConfig() {
-		return this.config;
-	}
 	
 }

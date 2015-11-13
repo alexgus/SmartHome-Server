@@ -19,6 +19,10 @@ import fr.utbm.to52.smarthome.controller.events.Event;
  *
  */
 public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnable{
+	
+	private static final int TIME_CHECK = 100;
+	
+	private Controller controller;
 
 	private Collection<String> lCmd = Collections.synchronizedCollection(new ArrayList<String>());
 	
@@ -37,12 +41,20 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private Event getNote;
 	
 	private Event getLogBook;
+
+	/**
+	 * Create command handler with
+	 * @param c Controller to handle
+	 */
+	public CommandHandlerImpl(Controller c) {
+		this.controller = c;
+	}
 	
 	@Override
 	public void run() {
 		List<String> handledCommand = new ArrayList<>();
 		
-		while(true){ // FIXME UGLY loop
+		while(this.controller.isRunning()){
 			synchronized (this.lCmd) {
 				for (String cmd : this.lCmd) {
 					this.handleQueuedCmd(new String(cmd));
@@ -54,7 +66,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 				this.lCmd.remove(cmdOk);
 			
 			try {
-				Thread.sleep(500); // TODO Add constant
+				Thread.sleep(CommandHandlerImpl.TIME_CHECK);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -71,23 +83,23 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	
 	
 	private void handleQueuedCmd(String cmd) {
-		if(cmd.equals(Controller.getInstance().getConfig().getCommandRing())){
+		if(cmd.equals(Conf.getInstance().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
 			if(this.getLightEvent() != null)
 				this.getLightEvent().inform(null);
-		}else if(cmd.equals(Controller.getInstance().getConfig().getCommandQuit())){
+		}else if(cmd.equals(Conf.getInstance().getCommandQuit())){
 			this.quitEvent.inform(null);
-		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddRing())){
+		}else if(cmd.contains(Conf.getInstance().getCommandAddRing())){
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
-		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandAddNote())){
+		}else if(cmd.contains(Conf.getInstance().getCommandAddNote())){
 			if(this.getAddNote() != null)
 				this.getAddNote().inform(cmd);
-		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandGetNote())){
+		}else if(cmd.contains(Conf.getInstance().getCommandGetNote())){
 			if(this.getGetNote() != null)
 				this.getGetNote().inform(cmd);
-		}else if(cmd.contains(Controller.getInstance().getConfig().getCommandGetLogBook())){
+		}else if(cmd.contains(Conf.getInstance().getCommandGetLogBook())){
 			if(this.getGetLogBook() != null)
 				this.getGetLogBook().inform(cmd);
 		}else{
@@ -108,7 +120,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	@Override
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-		if(arg0.equals(Controller.getInstance().getConfig().getMQTTRingTopic()))
+		if(arg0.equals(Conf.getInstance().getMQTTRingTopic()))
 			this.handle(arg1.toString());
 	}
 	
