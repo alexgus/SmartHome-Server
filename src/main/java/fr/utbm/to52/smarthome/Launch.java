@@ -15,7 +15,7 @@ public class Launch {
 	 * @param args Nothing in args
 	 */
 	public static void main(String[] args){
-		Conf c = new Conf();
+		Conf c = Conf.getInstance();
 		c.importConf();
 		Controller cont = new Controller();
 		cont.setUp(c);

@@ -106,6 +106,13 @@ public class Conf {
 	private String topicAnswerSuffix;
 
 	/**
+	 * Private constructor --> singleton
+	 */
+	private Conf() {
+		// nothing
+	}
+	
+	/**
 	 * Import the default configuration file into this object
 	 */
 	public void importConf(){
