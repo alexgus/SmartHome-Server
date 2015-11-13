@@ -3,14 +3,11 @@
  */
 package fr.utbm.to52.smarthome.repository;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.json.JSONObject;
 
 import fr.utbm.to52.smarthome.model.note.Note;
-import fr.utbm.to52.smarthome.util.BasicIO;
 
 /**
  * @author Alexandre Guyon
@@ -19,11 +16,8 @@ import fr.utbm.to52.smarthome.util.BasicIO;
 @SuppressWarnings("boxing")
 public class NoteDAO extends AbstractDAO<Note> {
 
-	private static final String designDoc = "note";
-
 	public void setUp(org.lightcouch.CouchDbClient s) {
 		super.setUp(s);
-		s.design().synchronizeWithDb(s.design().getFromDesk(NoteDAO.designDoc));
 	}
 
 
@@ -34,16 +28,15 @@ public class NoteDAO extends AbstractDAO<Note> {
 
 	@Override
 	public List<Note> getData() {
-		return this.couch.view(NoteDAO.designDoc+ "/list")
+		return this.couch.view(this.designDoc+ "/list")
 				.includeDocs(true)
 				.query(Note.class);
 	}
 	
 	@Override
 	public String getRawData() {
-		return this.couch.view(NoteDAO.designDoc+ "/list")
-				.includeDocs(true)
-				.queryForString();
+		return AbstractDAO.getStringFromView(this.couch.view(this.designDoc+ "/list")
+				.includeDocs(true));
 	}
 
 	@SuppressWarnings("unused")
@@ -56,14 +49,14 @@ public class NoteDAO extends AbstractDAO<Note> {
 		}catch (org.json.JSONException e) {
 			System.err.println("\"tag\" not found in JSON criteria");
 		}
-		return this.couch.view(NoteDAO.designDoc+ "/listByTag")
+		return this.couch.view(this.designDoc+ "/listByTag")
 				.includeDocs(true)
 				.descending(true)
 				.endKey(tag)
 				.query(Note.class);
 	}
 	
-	@SuppressWarnings({ "unused", "resource" })
+	@SuppressWarnings({ "unused" })
 	@Override
 	public String getRawData(JSONObject criteria) {
 		String tag = "";
@@ -75,21 +68,10 @@ public class NoteDAO extends AbstractDAO<Note> {
 			System.err.println("\"tag\" not found in JSON criteria");
 		}
 		
-		InputStream is = this.couch.view(NoteDAO.designDoc+ "/listByTag")
+		return AbstractDAO.getStringFromView(this.couch.view(this.designDoc+ "/listByTag")
 				.includeDocs(true)
 				.descending(true)
-				.endKey(tag)
-				.queryForStream();
-		
-		try {
-			content = BasicIO.readInputStream(is);
-			is.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return content;
+				.endKey(tag));
 	}
 
 }

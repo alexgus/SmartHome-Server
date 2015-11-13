@@ -79,8 +79,8 @@ public class Controller extends AbstractService{
 		this.clock = new ClockService();
 		this.lService.add(this.clock);
 		
-		this.mail = new GmailService();
-		this.lService.add(this.mail);
+		/*this.mail = new GmailService();
+		this.lService.add(this.mail);*/
 		
 		this.couch = new CouchdbService();
 		this.lService.add(this.couch);

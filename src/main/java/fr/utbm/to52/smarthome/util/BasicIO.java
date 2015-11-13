@@ -79,6 +79,21 @@ public class BasicIO {
 		return content;
 	}
 	
+	/**
+	 * Get string from inputstream
+	 * @param is InputStream to read
+	 * @return String from inputstream
+	 */
+	public static String getStringFromInput(InputStream is) {
+		String content = readInputStream(is);
+		try {
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return content;
+	}
+	
 
 
 	/**
