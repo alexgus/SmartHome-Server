@@ -3,11 +3,16 @@
  */
 package fr.utbm.to52.smarthome.repository;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.json.JSONObject;
 
 import fr.utbm.to52.smarthome.model.logbook.LogBook;
+import fr.utbm.to52.smarthome.model.note.Note;
+import fr.utbm.to52.smarthome.util.BasicIO;
 
 /**
  * @author Alexandre Guyon
@@ -53,17 +58,44 @@ public class LogBookDAO extends AbstractDAO<LogBook> {
 		}catch (org.json.JSONException e) {
 			System.err.println("\"tag\" not found in JSON criteria");
 		}
-		return this.couch.view(LogBookDAO.designDoc+ "/listByDay")
+		List<Note> ln = this.couch.view(LogBookDAO.designDoc+ "/listByDate")
+				.includeDocs(true)
+				.descending(true)
+				.startKey(day)
+				.query(Note.class);
+		
+		List<LogBook> l = new LinkedList<>();
+		LogBook e = new LogBook();
+		e.setlNote(ln);
+		l.add(e);
+		
+		return l;
+	}
+
+	@SuppressWarnings({ "boxing", "resource", "unused" })
+	@Override
+	public String getRawData(JSONObject criteria) {
+		String day = "";
+
+		try{
+			day = criteria.getString("day");
+		}catch (org.json.JSONException e) {
+			System.err.println("\"tag\" not found in JSON criteria");
+		}
+		InputStream is = this.couch.view(LogBookDAO.designDoc+ "/listByDate")
 				.includeDocs(true)
 				.descending(true)
 				.endKey(day)
-				.query(LogBook.class);
-	}
-
-	@Override
-	public String getRawData(JSONObject criteria) {
-		// TODO Auto-generated method stub
-		return null;
+				.queryForStream();
+		
+		String ln = BasicIO.readInputStream(is);
+		try {
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return ln.toString();
 	}	
 	
 }

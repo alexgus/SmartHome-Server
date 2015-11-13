@@ -27,7 +27,18 @@ public class GetLogBookEvent extends AbstractDAOComEvent<LogBook> {
 
 	@Override
 	protected void informCmd(JSONObject data) {
-		this.publish(Controller.getInstance().getConfig().getCommandGetLogBook(), data);
+		//List<LogBook> s = new LinkedList<>();
+		String s = "";
+		if(data.length() == 0)
+			s = this.dao.getRawData();
+		else // Launch correct methods from DAO
+			s = this.dao.getRawData(data);
+		
+		JSONObject json = new JSONObject(s);
+		JSONObject result = new JSONObject();
+		result.put("rows",json.getJSONArray("rows"));
+		
+		this.publish(Controller.getInstance().getConfig().getCommandGetLogBook(), result);
 	}
 
 }
