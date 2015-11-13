@@ -5,6 +5,8 @@ package fr.utbm.to52.smarthome.services;
 
 import fr.utbm.to52.smarthome.controller.Conf;
 
+// TODO implement Runnable
+
 /**
  * Define how service mean to be used
  * 

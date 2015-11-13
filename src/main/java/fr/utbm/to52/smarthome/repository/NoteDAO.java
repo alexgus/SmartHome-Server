@@ -32,46 +32,44 @@ public class NoteDAO extends AbstractDAO<Note> {
 				.includeDocs(true)
 				.query(Note.class);
 	}
-	
+
 	@Override
 	public String getRawData() {
 		return AbstractDAO.getStringFromView(this.couch.view(this.designDoc+ "/list")
 				.includeDocs(true));
 	}
 
-	@SuppressWarnings("unused")
 	@Override
-	public List<Note> getData(JSONObject criteria) {
+	public List<Note> getData(JSONObject criteria) { // TODO Improve code
 		String tag = "";
 
-		try{
+		if(criteria.has("tag")){
 			tag = criteria.getString("tag");
-		}catch (org.json.JSONException e) {
-			System.err.println("\"tag\" not found in JSON criteria");
+
+			return this.couch.view(this.designDoc+ "/listByTag")
+					.includeDocs(true)
+					.descending(true)
+					.endKey(tag)
+					.query(Note.class);
 		}
-		return this.couch.view(this.designDoc+ "/listByTag")
-				.includeDocs(true)
-				.descending(true)
-				.endKey(tag)
-				.query(Note.class);
+		return null;
 	}
-	
+
 	@SuppressWarnings({ "unused" })
 	@Override
 	public String getRawData(JSONObject criteria) {
 		String tag = "";
 		String content = "";
 
-		try{
-			tag = criteria.getString("tag"); // FIXME UGLY
-		}catch (org.json.JSONException e) {
-			System.err.println("\"tag\" not found in JSON criteria");
+		if(criteria.has("tag")){
+			tag = criteria.getString("tag");
+
+			return AbstractDAO.getStringFromView(this.couch.view(this.designDoc+ "/listByTag")
+					.includeDocs(true)
+					.descending(true)
+					.endKey(tag));
 		}
-		
-		return AbstractDAO.getStringFromView(this.couch.view(this.designDoc+ "/listByTag")
-				.includeDocs(true)
-				.descending(true)
-				.endKey(tag));
+		return null;
 	}
 
 }

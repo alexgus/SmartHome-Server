@@ -20,15 +20,17 @@ import it.sauronsoftware.cron4j.Scheduler;
  *
  */
 public class ClockService extends AbstractService {
-	
+
+	private static final int SCHED_TIME = 1000 * 60 * 60; // 1 hour in milliseconds
+
 	private Timer sched;
-	
+
 	private TimerTask cleaner;
-	
+
 	private RingCron cron;
-	
+
 	private Scheduler mainCron;
-	
+
 	/**
 	 * 
 	 */
@@ -37,23 +39,23 @@ public class ClockService extends AbstractService {
 		// TODO see sched deamon
 		this.sched = new Timer();
 	}
-	
+
 	public void setUp(Conf c) {
 		super.setUp(c);
-		
+
 		if(this.config.getCronSource().equals(Conf.CRON_SYSTEM))
 			this.cron = new SystemCron();
 		else
 			this.cron = new JavaCron();
-		
+
 		for(int i = 0 ; i < this.config.getAlarmURL().size() ; ++i)
 			this.mainCron.schedule("* * * * *", new DateController(this.cron, i));
-		
+
 		this.cleaner = new CronCleaner(this.cron);
-		// TODO add Constant/config
-		this.sched.scheduleAtFixedRate(this.cleaner, 0, 60 * 1000 * 60);
+
+		this.sched.scheduleAtFixedRate(this.cleaner, 0, ClockService.SCHED_TIME);
 	}
-	
+
 
 	@Override
 	public void start() {
@@ -64,7 +66,7 @@ public class ClockService extends AbstractService {
 	public void stop() {
 		this.mainCron.stop();
 	}
-	
+
 	/**
 	 * @return the cron
 	 */
