@@ -47,4 +47,17 @@ public abstract class AbstractDAOComEvent<N> extends AbstractDAOEvent<N> {
 		this.mqtt.publish("/" + topic + "/" + Controller.getInstance().getConfig().getTopicAnswerSuffix(), data);
 	}
 	
+	/**
+	 * {@link AbstractDAOComEvent#publish(String, JSONObject)}
+	 * @param topic {@link AbstractDAOComEvent#publish(String, JSONObject)}
+	 * @param data Data in raw from database response
+	 */
+	protected void publishRawData(String topic, String data) {
+		JSONObject json = new JSONObject(data);
+		JSONObject result = new JSONObject();
+		result.put("rows",json.getJSONArray("rows"));
+		
+		this.publish(topic, result);
+	}
+	
 }

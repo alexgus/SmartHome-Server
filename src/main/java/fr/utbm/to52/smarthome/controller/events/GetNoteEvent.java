@@ -28,17 +28,13 @@ public class GetNoteEvent extends AbstractDAOComEvent<Note> {
 	
 	@Override
 	protected void informCmd(JSONObject data) {
-		String s = "";
+		String s = "{}";
 		if(data.length() == 0)
 			s = this.dao.getRawData();
 		else // Launch correct methods from DAO
 			s = this.dao.getRawData(data);
 		
-		JSONObject json = new JSONObject(s);
-		JSONObject result = new JSONObject();
-		result.put("rows",json.getJSONArray("rows"));
-		
-		this.publish(Controller.getInstance().getConfig().getCommandGetNote(), result);
+		this.publishRawData(Controller.getInstance().getConfig().getCommandGetNote(), s);
 	}
 
 
