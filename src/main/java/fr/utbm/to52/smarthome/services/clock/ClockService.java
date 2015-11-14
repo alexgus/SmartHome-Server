@@ -36,8 +36,7 @@ public class ClockService extends AbstractService {
 	 */
 	public ClockService() {
 		this.mainCron = new Scheduler();
-		// TODO see sched deamon
-		this.sched = new Timer();
+		this.sched = new Timer(true);
 	}
 
 	public void setUp(Conf c) {

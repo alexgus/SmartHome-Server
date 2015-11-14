@@ -73,7 +73,7 @@ public class Controller extends AbstractService{
 		this.lService.add(this.couch);
 		
 		/*this.mail = new GmailService();
-		this.lService.add(this.mail);*/ // TODO Non blocking service
+		this.lService.add(this.mail);*/
 	}
 
 	@Override

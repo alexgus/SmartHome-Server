@@ -19,8 +19,7 @@ import fr.utbm.to52.smarthome.services.mail.oauth.GoogleAuth;
  */
 public class GmailService extends AbstractService{
 
-	// TODO config
-	private static final long CHECK_TIME = 1000 * 60 * 5;
+	private static final long CHECK_TIME = 1000 * 60 * 5; // 5 minutes in milliseconds
 	
 	private GoogleAuth auth;
 	
@@ -34,8 +33,7 @@ public class GmailService extends AbstractService{
 	 * Log to google server 
 	 */
 	public GmailService() {	
-		// TODO Look at deamon thread
-		this.sched = new Timer();
+		this.sched = new Timer(true);
 	}
 	
 	public void setUp(Conf c) {
