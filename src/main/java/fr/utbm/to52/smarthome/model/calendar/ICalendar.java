@@ -25,7 +25,7 @@ public interface ICalendar {
 	 * @param name Name of the event
 	 * @return Thu UUID of this event
 	 */
-	public UUID Add(Date begin, Date end, String name);
+	public UUID add(Date begin, Date end, String name);
 	
 	/**
 	 * Add an event to the calendar
@@ -35,7 +35,7 @@ public interface ICalendar {
 	 * @param Description Description of this event
 	 * @return Thu UUID of this event
 	 */
-	public UUID Add(Date begin, Date end, String name, String Description);
+	public UUID add(Date begin, Date end, String name, String Description);
 	
 	/**
 	 * Add an event to the calendar
@@ -46,7 +46,7 @@ public interface ICalendar {
 	 * @param Location Location of this event
 	 * @return Thu UUID of this event
 	 */
-	public UUID Add(Date begin, Date end, String name, String Description, String Location);
+	public UUID add(Date begin, Date end, String name, String Description, String Location);
 	
 	/**
 	 * Remove this event

@@ -158,7 +158,7 @@ public class GoogleCalendar implements ICalendar {
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name) {
+	public UUID add(Date begin, Date end, String name) {
 		return null;
 	}
 
@@ -166,7 +166,7 @@ public class GoogleCalendar implements ICalendar {
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name, String Description) {
+	public UUID add(Date begin, Date end, String name, String Description) {
 		return null;
 	}
 
@@ -174,7 +174,7 @@ public class GoogleCalendar implements ICalendar {
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name, String Description, String Location) {
+	public UUID add(Date begin, Date end, String name, String Description, String Location) {
 		return null;
 	}
 

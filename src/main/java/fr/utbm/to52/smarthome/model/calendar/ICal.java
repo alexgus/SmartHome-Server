@@ -14,9 +14,16 @@ import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
@@ -29,12 +36,23 @@ public class ICal implements ICalendar {
 	
 	private URL url;
 
+	private TimeZone timezone;
+	
 	/**
 	 * Default constructor.
 	 * @param u The URL to load the icalendar file
 	 */
 	public ICal(URL u){
 		this.url = u;
+		this.setTimeZone();
+	}
+	
+	/**
+	 * Set the time zone of this calendar
+	 */
+	public void setTimeZone(){
+		TimeZoneRegistry reg = TimeZoneRegistryFactory.getInstance().createRegistry();
+		this.timezone = reg.getTimeZone("Europe/France"); 
 	}
 	
 	/**
@@ -46,7 +64,6 @@ public class ICal implements ICalendar {
 		try {
 			c = new ICal(new URL("https://www.google.com/calendar/ical/alex.guyon78%40gmail.com/public/basic.ics"));
 			c.load();
-			
 			
 			java.util.Calendar calToday = java.util.Calendar.getInstance();
 			java.util.Calendar calMonthMinus1 = java.util.Calendar.getInstance();
@@ -73,30 +90,69 @@ public class ICal implements ICalendar {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Add VEvent
+	 * @param v VEvent to add
+	 * @return The UUID of the created event
+	 */
+	public UUID add(VEvent v){
+		this.cal.getComponents().add(v);
+		
+		Uid uid = (Uid) v.getProperties().getProperty("UID");
+		return UUID.fromString(uid.getValue());
+	}
+	
+	private VEvent prepareEvent(Date begin, Date end, String name){
+		DateTime dstart = new DateTime(begin.getTime());
+		DateTime dend = new DateTime(end.getTime());
+		
+		VEvent event = new VEvent(dstart, dend, name);
+		
+		event.getProperties().add(this.timezone.getVTimeZone().getTimeZoneId());
+		
+		UUID ret = UUID.randomUUID();
+		Uid uid = new Uid();
+		uid.setValue(ret.toString());
+		
+		event.getProperties().add(uid);
+		
+		return event;
+	}
 
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public UUID add(Date begin, Date end, String name) {
+		VEvent event = this.prepareEvent(begin, end, name);
+		
+		UUID uid = this.add(event);
+		
+		return uid;
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name, String Description) {
-		// TODO Auto-generated method stub
-		return null;
+	public UUID add(Date begin, Date end, String name, String Description) {
+		VEvent event = this.prepareEvent(begin, end, name);
+		
+		Description d = new Description(Description);
+		
+		event.getProperties().add(d);
+		
+		UUID uid = this.add(event);
+		
+		return uid;
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#Add(java.util.Date, java.util.Date, java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public UUID Add(Date begin, Date end, String name, String Description, String Location) {
+	public UUID add(Date begin, Date end, String name, String Description, String Location) {
 		// TODO Auto-generated method stub
 		return null;
 	}
