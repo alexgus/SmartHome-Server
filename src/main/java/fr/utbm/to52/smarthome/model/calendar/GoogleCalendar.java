@@ -182,8 +182,8 @@ public class GoogleCalendar implements ICalendar {
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#remove(java.util.UUID)
 	 */
 	@Override
-	public void remove(UUID uuid) {
-		//
+	public boolean remove(UUID uuid) {
+		return false;
 	}
 
 	/* (non-Javadoc)

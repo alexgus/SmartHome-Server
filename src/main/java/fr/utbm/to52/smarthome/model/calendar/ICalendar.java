@@ -51,8 +51,9 @@ public interface ICalendar {
 	/**
 	 * Remove this event
 	 * @param uuid Event to remove
+	 * @return Succeed or not
 	 */
-	public void remove(UUID uuid);
+	public boolean remove(UUID uuid);
 	
 	/**
 	 * Get Events corresponding to the filter given

@@ -23,6 +23,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Locality;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Calendars;
 
@@ -153,17 +154,27 @@ public class ICal implements ICalendar {
 	 */
 	@Override
 	public UUID add(Date begin, Date end, String name, String Description, String Location) {
-		// TODO Auto-generated method stub
-		return null;
+		VEvent event = this.prepareEvent(begin, end, name);
+		
+		Description d = new Description(Description);
+		event.getProperties().add(d);
+		
+		Locality loc = new Locality(Location);
+		event.getProperties().add(loc);
+		
+		UUID uid = this.add(event);
+		
+		return uid;
 	}
 
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.calendar.ICalendar#remove(java.util.UUID)
 	 */
 	@Override
-	public void remove(UUID uuid) {
-		// TODO Auto-generated method stub
-
+	public boolean remove(UUID uuid) {
+		Uid uid = new Uid();
+		uid.setValue(uuid.toString());
+		return this.cal.getProperties().remove(uid);
 	}
 
 	/* (non-Javadoc)
