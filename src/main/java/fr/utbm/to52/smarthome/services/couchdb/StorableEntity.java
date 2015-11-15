@@ -10,9 +10,19 @@ package fr.utbm.to52.smarthome.services.couchdb;
 public abstract class StorableEntity {
 
 	/**
+	 * Unique id od the object
+	 */
+	protected String _id;
+	
+	/**
+	 * Revision of this object
+	 */
+	protected String _rev;
+	
+	/**
 	 * Table name
 	 */
-    protected final String $table;
+    protected String $table;
 	
 	/**
 	 * Constructor defining table property
@@ -20,6 +30,48 @@ public abstract class StorableEntity {
 	 */
 	public StorableEntity(String table) {
 		this.$table = table;
+	}
+
+	/**
+	 * @return the _id
+	 */
+	public String get_id() {
+		return this._id;
+	}
+
+	/**
+	 * @param _id the _id to set
+	 */
+	public void set_id(String _id) {
+		this._id = _id;
+	}
+
+	/**
+	 * @return the _rev
+	 */
+	public String get_rev() {
+		return this._rev;
+	}
+
+	/**
+	 * @param _rev the _rev to set
+	 */
+	public void set_rev(String _rev) {
+		this._rev = _rev;
+	}
+
+	/**
+	 * @return the $table
+	 */
+	public String get$table() {
+		return this.$table;
+	}
+
+	/**
+	 * @param $table the $table to set
+	 */
+	public void set$table(String $table) {
+		this.$table = $table;
 	}
 
 	/* (non-Javadoc)
