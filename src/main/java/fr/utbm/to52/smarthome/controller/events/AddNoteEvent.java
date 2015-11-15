@@ -8,6 +8,7 @@ import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
+import fr.utbm.to52.smarthome.repository.UnimplementedOperationException;
 
 /**
  * @author Alexandre Guyon
@@ -29,6 +30,10 @@ public class AddNoteEvent extends AbstractDAOEvent<Note> {
 		n1.setNote(data.getString("note"));
 		n1.setTag(data.getString("tag"));
 		
-		this.dao.save(n1);
+		try{
+			this.dao.save(n1);
+		}catch(UnimplementedOperationException e){
+			e.printStackTrace();
+		}
 	}
 }

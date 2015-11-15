@@ -9,6 +9,7 @@ import org.lightcouch.CouchDbClient;
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
+import fr.utbm.to52.smarthome.repository.UnimplementedOperationException;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
@@ -29,10 +30,14 @@ public class GetNoteEvent extends AbstractDAOComEvent<Note> {
 	@Override
 	protected void informCmd(JSONObject data) {
 		String s = "{}";
-		if(data.length() == 0)
-			s = this.dao.getRawData();
-		else // Launch correct methods from DAO
-			s = this.dao.getRawData(data);
+		try{
+			if(data.length() == 0)
+				s = this.dao.getRawData();
+			else // Launch correct methods from DAO
+				s = this.dao.getRawData(data);
+		}catch(UnimplementedOperationException e){
+			e.printStackTrace();
+		}
 		
 		this.publishRawData(Conf.getInstance().getCommandGetNote(), s);
 	}

@@ -9,6 +9,7 @@ import org.lightcouch.CouchDbClient;
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.model.logbook.LogBook;
 import fr.utbm.to52.smarthome.repository.DAO;
+import fr.utbm.to52.smarthome.repository.UnimplementedOperationException;
 
 /**
  * @author Alexandre Guyon
@@ -28,10 +29,14 @@ public class GetLogBookEvent extends AbstractDAOComEvent<LogBook> {
 	@Override
 	protected void informCmd(JSONObject data) {
 		String s = "{}";
-		if(data.length() == 0)
-			s = this.dao.getRawData();
-		else // Launch correct methods from DAO
-			s = this.dao.getRawData(data);
+		try{
+			if(data.length() == 0)
+				s = this.dao.getRawData();
+			else // Launch correct methods from DAO
+				s = this.dao.getRawData(data);
+		}catch(UnimplementedOperationException e){
+			e.printStackTrace();
+		}
 		
 		this.publishRawData(Conf.getInstance().getCommandGetLogBook(), s);
 	}
