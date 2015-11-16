@@ -7,8 +7,6 @@ import java.util.Date;
 
 import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
 
-// TODO add client id / source of the event, message --> Can't from mqtt
-
 /**
  * @author Alexandre Guyon
  *
