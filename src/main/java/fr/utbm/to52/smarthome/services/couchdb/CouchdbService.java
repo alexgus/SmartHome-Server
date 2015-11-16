@@ -10,6 +10,7 @@ import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.model.note.Note;
 import fr.utbm.to52.smarthome.repository.DAO;
+import fr.utbm.to52.smarthome.repository.EventDAO;
 import fr.utbm.to52.smarthome.repository.LogBookDAO;
 import fr.utbm.to52.smarthome.repository.NoteDAO;
 import fr.utbm.to52.smarthome.services.AbstractService;
@@ -27,6 +28,8 @@ public class CouchdbService extends AbstractService {
 	private NoteDAO note = null;
 	
 	private LogBookDAO logbook = null;
+	
+	private EventDAO event = null;
 
 	/**
 	 * Create a couchdb service
@@ -39,6 +42,9 @@ public class CouchdbService extends AbstractService {
 		
 		this.logbook = new LogBookDAO();
 		this.lDAO.add(this.logbook);
+		
+		this.event = new EventDAO();
+		this.lDAO.add(this.event);
 	}
 	
 	/* (non-Javadoc)
@@ -48,10 +54,10 @@ public class CouchdbService extends AbstractService {
 	@Override
 	public void start() {
 		try{
-		this.session = new CouchDbClient();
-		
-		for (DAO<?> dao : this.lDAO) 
-			dao.setUp(this.session);
+			this.session = new CouchDbClient();
+			
+			for (DAO<?> dao : this.lDAO) 
+				dao.setUp(this.session);
 		}catch(org.lightcouch.CouchDbException e){
 			System.err.println("No couchdb server found. Service not started");
 		}
