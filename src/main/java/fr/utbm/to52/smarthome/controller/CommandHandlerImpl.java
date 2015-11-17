@@ -41,6 +41,8 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private Event getNote;
 	
 	private Event getLogBook;
+	
+	private Event motionSensor;
 
 	/**
 	 * Create command handler with
@@ -102,6 +104,9 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 		}else if(cmd.contains(Conf.getInstance().getCommandGetLogBook())){
 			if(this.getGetLogBook() != null)
 				this.getGetLogBook().inform(cmd);
+		}else if(cmd.contains(Conf.getInstance().getCommandMotionSensor())){
+			if(this.motionSensor != null)
+				this.motionSensor.inform(null);
 		}else{
 			this.noSuchCommand.inform(cmd);
 		}
@@ -238,6 +243,20 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 */
 	public void setGetLogBook(Event getLogBook) {
 		this.getLogBook = getLogBook;
+	}
+
+	/**
+	 * @return the motionSensor
+	 */
+	public Event getMotionSensor() {
+		return this.motionSensor;
+	}
+
+	/**
+	 * @param motionSensor the motionSensor to set
+	 */
+	public void setMotionSensor(Event motionSensor) {
+		this.motionSensor = motionSensor;
 	}
 
 }

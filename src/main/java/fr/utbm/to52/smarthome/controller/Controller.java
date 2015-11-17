@@ -3,11 +3,13 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.to52.smarthome.controller.events.AbortEvent;
 import fr.utbm.to52.smarthome.controller.events.AddNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
 import fr.utbm.to52.smarthome.controller.events.GetLogBookEvent;
 import fr.utbm.to52.smarthome.controller.events.GetNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
+import fr.utbm.to52.smarthome.controller.events.MotionSensor;
 import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
 import fr.utbm.to52.smarthome.controller.events.QuitEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
@@ -98,6 +100,8 @@ public class Controller extends AbstractService{
 		this.cmdHandler.setAddNote(new AddNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
 		this.cmdHandler.setGetNote(new GetNoteEvent(this.couch.getSession(), this.couch.getNoteDao(), this.MQTT.getMqtt()));
 		this.cmdHandler.setGetLogBook(new GetLogBookEvent(this.couch.getSession(), this.couch.getLogbookDAO(), this.MQTT.getMqtt()));
+		this.cmdHandler.setMotionSensor(new MotionSensor(this.couch.getSession(), 
+				new AbortEvent(this.couch.getSession(), this.MQTT.getMqtt())));
 	}
 	
 	@Override

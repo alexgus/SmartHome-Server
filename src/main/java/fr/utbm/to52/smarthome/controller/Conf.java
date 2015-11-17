@@ -66,6 +66,8 @@ public class Conf {
 	private String MQTTLightTopic;
 
 	private String MQTTRingPayload;
+	
+	private String MQTTAbortPayload;
 
 	private int MQTTQOS;
 	
@@ -82,6 +84,8 @@ public class Conf {
 	private String commandGetNote;
 	
 	private String commandGetLogBook;
+	
+	private String commandMotionSensor;
 	
 	private String cronSource;
 	
@@ -133,6 +137,7 @@ public class Conf {
 		this.setMQTTRingTopic(MQTT.getString("topic"));
 		this.setMQTTLightTopic(MQTT.getString("topicLight"));
 		this.setMQTTRingPayload(MQTT.getString("payload"));
+		this.setMQTTAbortPayload(MQTT.getString("abort"));
 		this.setMQTTRingQOS(MQTT.getInt("QOS"));
 		
 		JSONObject Server = js.getJSONObject("server");
@@ -146,6 +151,7 @@ public class Conf {
 		this.setCommandAddNote(Command.getString("addNoteAction"));
 		this.setCommandGetNote(Command.getString("getNoteAction"));
 		this.setCommandGetLogBook(Command.getString("getLogBookAction"));
+		this.setCommandMotionSensor(Command.getString("motionSensor"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronSource(cron.getString("source"));
@@ -518,6 +524,34 @@ public class Conf {
 	 */
 	public void setCommandGetLogBook(String commandGetLogBook) {
 		this.commandGetLogBook = commandGetLogBook;
+	}
+
+	/**
+	 * @return the mQTTAbortPayload
+	 */
+	public String getMQTTAbortPayload() {
+		return this.MQTTAbortPayload;
+	}
+
+	/**
+	 * @param mQTTAbortPayload the mQTTAbortPayload to set
+	 */
+	public void setMQTTAbortPayload(String mQTTAbortPayload) {
+		this.MQTTAbortPayload = mQTTAbortPayload;
+	}
+
+	/**
+	 * @return the commandMotionSensor
+	 */
+	public String getCommandMotionSensor() {
+		return this.commandMotionSensor;
+	}
+
+	/**
+	 * @param commandMotionSensor the commandMotionSensor to set
+	 */
+	public void setCommandMotionSensor(String commandMotionSensor) {
+		this.commandMotionSensor = commandMotionSensor;
 	}
 	
 	
