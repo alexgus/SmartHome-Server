@@ -64,6 +64,8 @@ public class Conf {
 	private String MQTTRingTopic;
 	
 	private String MQTTLightTopic;
+	
+	private String MQTTShutterTopic;
 
 	private String MQTTRingPayload;
 	
@@ -86,6 +88,8 @@ public class Conf {
 	private String commandGetLogBook;
 	
 	private String commandMotionSensor;
+	
+	private String commandShutter;
 	
 	private String cronSource;
 	
@@ -136,6 +140,7 @@ public class Conf {
 		this.setMQTTID(MQTT.getString("id"));
 		this.setMQTTRingTopic(MQTT.getString("topic"));
 		this.setMQTTLightTopic(MQTT.getString("topicLight"));
+		this.setMQTTShutterTopic(MQTT.getString("shutterTopic"));
 		this.setMQTTRingPayload(MQTT.getString("payload"));
 		this.setMQTTAbortPayload(MQTT.getString("abort"));
 		this.setMQTTRingQOS(MQTT.getInt("QOS"));
@@ -151,7 +156,8 @@ public class Conf {
 		this.setCommandAddNote(Command.getString("addNoteAction"));
 		this.setCommandGetNote(Command.getString("getNoteAction"));
 		this.setCommandGetLogBook(Command.getString("getLogBookAction"));
-		this.setCommandMotionSensor(Command.getString("motionSensor"));
+		this.setCommandMotionSensor(Command.getString("motionSensorAction"));
+		this.setCommandShutter(Command.getString("shutterAction"));
 		
 		JSONObject cron = js.getJSONObject("cron");
 		this.setCronSource(cron.getString("source"));
@@ -552,6 +558,34 @@ public class Conf {
 	 */
 	public void setCommandMotionSensor(String commandMotionSensor) {
 		this.commandMotionSensor = commandMotionSensor;
+	}
+
+	/**
+	 * @return the commandShutter
+	 */
+	public String getCommandShutter() {
+		return this.commandShutter;
+	}
+
+	/**
+	 * @param commandShutter the commandShutter to set
+	 */
+	public void setCommandShutter(String commandShutter) {
+		this.commandShutter = commandShutter;
+	}
+
+	/**
+	 * @return the mQTTShutterTopic
+	 */
+	public String getMQTTShutterTopic() {
+		return this.MQTTShutterTopic;
+	}
+
+	/**
+	 * @param mQTTShutterTopic the mQTTShutterTopic to set
+	 */
+	public void setMQTTShutterTopic(String mQTTShutterTopic) {
+		this.MQTTShutterTopic = mQTTShutterTopic;
 	}
 	
 	

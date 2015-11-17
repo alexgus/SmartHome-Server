@@ -3,6 +3,8 @@
  */
 package fr.utbm.to52.smarthome.controller.events;
 
+import java.util.List;
+
 import org.lightcouch.CouchDbClient;
 
 /**
@@ -11,14 +13,17 @@ import org.lightcouch.CouchDbClient;
  */
 public class MotionSensor extends AbstractEvent{
 	
-	private Event toInform;
+	/**
+	 * AbortEvent{0}, 
+	 */
+	private List<Event> toInform;
 	
 	/**
 	 * Create Abort event for the clock
 	 * @param s Couchdb client
 	 * @param e Event to trigger
 	 */
-	public MotionSensor(CouchDbClient s, Event e) {
+	public MotionSensor(CouchDbClient s, List<Event> e) {
 		super(s);
 		this.toInform = e;
 	}
@@ -30,7 +35,8 @@ public class MotionSensor extends AbstractEvent{
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-		this.toInform.inform(null);
+		for (Event event : this.toInform) 
+			event.inform(null);
 	}
 
 }
