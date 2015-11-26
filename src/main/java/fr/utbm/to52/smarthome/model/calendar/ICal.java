@@ -87,8 +87,10 @@ public class ICal implements ICalendar {
 	public void load() {
 		try {
 			this.cal = Calendars.load(this.url);
-		} catch (IOException | ParserException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (ParserException e2) {
+			e2.printStackTrace(); // TODO Message
 		}
 	}
 	
