@@ -55,15 +55,15 @@ public class DateController extends TimerTask {
 			fr.utbm.to52.smarthome.model.calendar.DateCalendar rangeHour1 = (fr.utbm.to52.smarthome.model.calendar.DateCalendar) now.clone();
 			
 			// Create range of date for the research
-			if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 4) // if soon in the morning
+			//if(now.get(Calendar.AM_PM) == Calendar.AM && now.get(Calendar.HOUR) < 12) // if soon in the morning
 				rangeHour0 = now;
-			else{
+			/*else{
 				rangeHour0.set(Calendar.SECOND, 0);
 				rangeHour0.set(Calendar.MINUTE, 0);
 				rangeHour0.set(Calendar.HOUR, 0);
 				rangeHour0.set(Calendar.AM_PM, Calendar.AM);
 				rangeHour0.add(Calendar.DAY_OF_YEAR, 1);
-			}
+			}*/
 			
 			rangeHour1.set(Calendar.SECOND, 0);
 			rangeHour1.set(Calendar.MINUTE, 0);

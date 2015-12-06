@@ -22,16 +22,21 @@
 
 	<repositories>
 		<repository>
-			<id>Eclipse Paho Repo</id>
-			<url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
-		</repository>
-		<repository>
 			<id>scribe-java-mvn-repo</id>
 			<url>https://raw.github.com/fernandezpablo85/scribe-java/mvn-repo/</url>
 			<snapshots>
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
+		</repository>
+		<repository>
+			<id>Eclipse Paho Repo</id>
+			<url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+		</repository>
+		<repository>
+			<id>org.arakhne-maven</id>
+			<name>Arakhnê.org Snapshots</name>
+			<url>http://download.tuxfamily.org/arakhne/maven/</url>
 		</repository>
 	</repositories>
 
@@ -123,7 +128,24 @@
 			<artifactId>lightcouch</artifactId>
 			<version>0.1.8</version>
 		</dependency>
+		<dependency>
+			<groupId>org.arakhne.tinymas</groupId>
+			<artifactId>tinymas</artifactId>
+			<type>pom</type>
+		</dependency>
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.arakhne.tinymas</groupId>
+				<artifactId>tinymas</artifactId>
+				<version>6.7</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<plugins>
 			<plugin>

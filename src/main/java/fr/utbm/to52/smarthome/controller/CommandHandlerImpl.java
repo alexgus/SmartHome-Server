@@ -19,30 +19,32 @@ import fr.utbm.to52.smarthome.controller.events.Event;
  *
  */
 public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnable{
-	
+
 	private static final int TIME_CHECK = 100;
-	
+
 	private Controller controller;
 
 	private Collection<String> lCmd = Collections.synchronizedCollection(new ArrayList<String>());
-	
+
 	private Event noSuchCommand;
-	
+
 	private Event ringEvent;
-	
+
 	private Event addRingEvent;
-	
+
 	private Event lightEvent;
-	
+
 	private Event quitEvent;
-	
+
 	private Event addNote;
-	
+
 	private Event getNote;
-	
+
 	private Event getLogBook;
-	
+
 	private Event motionSensor;
+	
+	private Event presence;
 
 	/**
 	 * Create command handler with
@@ -51,11 +53,11 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	public CommandHandlerImpl(Controller c) {
 		this.controller = c;
 	}
-	
+
 	@Override
 	public void run() {
 		List<String> handledCommand = new ArrayList<>();
-		
+
 		while(this.controller.isRunning()){
 			synchronized (this.lCmd) {
 				for (String cmd : this.lCmd) {
@@ -63,10 +65,10 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 					handledCommand.add(cmd);
 				}
 			}
-			
+
 			for (String cmdOk : handledCommand)
 				this.lCmd.remove(cmdOk);
-			
+
 			try {
 				Thread.sleep(CommandHandlerImpl.TIME_CHECK);
 			} catch (InterruptedException e) {
@@ -74,7 +76,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 			}
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
@@ -82,8 +84,8 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	public synchronized void handle(String cmd){
 		this.lCmd.add(cmd);
 	}
-	
-	
+
+
 	private void handleQueuedCmd(String cmd) {
 		if(cmd.equals(Conf.getInstance().getCommandRing())){
 			if(this.getRingEvent() != null)
@@ -107,6 +109,9 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 		}else if(cmd.contains(Conf.getInstance().getCommandMotionSensor())){
 			if(this.motionSensor != null)
 				this.motionSensor.inform(null);
+		}else if(cmd.contains("out")){
+			if(this.presence != null)
+				this.presence.inform(null);
 		}else{
 			this.noSuchCommand.inform(cmd);
 		}
@@ -125,10 +130,10 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	@Override
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
-		if(arg0.equals(Conf.getInstance().getMQTTRingTopic()))
+		//if(arg0.equals(Conf.getInstance().getMQTTRingTopic()))
 			this.handle(arg1.toString());
 	}
-	
+
 	/**
 	 * Get the add ring event set to this handler
 	 * @return The add ring event set
@@ -136,7 +141,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	public Event getAddRingEvent() {
 		return this.addRingEvent;
 	}
-	
+
 	/**
 	 * Set the add ring event
 	 * @param r The add ring event
@@ -152,7 +157,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	public void setRingEventController(Event r){
 		this.ringEvent = r;
 	}
-	
+
 	/**
 	 * Get the ring event for this handler
 	 * @return The ring event set
@@ -257,6 +262,20 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 */
 	public void setMotionSensor(Event motionSensor) {
 		this.motionSensor = motionSensor;
+	}
+
+	/**
+	 * @return the presence
+	 */
+	public Event getPresence() {
+		return this.presence;
+	}
+
+	/**
+	 * @param presence the presence to set
+	 */
+	public void setPresence(Event presence) {
+		this.presence = presence;
 	}
 
 }

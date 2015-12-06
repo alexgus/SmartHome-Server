@@ -12,6 +12,7 @@ import fr.utbm.to52.smarthome.controller.events.GetNoteEvent;
 import fr.utbm.to52.smarthome.controller.events.LightEvent;
 import fr.utbm.to52.smarthome.controller.events.MotionSensor;
 import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
+import fr.utbm.to52.smarthome.controller.events.PresenceEvent;
 import fr.utbm.to52.smarthome.controller.events.QuitEvent;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
 import fr.utbm.to52.smarthome.controller.events.ShutterEvent;
@@ -107,6 +108,8 @@ public class Controller extends AbstractService{
 		ev.add(new AbortEvent(this.couch.getSession(), this.MQTT.getMqtt()));
 		ev.add(new ShutterEvent(this.couch.getSession(), this.MQTT.getMqtt()));
 		this.cmdHandler.setMotionSensor(new MotionSensor(this.couch.getSession(), ev));
+		
+		this.cmdHandler.setPresence(new PresenceEvent(this.couch.getSession(), this.MQTT.getMqtt()));
 	}
 	
 	@Override

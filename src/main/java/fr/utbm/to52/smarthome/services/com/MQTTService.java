@@ -32,6 +32,8 @@ public class MQTTService extends AbstractService {
 		this.mqtt.connect();
 		
 		this.mqtt.subscribe(this.config.getMQTTRingTopic());
+		this.mqtt.subscribe("/bed"); // TODO better
+		this.mqtt.subscribe("/presence"); // TODO better
 	}
 
 	@Override
