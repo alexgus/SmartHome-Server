@@ -13,7 +13,6 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import fr.utbm.to52.smarthome.controller.events.core.Event;
-import fr.utbm.to52.smarthome.services.com.SocketInput;
 
 /**
  * @author Alexandre Guyon
@@ -86,7 +85,6 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 		Message m = new Message(subject, cmd);
 		this.lCmd.add(m);
 	}
-
 
 	private void handleQueuedCmd(String subject, String cmd) { // FIXME equals or contains
 		if(cmd.equals(Conf.getInstance().getClockRing())){

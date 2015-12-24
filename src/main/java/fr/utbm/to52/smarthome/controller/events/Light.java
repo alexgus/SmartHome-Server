@@ -16,7 +16,7 @@ import fr.utbm.to52.smarthome.services.com.MQTT;
  * @author Alexandre Guyon
  *
  */
-public class LightEvent extends AbstractEvent {
+public class Light extends AbstractEvent {
 
 	private MQTT connection; 
 
@@ -35,7 +35,7 @@ public class LightEvent extends AbstractEvent {
 	 * @param s couchdb session
 	 * @param c The MQTT connection to use
 	 */
-	public LightEvent(CouchDbClient s, MQTT c) {
+	public Light(CouchDbClient s, MQTT c) {
 		super(s);
 		this.connection = c;
 	}
@@ -45,25 +45,31 @@ public class LightEvent extends AbstractEvent {
 	 */
 	@Override
 	public void inform(Object o) {
-		if(this.nbCall == 0){
-			this.nbCall++;
-			this.clean();
+		Integer intens = (Integer) o;
+		if(intens > 0){
+			if(this.nbCall == 0){
+				this.nbCall++;
+				this.clean();
+				
+				this.registerEvent(getClass(), o);
 			
-			this.registerEvent(getClass(), o);
-		
-			TimerTask lightIncrease = new TimerTask() {
-
-				@Override
-				public void run() {
-					LightEvent.this.getConnection().publish(Conf.getInstance().getLightTopic(), 
-							Integer.toString(LightEvent.this.getLightIntensity()));
-					LightEvent.this.setLightIntensity(
-							Math.round(LightEvent.this.getLightIntensity() + LightEvent.this.step));
-				}
-			};
-			this.schedLight.scheduleAtFixedRate(lightIncrease, 0, this.rate);
-			
-			this.scheduleCancel();
+				TimerTask lightIncrease = new TimerTask() {
+	
+					@Override
+					public void run() {
+						Light.this.getConnection().publish(Conf.getInstance().getLightTopic(), 
+								Integer.toString(Light.this.getLightIntensity()));
+						Light.this.setLightIntensity(
+								Math.round(Light.this.getLightIntensity() + Light.this.step));
+					}
+				};
+				this.schedLight.scheduleAtFixedRate(lightIncrease, 0, this.rate);
+				
+				this.scheduleCancel();
+			}
+		}else if(intens == 0){
+			this.getConnection().publish(Conf.getInstance().getLightTopic(), 
+								Integer.toString(0));
 		}
 	}
 	
@@ -78,8 +84,8 @@ public class LightEvent extends AbstractEvent {
 
 			@Override
 			public void run() {
-				LightEvent.this.getLightScheduler().cancel();
-				LightEvent.this.setNbCall(LightEvent.this.getNbCall() - 1);
+				Light.this.getLightScheduler().cancel();
+				Light.this.setNbCall(Light.this.getNbCall() - 1);
 			}
 		};
 		cancelTask.schedule(t, this.rate * ((this.maxIntesity + 1)/this.step));
