@@ -80,6 +80,8 @@ public class Conf {
 	private String clockRing;
 	
 	private String lightTopic;
+	private String lightOn;
+	private String lightOff;
 	
 	private String blindTopic;
 	private String blindOpen;
@@ -142,7 +144,9 @@ public class Conf {
 		this.clockAbort = cpClock.getString("commandAbort");
 		
 		JSONObject cpLight = js.getJSONObject("componentLight");
-		this.setLightTopic(cpLight.getString("topic"));
+		this.lightTopic = cpLight.getString("topic");
+		this.lightOn = cpLight.getString("commandOn");
+		this.lightOff = cpLight.getString("commandOff");
 		
 		JSONObject cpBlind = js.getJSONObject("componentBlind");
 		this.blindTopic = cpBlind.getString("topic");
@@ -457,6 +461,34 @@ public class Conf {
 	 */
 	public void setLightTopic(String lightTopic) {
 		this.lightTopic = lightTopic;
+	}
+
+	/**
+	 * @return the lightOn
+	 */
+	public String getLightOn() {
+		return this.lightOn;
+	}
+
+	/**
+	 * @param lightOn the lightOn to set
+	 */
+	public void setLightOn(String lightOn) {
+		this.lightOn = lightOn;
+	}
+
+	/**
+	 * @return the lightOff
+	 */
+	public String getLightOff() {
+		return this.lightOff;
+	}
+
+	/**
+	 * @param lightOff the lightOff to set
+	 */
+	public void setLightOff(String lightOff) {
+		this.lightOff = lightOff;
 	}
 	
 }

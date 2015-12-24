@@ -31,9 +31,6 @@ public class MQTTService extends AbstractService {
 			this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
 		this.mqtt.connect();
 		
-		this.mqtt.subscribe(this.config.getClockTopic());
-		this.mqtt.subscribe(this.config.getLightTopic());
-		this.mqtt.subscribe(this.config.getBlindTopic());
 		this.mqtt.subscribe(this.config.getBedTopic());
 		this.mqtt.subscribe(this.config.getMotionTopic());
 	}

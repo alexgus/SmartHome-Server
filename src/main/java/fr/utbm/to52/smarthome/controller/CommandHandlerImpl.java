@@ -87,10 +87,10 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private void handleQueuedCmd(String subject, String cmd) {
 		if(subject.contains(SocketInput.SUBJECT) && cmd.contains("AddRing")){ // TODO conf
 			this.addRingEvent.inform(cmd);
-		}else if(subject.equals(Conf.getInstance().getClockTopic()) && cmd.equals(Conf.getInstance().getClockRing())){
+		}else if(subject.contains(SocketInput.SUBJECT) && cmd.equals(Conf.getInstance().getClockRing())){
 			this.ringEvent.inform(null);
-			this.lightEvent.inform(null);
-		}else if(subject.equals(Conf.getInstance().getBedTopic()) && cmd.contains(Conf.getInstance().getBedOut())){
+			this.lightEvent.inform(150);
+		}else if(subject.equals(Conf.getInstance().getBedTopic()) && cmd.equals(Conf.getInstance().getBedOut())){
 			this.shutter.inform(null);
 			this.abort.inform(null);
 		}else if(subject.equals(Conf.getInstance().getMotionTopic()) &&cmd.contains(Conf.getInstance().getMotionOut())){

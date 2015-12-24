@@ -43,6 +43,7 @@ public class Light extends AbstractEvent {
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.events.Event#inform(java.lang.Object)
 	 */
+	@SuppressWarnings("boxing")
 	@Override
 	public void inform(Object o) {
 		Integer intens = (Integer) o;
@@ -68,8 +69,7 @@ public class Light extends AbstractEvent {
 				this.scheduleCancel();
 			}
 		}else if(intens == 0){
-			this.getConnection().publish(Conf.getInstance().getLightTopic(), 
-								Integer.toString(0));
+			this.getConnection().publish(Conf.getInstance().getLightTopic(),Conf.getInstance().getLightOff());
 		}
 	}
 	
