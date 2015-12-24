@@ -15,7 +15,7 @@ public class LightAgent extends ComponentAgent {
 	@Override
 	protected void activate() {
 		this.logger.info("Light started");
-		this.mqtt.getMqtt().subscribe(Conf.getInstance().getLightTopic());
+		this.subscribe(Conf.getInstance().getLightTopic());
 	}
 	
 	@Override

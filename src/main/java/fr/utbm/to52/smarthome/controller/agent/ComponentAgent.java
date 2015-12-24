@@ -10,6 +10,7 @@ import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
 import fr.utbm.to52.smarthome.controller.Message;
+import fr.utbm.to52.smarthome.services.com.MQTT;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
 import fr.utbm.to52.smarthome.services.couchdb.CouchdbService;
 import madkit.kernel.Agent;
@@ -22,7 +23,7 @@ public abstract class ComponentAgent extends Agent implements MqttCallback{
 	
 	private CouchDbClient couch;
 	
-	protected MQTTService mqtt = new MQTTService(this);
+	private MQTTService mqtt = new MQTTService(this);
 	
 	/**
 	 * Start services
@@ -34,6 +35,23 @@ public abstract class ComponentAgent extends Agent implements MqttCallback{
 		c.setUp(Conf.getInstance());
 		c.start();
 		this.couch = c.getSession();
+	}
+	
+	/**
+	 * {@link MQTT#subscribe(String)}
+	 * @param topic MQTT#subscribe(String)
+	 */
+	protected void subscribe(String topic){
+		this.mqtt.getMqtt().subscribe(topic);
+	}
+	
+	/**
+	 * {@link MQTT#publish(String, String)}
+	 * @param topic {@link MQTT#publish(String, String)}
+	 * @param message {@link MQTT#publish(String, String)}
+	 */
+	protected void publish(String topic, String message){
+		this.mqtt.getMqtt().publish(topic, message);
 	}
 	
 	/**
