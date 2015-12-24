@@ -44,8 +44,9 @@ public class Controller extends AbstractService{
 	
 	/**
 	 * Default instance of a controller
+	 * @param c Configuration of the app
 	 */
-	public Controller(){
+	public Controller(Conf c){
 		
 		this.cmdHandler = new CommandHandlerImpl(this);
 		this.tCmdhandler = new Thread(this.cmdHandler);
@@ -58,7 +59,7 @@ public class Controller extends AbstractService{
 		this.couch = new CouchdbService();
 		this.lService.add(this.couch);
 		
-		if(this.config.getFeaturesEnabled().contains("clock")){
+		if(c.getFeaturesEnabled().contains("clock")){
 			this.server = new CmdServer(this.cmdHandler);
 			this.lService.add(this.server);
 			

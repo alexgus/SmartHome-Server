@@ -139,7 +139,7 @@ public class Conf {
 		JSONObject cpClock = js.getJSONObject("componentClock");
 		this.clockTopic = cpClock.getString("topic");
 		this.clockRing = cpClock.getString("commandRing");
-		this.clockAbort = cpClock.getString("commandClose");
+		this.clockAbort = cpClock.getString("commandAbort");
 		
 		JSONObject cpLight = js.getJSONObject("componentLight");
 		this.setLightTopic(cpLight.getString("topic"));
@@ -156,8 +156,8 @@ public class Conf {
 		
 		JSONObject cpMotion = js.getJSONObject("componentMotion");
 		this.motionTopic = cpMotion.getString("topic");
-		this.motionIn = cpMotion.getString("motionIn");
-		this.motionOut = cpMotion.getString("motionOut");
+		this.motionIn = cpMotion.getString("commandIn");
+		this.motionOut = cpMotion.getString("commandOut");
 	}
 	
 	/**
