@@ -10,5 +10,20 @@ import madkit.kernel.Agent;
  *
  */
 public class ComponentAgent extends Agent {
-
+	
+	@Override
+	protected void activate() {
+		this.logger.info("ComponenentAgent : activate");
+	}
+	
+	@Override
+	protected void live() {
+		this.logger.info("ComponenentAgent : live");
+	}
+	
+	@Override
+	protected void end() {
+		this.logger.info("ComponenentAgent : end");
+	}
+	
 }
