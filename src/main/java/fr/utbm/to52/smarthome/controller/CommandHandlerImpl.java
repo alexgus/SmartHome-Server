@@ -45,6 +45,10 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private Event motionSensor;
 	
 	private Event presence;
+	
+	private Event abort;
+	
+	private Event shutter;
 
 	/**
 	 * Create command handler with
@@ -98,7 +102,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 		}else if(cmd.contains(Conf.getInstance().getMotionOut())){
 			if(this.motionSensor != null)
 				this.motionSensor.inform(null);
-		}else if(cmd.contains("out")){
+		}else if(cmd.contains("out")){ // presence
 			if(this.presence != null)
 				this.presence.inform(null);
 		}else if(cmd.equals("QUIT")){ // TODO conf
@@ -267,6 +271,34 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 */
 	public void setPresence(Event presence) {
 		this.presence = presence;
+	}
+
+	/**
+	 * @return the abort
+	 */
+	public Event getAbort() {
+		return this.abort;
+	}
+
+	/**
+	 * @param abort the abort to set
+	 */
+	public void setAbort(Event abort) {
+		this.abort = abort;
+	}
+
+	/**
+	 * @return the shutter
+	 */
+	public Event getShutter() {
+		return this.shutter;
+	}
+
+	/**
+	 * @param shutter the shutter to set
+	 */
+	public void setShutter(Event shutter) {
+		this.shutter = shutter;
 	}
 
 }

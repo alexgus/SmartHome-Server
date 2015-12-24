@@ -3,6 +3,16 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.utbm.to52.smarthome.controller.events.AbortEvent;
+import fr.utbm.to52.smarthome.controller.events.AddRing;
+import fr.utbm.to52.smarthome.controller.events.Light;
+import fr.utbm.to52.smarthome.controller.events.MotionSensor;
+import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
+import fr.utbm.to52.smarthome.controller.events.PresenceEvent;
+import fr.utbm.to52.smarthome.controller.events.QuitEvent;
+import fr.utbm.to52.smarthome.controller.events.Ring;
+import fr.utbm.to52.smarthome.controller.events.ShutterEvent;
+import fr.utbm.to52.smarthome.controller.events.core.Event;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
@@ -85,7 +95,19 @@ public class Controller extends AbstractService{
 	}
 	
 	private void enableEvent(){ // TODO make DAO singleton
+		this.cmdHandler.setQuitEvent(new QuitEvent(this, this.couch.getSession()));
+		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.couch.getSession()));
 		
+		this.cmdHandler.setAddRingEventController(new AddRing(this.couch.getSession(), this.clock.getCron()));
+		
+		this.cmdHandler.setRingEventController(new Ring(this.couch.getSession(), this.MQTT.getMqtt()));
+		this.cmdHandler.setLightEvent(new Light(this.couch.getSession(), this.MQTT.getMqtt()));
+		
+		this.cmdHandler.setMotionSensor(new MotionSensor(this.couch.getSession()));
+		this.cmdHandler.setAbort(new AbortEvent(this.couch.getSession(), this.MQTT.getMqtt()));
+		this.cmdHandler.setShutter(new ShutterEvent(this.couch.getSession(), this.MQTT.getMqtt()));
+		
+		this.cmdHandler.setPresence(new PresenceEvent(this.couch.getSession(), this.MQTT.getMqtt()));		
 	}
 	
 	@Override
