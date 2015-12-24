@@ -10,11 +10,11 @@ import fr.utbm.to52.smarthome.controller.Message;
  * @author Alexandre Guyon
  *
  */
-public class LightAgent extends ComponentAgent {
-
+public class Clock extends ComponentAgent {
+	
 	@Override
 	protected void activate() {
-		this.logger.info("Light started");
+		this.logger.info("Clock started");
 		this.subscribe(Conf.getInstance().getLightTopic());
 	}
 	
@@ -27,7 +27,7 @@ public class LightAgent extends ComponentAgent {
 	
 	@Override
 	protected void end() {
-		this.logger.info("Light ended");
+		this.logger.info("Clock ended");
 	}
 	
 	/* (non-Javadoc)
@@ -35,9 +35,8 @@ public class LightAgent extends ComponentAgent {
 	 */
 	@Override
 	protected void inform(Message m) {
-		if(m.getSubject().equals(Conf.getInstance().getLightTopic())){
+		if(m.getSubject().equals(Conf.getInstance().getClockTopic())){
 			this.logger.info(m.getMessage());
 		}
 	}
-
 }

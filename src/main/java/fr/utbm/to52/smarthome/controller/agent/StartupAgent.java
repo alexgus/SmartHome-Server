@@ -31,7 +31,11 @@ public class StartupAgent extends Agent{
 	@Override
 	protected void live() {
 		this.logger.info("Launch others agents");
-		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.LightAgent");
+		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.Light");
+		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.Clock");
+		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.Bed");
+		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.Motion");
+		this.launchAgent("fr.utbm.to52.smarthome.controller.agent.Blind");
 	}
 	
 	@Override
