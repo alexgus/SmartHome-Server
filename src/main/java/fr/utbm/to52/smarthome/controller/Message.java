@@ -3,11 +3,13 @@
  */
 package fr.utbm.to52.smarthome.controller;
 
+import fr.utbm.to52.smarthome.services.couchdb.StorableEntity;
+
 /**
  * @author Alexandre Guyon
  *
  */
-public class Message {
+public class Message extends StorableEntity{
 	
 	private String subject;
 	
