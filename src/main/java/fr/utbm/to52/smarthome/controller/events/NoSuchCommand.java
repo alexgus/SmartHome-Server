@@ -5,6 +5,8 @@ package fr.utbm.to52.smarthome.controller.events;
 
 import org.lightcouch.CouchDbClient;
 
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
+
 /**
  * @author Alexandre Guyon
  *

@@ -1,14 +1,14 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.services.com;
+package fr.utbm.to52.smarthome.services.clock;
 
 import java.io.IOException;
 
 import fr.utbm.to52.smarthome.controller.CommandHandler;
 import fr.utbm.to52.smarthome.services.AbstractService;
-
-// FIXME Move CmdServer to clock
+import fr.utbm.to52.smarthome.services.com.NextPortException;
+import fr.utbm.to52.smarthome.services.com.SocketInput;
 
 /**
  * @author Alexandre Guyon

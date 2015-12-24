@@ -7,6 +7,9 @@ import java.util.List;
 
 import org.lightcouch.CouchDbClient;
 
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
+import fr.utbm.to52.smarthome.controller.events.core.Event;
+
 /**
  * @author Alexandre Guyon
  *

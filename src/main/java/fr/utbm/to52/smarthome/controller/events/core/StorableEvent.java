@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.utbm.to52.smarthome.controller.events;
+package fr.utbm.to52.smarthome.controller.events.core;
 
 import java.util.Date;
 

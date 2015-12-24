@@ -14,8 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.events.Event;
 import fr.utbm.to52.smarthome.controller.events.RingEvent;
+import fr.utbm.to52.smarthome.controller.events.core.Event;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
 import fr.utbm.to52.smarthome.services.couchdb.CouchdbService;
 

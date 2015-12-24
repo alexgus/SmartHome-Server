@@ -6,6 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
