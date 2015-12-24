@@ -19,33 +19,6 @@ import fr.utbm.to52.smarthome.controller.events.core.Event;
  *
  */
 public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnable{
-	
-	private class Message{
-		
-		private String subject;
-		
-		private String message;
-		
-		public Message(String subject, String message) {
-			this.message = message;
-			this.subject = subject;
-		}
-
-		/**
-		 * @return the subject
-		 */
-		public String getSubject() {
-			return this.subject;
-		}
-
-		/**
-		 * @return the message
-		 */
-		public String getMessage() {
-			return this.message;
-		}
-		
-	}
 
 	private static final int TIME_CHECK = 100;
 

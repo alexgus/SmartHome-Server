@@ -1,7 +1,6 @@
 package fr.utbm.to52.smarthome.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,8 +73,6 @@ public class Conf {
 	private List<String> featuresEnabled;
 	
 	private ClockFeature clockfeature;
-	
-	private Map<String, JSONArray> featuresMap;
 
 	/**
 	 * Private constructor --> singleton
@@ -117,12 +114,11 @@ public class Conf {
 			this.featuresEnabled.add(ftenabled.getString(i));
 		
 		JSONObject featuresConfig = js.getJSONObject("featuresConfig");
-		JSONObject featuresM = js.getJSONObject("featuresMap");
-		this.featuresMap = new HashMap<>();
-		if(this.featuresEnabled.contains("clock")){
+		if(this.featuresEnabled.contains("clock"))
 			this.clockfeature = new ClockFeature(featuresConfig.getJSONObject("clock"));
-			this.featuresMap.put("clock", featuresM.getJSONArray("clock"));
-		}
+		
+		
+		
 	}
 	
 	/**
@@ -241,13 +237,5 @@ public class Conf {
 	public void setClockfeature(ClockFeature clockfeature) {
 		this.clockfeature = clockfeature;
 	}
-
-	/**
-	 * @return the featuresMap
-	 */
-	public Map<String, JSONArray> getFeaturesMap() {
-		return this.featuresMap;
-	}
-	
 	
 }
