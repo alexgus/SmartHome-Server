@@ -2,6 +2,9 @@ package fr.utbm.to52.smarthome.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
 
 import fr.utbm.to52.smarthome.controller.events.AbortEvent;
 import fr.utbm.to52.smarthome.controller.events.AddNoteEvent;
@@ -94,7 +97,13 @@ public class Controller extends AbstractService{
 		this.running = true;
 	}
 	
+	private EventController eventInit;
+	
 	private void enableEvent(){ // TODO make DAO singleton
+		this.eventInit = new EventController(this);
+		for(Map.Entry<String, JSONArray> entry : this.config.getFeaturesMap().entrySet())
+			this.eventInit.initialize(entry.getValue());
+		
 		this.cmdHandler.setQuitEvent(new QuitEvent(this, this.couch.getSession()));
 		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.couch.getSession()));
 		this.cmdHandler.setRingEventController(new RingEvent(this.couch.getSession(), this.MQTT.getMqtt()));
@@ -130,6 +139,24 @@ public class Controller extends AbstractService{
 	 */
 	public boolean isRunning() {
 		return this.running;
-	}	
-
+	}
+	
+	/**
+	 * @return The list of services
+	 */
+	public List<Service> getServices(){
+		return this.lService;
+	}
+	
+	/**
+	 * @param c Services class
+	 * @return Asked service
+	 */
+	public Service getService(Class<? extends Service> c){
+		for (Service service : this.lService) {
+			if(service.getClass() == c)
+				return service;
+		}
+		return null;
+	}
 }

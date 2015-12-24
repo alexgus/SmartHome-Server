@@ -30,12 +30,13 @@ public abstract class AbstractDAOEvent<N> extends AbstractEvent {
 	}
 
 	@Override
-	public void inform(Object o) {
+	public final void inform(Object o) {
 		this.registerEvent(getClass(), o);
 
 		String cmdline = (String) o;
 		String json = cmdline.substring(cmdline.indexOf(" "));
 
+		// TODO later, thread events
 		this.informCmd(new JSONObject(json));
 	}
 

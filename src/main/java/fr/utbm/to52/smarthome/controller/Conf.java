@@ -1,14 +1,17 @@
 package fr.utbm.to52.smarthome.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import fr.utbm.to52.smarthome.controller.conf.ClockFeature;
 import fr.utbm.to52.smarthome.util.BasicIO;
-
-// TODO re-organize import
+ 
 /**
  * This class is used to parse the configuration file.
  * This is also used to store all this values.
@@ -43,7 +46,12 @@ public class Conf {
 	public static final int SOURCE_ICAL = 1;
 	
 	/**
-	 * Default config file
+	 * Default config file (old one)
+	 */
+	private static final String DEFAULT_CONF_FILE_old = "smart.conf.old";
+	
+	/**
+	 * New config file
 	 */
 	private static final String DEFAULT_CONF_FILE = "smart.conf";
 	
@@ -55,12 +63,28 @@ public class Conf {
 	/**
 	 * Use java cron (Multiplatform)
 	 */
-	public static final String CRON_JAVA = "java";
+	public static final String CRON_JAVA = "java";	
 	
 	private String MQTTServer;
 	
 	private String MQTTID;
-
+	
+	private int MQTTQOS;
+	
+	private String googleApiKey;
+	
+	private String googleApiSecret;
+	
+	private String googleScope;
+	
+	///////////////////////////////////////
+	private List<String> featuresEnabled;
+	
+	private ClockFeature clockfeature;
+	
+	private Map<String, JSONArray> featuresMap;
+	///////////////////////////////////////
+	
 	private String MQTTRingTopic;
 	
 	private String MQTTLightTopic;
@@ -70,8 +94,6 @@ public class Conf {
 	private String MQTTRingPayload;
 	
 	private String MQTTAbortPayload;
-
-	private int MQTTQOS;
 	
 	private int serverPort;
 	
@@ -105,12 +127,6 @@ public class Conf {
 	
 	private List<String> alarmURL;
 	
-	private String googleApiKey;
-	
-	private String googleApiSecret;
-	
-	private String googleScope;
-
 	private String topicAnswerSuffix;
 
 	/**
@@ -124,6 +140,7 @@ public class Conf {
 	 * Import the default configuration file into this object
 	 */
 	public void importConf(){
+		importOldConfFromFile(DEFAULT_CONF_FILE_old);
 		importConfFromFile(DEFAULT_CONF_FILE);
 	}
 	
@@ -132,6 +149,41 @@ public class Conf {
 	 * @param defaultConfFile The configuration file to import
 	 */
 	public void importConfFromFile(String defaultConfFile) {
+		String content = BasicIO.readFile(defaultConfFile);
+		JSONObject js = new JSONObject(content);
+		
+		JSONObject network = js.getJSONObject("network");
+		JSONObject MQTT = network.getJSONObject("MQTT");
+		this.setMQTTServer(MQTT.getString("server"));
+		this.setMQTTID(MQTT.getString("id"));
+		this.setMQTTQOS(MQTT.getInt("QOS"));
+		
+		JSONObject connector = js.getJSONObject("connector");
+		JSONObject google = connector.getJSONObject("google");
+		this.setGoogleApiKey(google.getString("apiKey"));
+		this.setGoogleApiSecret(google.getString("apiSecret"));
+		this.setGoogleScope(google.getString("scope"));
+		
+		JSONArray ftenabled = js.getJSONArray("featuresEnabled");
+		this.featuresEnabled = new ArrayList<>();
+		for(int i = 0 ; i < ftenabled.length(); ++i)
+			this.featuresEnabled.add(ftenabled.getString(i));
+		
+		JSONObject featuresConfig = js.getJSONObject("featuresConfig");
+		JSONObject featuresM = js.getJSONObject("featuresMap");
+		this.featuresMap = new HashMap<>();
+		if(this.featuresEnabled.contains("clock")){
+			this.clockfeature = new ClockFeature(featuresConfig.getJSONObject("clock"));
+			this.featuresMap.put("clock", featuresM.getJSONArray("clock"));
+		}
+	}
+
+	/**
+	 * Import configuration file into this object
+	 * @param defaultConfFile The configuration file to import
+	 */
+	@Deprecated
+	public void importOldConfFromFile(String defaultConfFile) {
 		String content = BasicIO.readFile(defaultConfFile);
 		JSONObject js = new JSONObject(content);
 		
@@ -183,7 +235,7 @@ public class Conf {
 	 * Set the MQTT QOS in this object
 	 * @param int1 The MQTT QOS to set
 	 */
-	private void setMQTTRingQOS(int int1) {
+	private void setMQTTRingQOS(int int1) { // TODO Refactor -> rename
 		this.MQTTQOS = int1;
 	}
 
@@ -223,6 +275,7 @@ public class Conf {
 	 * Get the MQTT topic to ring event
 	 * @return the MQTT topic to ring event
 	 */
+	@Deprecated
 	public String getMQTTRingTopic() {
 		return this.MQTTRingTopic;
 	}
@@ -231,6 +284,7 @@ public class Conf {
 	 * Set the MQTT topic to ring event
 	 * @param mQTTRingTopic the MQTT topic to ring event
 	 */
+	@Deprecated
 	public void setMQTTRingTopic(String mQTTRingTopic) {
 		this.MQTTRingTopic = mQTTRingTopic;
 	}
@@ -238,6 +292,7 @@ public class Conf {
 	/**
 	 * @return the mQTTLightTopic
 	 */
+	@Deprecated
 	public String getMQTTLightTopic() {
 		return this.MQTTLightTopic;
 	}
@@ -245,6 +300,7 @@ public class Conf {
 	/**
 	 * @param mQTTLightTopic the mQTTLightTopic to set
 	 */
+	@Deprecated
 	public void setMQTTLightTopic(String mQTTLightTopic) {
 		this.MQTTLightTopic = mQTTLightTopic;
 	}
@@ -253,6 +309,7 @@ public class Conf {
 	 * Get the MQTT payload to ring event
 	 * @return the MQTT payload to ring event
 	 */
+	@Deprecated
 	public String getMQTTRingPayload() {
 		return this.MQTTRingPayload;
 	}
@@ -261,6 +318,7 @@ public class Conf {
 	 * Set the MQTT payload to ring event
 	 * @param mQTTRingPayload the MQTT payload to ring event
 	 */
+	@Deprecated
 	public void setMQTTRingPayload(String mQTTRingPayload) {
 		this.MQTTRingPayload = mQTTRingPayload;
 	}
@@ -276,6 +334,7 @@ public class Conf {
 	/**
 	 * @return the serverPort
 	 */
+	@Deprecated
 	public int getServerPort() {
 		return this.serverPort;
 	}
@@ -283,6 +342,7 @@ public class Conf {
 	/**
 	 * @param serverPort the serverPort to set
 	 */
+	@Deprecated
 	public void setServerPort(int serverPort) {
 		this.serverPort = serverPort;
 	}
@@ -290,6 +350,7 @@ public class Conf {
 	/**
 	 * @return the serverCommandQuit
 	 */
+	@Deprecated
 	public String getCommandQuit() {
 		return this.commandQuit;
 	}
@@ -297,6 +358,7 @@ public class Conf {
 	/**
 	 * @param serverCommandQuit the serverCommandQuit to set
 	 */
+	@Deprecated
 	public void setCommandQuit(String serverCommandQuit) {
 		this.commandQuit = serverCommandQuit;
 	}
@@ -304,6 +366,7 @@ public class Conf {
 	/**
 	 * @return the serverCommandAddRing
 	 */
+	@Deprecated
 	public String getCommandAddRing() {
 		return this.commandAddRing;
 	}
@@ -311,6 +374,7 @@ public class Conf {
 	/**
 	 * @param serverCommandAddRing the serverCommandAddRing to set
 	 */
+	@Deprecated
 	public void setCommandAddRing(String serverCommandAddRing) {
 		this.commandAddRing = serverCommandAddRing;
 	}
@@ -318,6 +382,7 @@ public class Conf {
 	/**
 	 * @return the serverCommandRing
 	 */
+	@Deprecated
 	public String getCommandRing() {
 		return this.commandRing;
 	}
@@ -325,6 +390,7 @@ public class Conf {
 	/**
 	 * @param serverCommandRing the serverCommandRing to set
 	 */
+	@Deprecated
 	public void setCommandRing(String serverCommandRing) {
 		this.commandRing = serverCommandRing;
 	}
@@ -332,6 +398,7 @@ public class Conf {
 	/**
 	 * @return the cronCommand
 	 */
+	@Deprecated
 	public String getCronCommand() {
 		return this.cronCommand;
 	}
@@ -339,6 +406,7 @@ public class Conf {
 	/**
 	 * @param cronCommand the cronCommand to set
 	 */
+	@Deprecated
 	public void setCronCommand(String cronCommand) {
 		this.cronCommand = cronCommand;
 	}
@@ -346,6 +414,7 @@ public class Conf {
 	/**
 	 * @return the cronTMPFile
 	 */
+	@Deprecated
 	public String getCronTMPFile() {
 		return this.cronTMPFile;
 	}
@@ -353,6 +422,7 @@ public class Conf {
 	/**
 	 * @param cronTMPFile the cronTMPFile to set
 	 */
+	@Deprecated
 	public void setCronTMPFile(String cronTMPFile) {
 		this.cronTMPFile = cronTMPFile;
 	}
@@ -360,6 +430,7 @@ public class Conf {
 	/**
 	 * @return the cronTag
 	 */
+	@Deprecated
 	public String getCronTag() {
 		return this.cronTag;
 	}
@@ -381,6 +452,7 @@ public class Conf {
 	/**
 	 * @return the alarmWakeUpTime
 	 */
+	@Deprecated
 	public String getAlarmWakeUpTime() {
 		return this.alarmWakeUpTime;
 	}
@@ -388,6 +460,7 @@ public class Conf {
 	/**
 	 * @param alarmWakeUpTime the alarmWakeUpTime to set
 	 */
+	@Deprecated
 	public void setAlarmWakeUpTime(String alarmWakeUpTime) {
 		this.alarmWakeUpTime = alarmWakeUpTime;
 	}
@@ -395,6 +468,7 @@ public class Conf {
 	/**
 	 * @return the alarmURL
 	 */
+	@Deprecated
 	public List<String> getAlarmURL() {
 		return this.alarmURL;
 	}
@@ -402,6 +476,7 @@ public class Conf {
 	/**
 	 * @param alarmURL the alarmURL to set
 	 */
+	@Deprecated
 	public void setAlarmURL(List<String> alarmURL) {
 		this.alarmURL = alarmURL;
 	}
@@ -409,6 +484,7 @@ public class Conf {
 	/**
 	 * @return the cronICalTag
 	 */
+	@Deprecated
 	public String getCronICalTag() {
 		return this.cronICalTag;
 	}
@@ -416,6 +492,7 @@ public class Conf {
 	/**
 	 * @param cronICalTag the cronICalTag to set
 	 */
+	@Deprecated
 	public void setCronICalTag(String cronICalTag) {
 		this.cronICalTag = cronICalTag;
 	}
@@ -423,6 +500,7 @@ public class Conf {
 	/**
 	 * @return the cronSource
 	 */
+	@Deprecated
 	public String getCronSource() {
 		return this.cronSource;
 	}
@@ -430,6 +508,7 @@ public class Conf {
 	/**
 	 * @param cronSource the cronSource to set
 	 */
+	@Deprecated
 	public void setCronSource(String cronSource) {
 		this.cronSource = cronSource;
 	}
@@ -479,6 +558,7 @@ public class Conf {
 	/**
 	 * @return the commandAddNote
 	 */
+	@Deprecated
 	public String getCommandAddNote() {
 		return this.commandAddNote;
 	}
@@ -486,6 +566,7 @@ public class Conf {
 	/**
 	 * @param commandAddNote the commandAddNote to set
 	 */
+	@Deprecated
 	public void setCommandAddNote(String commandAddNote) {
 		this.commandAddNote = commandAddNote;
 	}
@@ -493,6 +574,7 @@ public class Conf {
 	/**
 	 * @return the commandGetNote
 	 */
+	@Deprecated
 	public String getCommandGetNote() {
 		return this.commandGetNote;
 	}
@@ -500,6 +582,7 @@ public class Conf {
 	/**
 	 * @param commandGetNote the commandGetNote to set
 	 */
+	@Deprecated
 	public void setCommandGetNote(String commandGetNote) {
 		this.commandGetNote = commandGetNote;
 	}
@@ -507,6 +590,7 @@ public class Conf {
 	/**
 	 * @return the topicAnswerSuffix
 	 */
+	@Deprecated
 	public String getTopicAnswerSuffix() {
 		return this.topicAnswerSuffix;
 	}
@@ -514,6 +598,7 @@ public class Conf {
 	/**
 	 * @param topicAnswerSuffix the topicAnswerSuffix to set
 	 */
+	@Deprecated
 	public void setTopicAnswerSuffix(String topicAnswerSuffix) {
 		this.topicAnswerSuffix = topicAnswerSuffix;
 	}
@@ -521,6 +606,7 @@ public class Conf {
 	/**
 	 * @return the commandGetLogBook
 	 */
+	@Deprecated
 	public String getCommandGetLogBook() {
 		return this.commandGetLogBook;
 	}
@@ -528,6 +614,7 @@ public class Conf {
 	/**
 	 * @param commandGetLogBook the commandGetLogBook to set
 	 */
+	@Deprecated
 	public void setCommandGetLogBook(String commandGetLogBook) {
 		this.commandGetLogBook = commandGetLogBook;
 	}
@@ -535,6 +622,7 @@ public class Conf {
 	/**
 	 * @return the mQTTAbortPayload
 	 */
+	@Deprecated
 	public String getMQTTAbortPayload() {
 		return this.MQTTAbortPayload;
 	}
@@ -542,6 +630,7 @@ public class Conf {
 	/**
 	 * @param mQTTAbortPayload the mQTTAbortPayload to set
 	 */
+	@Deprecated
 	public void setMQTTAbortPayload(String mQTTAbortPayload) {
 		this.MQTTAbortPayload = mQTTAbortPayload;
 	}
@@ -549,6 +638,7 @@ public class Conf {
 	/**
 	 * @return the commandMotionSensor
 	 */
+	@Deprecated
 	public String getCommandMotionSensor() {
 		return this.commandMotionSensor;
 	}
@@ -556,6 +646,7 @@ public class Conf {
 	/**
 	 * @param commandMotionSensor the commandMotionSensor to set
 	 */
+	@Deprecated
 	public void setCommandMotionSensor(String commandMotionSensor) {
 		this.commandMotionSensor = commandMotionSensor;
 	}
@@ -563,6 +654,7 @@ public class Conf {
 	/**
 	 * @return the commandShutter
 	 */
+	@Deprecated
 	public String getCommandShutter() {
 		return this.commandShutter;
 	}
@@ -570,6 +662,7 @@ public class Conf {
 	/**
 	 * @param commandShutter the commandShutter to set
 	 */
+	@Deprecated
 	public void setCommandShutter(String commandShutter) {
 		this.commandShutter = commandShutter;
 	}
@@ -577,6 +670,7 @@ public class Conf {
 	/**
 	 * @return the mQTTShutterTopic
 	 */
+	@Deprecated
 	public String getMQTTShutterTopic() {
 		return this.MQTTShutterTopic;
 	}
@@ -584,8 +678,44 @@ public class Conf {
 	/**
 	 * @param mQTTShutterTopic the mQTTShutterTopic to set
 	 */
+	@Deprecated
 	public void setMQTTShutterTopic(String mQTTShutterTopic) {
 		this.MQTTShutterTopic = mQTTShutterTopic;
+	}
+
+	/**
+	 * @return the featuresEnabled
+	 */
+	public List<String> getFeaturesEnabled() {
+		return this.featuresEnabled;
+	}
+
+	/**
+	 * @param featuresEnabled the featuresEnabled to set
+	 */
+	public void setFeaturesEnabled(List<String> featuresEnabled) {
+		this.featuresEnabled = featuresEnabled;
+	}
+
+	/**
+	 * @return the clockfeature
+	 */
+	public ClockFeature getClockfeature() {
+		return this.clockfeature;
+	}
+
+	/**
+	 * @param clockfeature the clockfeature to set
+	 */
+	public void setClockfeature(ClockFeature clockfeature) {
+		this.clockfeature = clockfeature;
+	}
+
+	/**
+	 * @return the featuresMap
+	 */
+	public Map<String, JSONArray> getFeaturesMap() {
+		return this.featuresMap;
 	}
 	
 	

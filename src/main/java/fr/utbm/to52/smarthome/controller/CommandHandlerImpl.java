@@ -86,7 +86,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	}
 
 
-	private void handleQueuedCmd(String cmd) {
+	private void handleQueuedCmd(String cmd) { // FIXME equals or contains
 		if(cmd.equals(Conf.getInstance().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
