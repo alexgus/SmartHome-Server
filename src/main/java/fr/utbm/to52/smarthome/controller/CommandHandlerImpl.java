@@ -19,12 +19,39 @@ import fr.utbm.to52.smarthome.controller.events.Event;
  *
  */
 public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnable{
+	
+	private class Message{
+		
+		private String subject;
+		
+		private String message;
+		
+		public Message(String subject, String message) {
+			this.message = message;
+			this.subject = subject;
+		}
+
+		/**
+		 * @return the subject
+		 */
+		public String getSubject() {
+			return this.subject;
+		}
+
+		/**
+		 * @return the message
+		 */
+		public String getMessage() {
+			return this.message;
+		}
+		
+	}
 
 	private static final int TIME_CHECK = 100;
 
 	private Controller controller;
 
-	private Collection<String> lCmd = Collections.synchronizedCollection(new ArrayList<String>());
+	private Collection<Message> lCmd = Collections.synchronizedCollection(new ArrayList<Message>());
 
 	private Event noSuchCommand;
 
@@ -56,17 +83,17 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	@Override
 	public void run() {
-		List<String> handledCommand = new ArrayList<>();
+		List<Message> handledCommand = new ArrayList<>();
 
 		while(this.controller.isRunning()){
 			synchronized (this.lCmd) {
-				for (String cmd : this.lCmd) {
-					this.handleQueuedCmd(new String(cmd));
+				for (Message cmd : this.lCmd) {
+					this.handleQueuedCmd(cmd.getSubject(), cmd.getMessage());
 					handledCommand.add(cmd);
 				}
 			}
 
-			for (String cmdOk : handledCommand)
+			for (Message cmdOk : handledCommand)
 				this.lCmd.remove(cmdOk);
 
 			try {
@@ -81,12 +108,13 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
 	@Override
-	public synchronized void handle(String cmd){
-		this.lCmd.add(cmd);
+	public synchronized void handle(String subject, String cmd){
+		Message m = new Message(subject, cmd);
+		this.lCmd.add(m);
 	}
 
 
-	private void handleQueuedCmd(String cmd) { // FIXME equals or contains
+	private void handleQueuedCmd(String subject, String cmd) { // FIXME equals or contains
 		if(cmd.equals(Conf.getInstance().getCommandRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
@@ -131,7 +159,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	@Override
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
 		//if(arg0.equals(Conf.getInstance().getMQTTRingTopic()))
-			this.handle(arg1.toString());
+			this.handle(arg0.toString(), arg1.toString());
 	}
 
 	/**
