@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import fr.utbm.to52.smarthome.controller.events.core.Event;
+import fr.utbm.to52.smarthome.services.com.SocketInput;
 
 /**
  * @author Alexandre Guyon
@@ -89,21 +90,21 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	private void handleQueuedCmd(String subject, String cmd) { // FIXME equals or contains
 		if(cmd.equals(Conf.getInstance().getClockRing())){
-			if(this.getRingEvent() != null)
-				this.getRingEvent().inform(null);
-			if(this.getLightEvent() != null)
-				this.getLightEvent().inform(null);
-		}else if(cmd.equals("QUIT")){ // TODO conf
-			this.quitEvent.inform(null);
+			if(this.ringEvent != null)
+				this.ringEvent.inform(null);
+			if(this.lightEvent != null)
+				this.lightEvent.inform(null);
 		}else if(cmd.contains("AddRing")){ // TODO conf
-			if(this.getAddRingEvent() != null)
-				this.getAddRingEvent().inform(cmd);
+			if(this.addRingEvent != null)
+				this.addRingEvent.inform(cmd);
 		}else if(cmd.contains(Conf.getInstance().getMotionOut())){
 			if(this.motionSensor != null)
 				this.motionSensor.inform(null);
 		}else if(cmd.contains("out")){
 			if(this.presence != null)
 				this.presence.inform(null);
+		}else if(cmd.equals("QUIT")){ // TODO conf
+			this.quitEvent.inform(null);
 		}else{
 			this.noSuchCommand.inform(cmd);
 		}

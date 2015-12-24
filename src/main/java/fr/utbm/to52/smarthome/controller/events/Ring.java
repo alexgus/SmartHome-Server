@@ -15,7 +15,7 @@ import fr.utbm.to52.smarthome.services.com.MQTT;
  * @author Alexandre Guyon
  *
  */
-public class RingEvent extends AbstractEvent{
+public class Ring extends AbstractEvent{
 
 	private MQTT connection;  
 	
@@ -24,7 +24,7 @@ public class RingEvent extends AbstractEvent{
 	 * @param s Couchdb session
 	 * @param c A valid MQTT connection
 	 */
-	public RingEvent(CouchDbClient s, MQTT c) {
+	public Ring(CouchDbClient s, MQTT c) {
 		super(s);
 		this.connection = c;
 	}
