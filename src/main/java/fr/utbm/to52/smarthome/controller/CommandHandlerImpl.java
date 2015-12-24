@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import fr.utbm.to52.smarthome.controller.events.core.Event;
+import fr.utbm.to52.smarthome.services.com.SocketInput;
 
 /**
  * @author Alexandre Guyon
@@ -35,14 +36,6 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private Event lightEvent;
 
 	private Event quitEvent;
-
-	private Event addNote;
-
-	private Event getNote;
-
-	private Event getLogBook;
-
-	private Event motionSensor;
 	
 	private Event presence;
 	
@@ -90,21 +83,18 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 		this.lCmd.add(m);
 	}
 
-	private void handleQueuedCmd(String subject, String cmd) { // FIXME equals or contains
-		if(cmd.equals(Conf.getInstance().getClockRing())){
-			if(this.ringEvent != null)
-				this.ringEvent.inform(null);
-			if(this.lightEvent != null)
-				this.lightEvent.inform(null);
-		}else if(cmd.contains("AddRing")){ // TODO conf
-			if(this.addRingEvent != null)
-				this.addRingEvent.inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getMotionOut())){
-			if(this.motionSensor != null)
-				this.motionSensor.inform(null);
-		}else if(cmd.contains("out")){ // presence
-			if(this.presence != null)
-				this.presence.inform(null);
+	@SuppressWarnings("boxing")
+	private void handleQueuedCmd(String subject, String cmd) {
+		if(subject.contains(SocketInput.SUBJECT) && cmd.contains("AddRing")){ // TODO conf
+			this.addRingEvent.inform(cmd);
+		}else if(subject.equals(Conf.getInstance().getClockTopic()) && cmd.equals(Conf.getInstance().getClockRing())){
+			this.ringEvent.inform(null);
+			this.lightEvent.inform(null);
+		}else if(subject.equals(Conf.getInstance().getBedTopic()) && cmd.contains(Conf.getInstance().getBedOut())){
+			this.shutter.inform(null);
+			this.abort.inform(null);
+		}else if(subject.equals(Conf.getInstance().getMotionTopic()) &&cmd.contains(Conf.getInstance().getMotionOut())){
+			this.lightEvent.inform(0);
 		}else if(cmd.equals("QUIT")){ // TODO conf
 			this.quitEvent.inform(null);
 		}else{
@@ -201,62 +191,6 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 */
 	public void setNoSuchCommand(Event noSuchCommand) {
 		this.noSuchCommand = noSuchCommand;
-	}
-
-	/**
-	 * @return the addNote
-	 */
-	public Event getAddNote() {
-		return this.addNote;
-	}
-
-	/**
-	 * @param addNote the addNote to set
-	 */
-	public void setAddNote(Event addNote) {
-		this.addNote = addNote;
-	}
-
-	/**
-	 * @return the getNote
-	 */
-	public Event getGetNote() {
-		return this.getNote;
-	}
-
-	/**
-	 * @param getNote the getNote to set
-	 */
-	public void setGetNote(Event getNote) {
-		this.getNote = getNote;
-	}
-
-	/**
-	 * @return the getLogBook
-	 */
-	public Event getGetLogBook() {
-		return this.getLogBook;
-	}
-
-	/**
-	 * @param getLogBook the getLogBook to set
-	 */
-	public void setGetLogBook(Event getLogBook) {
-		this.getLogBook = getLogBook;
-	}
-
-	/**
-	 * @return the motionSensor
-	 */
-	public Event getMotionSensor() {
-		return this.motionSensor;
-	}
-
-	/**
-	 * @param motionSensor the motionSensor to set
-	 */
-	public void setMotionSensor(Event motionSensor) {
-		this.motionSensor = motionSensor;
 	}
 
 	/**
