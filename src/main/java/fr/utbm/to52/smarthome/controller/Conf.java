@@ -2,7 +2,6 @@ package fr.utbm.to52.smarthome.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,6 +73,26 @@ public class Conf {
 	
 	private ClockFeature clockfeature;
 
+	//-------- Components
+	
+	private String clockTopic;
+	private String clockAbort;
+	private String clockRing;
+	
+	private String lightTopic;
+	
+	private String blindTopic;
+	private String blindOpen;
+	private String blindClose;
+	
+	private String bedTopic;
+	private String bedIn;
+	private String bedOut;
+	
+	private String motionTopic;
+	private String motionIn;
+	private String motionOut;
+	
 	/**
 	 * Private constructor --> singleton
 	 */
@@ -117,8 +136,28 @@ public class Conf {
 		if(this.featuresEnabled.contains("clock"))
 			this.clockfeature = new ClockFeature(featuresConfig.getJSONObject("clock"));
 		
+		JSONObject cpClock = js.getJSONObject("componentClock");
+		this.clockTopic = cpClock.getString("topic");
+		this.clockRing = cpClock.getString("commandRing");
+		this.clockAbort = cpClock.getString("commandClose");
 		
+		JSONObject cpLight = js.getJSONObject("componentLight");
+		this.setLightTopic(cpLight.getString("topic"));
 		
+		JSONObject cpBlind = js.getJSONObject("componentBlind");
+		this.blindTopic = cpBlind.getString("topic");
+		this.blindClose = cpBlind.getString("commandClose");
+		this.blindOpen = cpBlind.getString("commandOpen");
+		
+		JSONObject cpBed = js.getJSONObject("componentBed");
+		this.bedTopic = cpBed.getString("topic");
+		this.bedIn = cpBed.getString("commandIn");
+		this.bedOut = cpBed.getString("commandOut");
+		
+		JSONObject cpMotion = js.getJSONObject("componentMotion");
+		this.motionTopic = cpMotion.getString("topic");
+		this.motionIn = cpMotion.getString("motionIn");
+		this.motionOut = cpMotion.getString("motionOut");
 	}
 	
 	/**
@@ -236,6 +275,188 @@ public class Conf {
 	 */
 	public void setClockfeature(ClockFeature clockfeature) {
 		this.clockfeature = clockfeature;
+	}
+
+	/**
+	 * @return the clockTopic
+	 */
+	public String getClockTopic() {
+		return this.clockTopic;
+	}
+
+	/**
+	 * @param clockTopic the clockTopic to set
+	 */
+	public void setClockTopic(String clockTopic) {
+		this.clockTopic = clockTopic;
+	}
+
+	/**
+	 * @return the clockAbort
+	 */
+	public String getClockAbort() {
+		return this.clockAbort;
+	}
+
+	/**
+	 * @param clockAbort the clockAbort to set
+	 */
+	public void setClockAbort(String clockAbort) {
+		this.clockAbort = clockAbort;
+	}
+
+	/**
+	 * @return the clockRing
+	 */
+	public String getClockRing() {
+		return this.clockRing;
+	}
+
+	/**
+	 * @param clockRing the clockRing to set
+	 */
+	public void setClockRing(String clockRing) {
+		this.clockRing = clockRing;
+	}
+
+	/**
+	 * @return the blindTopic
+	 */
+	public String getBlindTopic() {
+		return this.blindTopic;
+	}
+
+	/**
+	 * @param blindTopic the blindTopic to set
+	 */
+	public void setBlindTopic(String blindTopic) {
+		this.blindTopic = blindTopic;
+	}
+
+	/**
+	 * @return the blindOpen
+	 */
+	public String getBlindOpen() {
+		return this.blindOpen;
+	}
+
+	/**
+	 * @param blindOpen the blindOpen to set
+	 */
+	public void setBlindOpen(String blindOpen) {
+		this.blindOpen = blindOpen;
+	}
+
+	/**
+	 * @return the blindClose
+	 */
+	public String getBlindClose() {
+		return this.blindClose;
+	}
+
+	/**
+	 * @param blindClose the blindClose to set
+	 */
+	public void setBlindClose(String blindClose) {
+		this.blindClose = blindClose;
+	}
+
+	/**
+	 * @return the bedTopic
+	 */
+	public String getBedTopic() {
+		return this.bedTopic;
+	}
+
+	/**
+	 * @param bedTopic the bedTopic to set
+	 */
+	public void setBedTopic(String bedTopic) {
+		this.bedTopic = bedTopic;
+	}
+
+	/**
+	 * @return the bedIn
+	 */
+	public String getBedIn() {
+		return this.bedIn;
+	}
+
+	/**
+	 * @param bedIn the bedIn to set
+	 */
+	public void setBedIn(String bedIn) {
+		this.bedIn = bedIn;
+	}
+
+	/**
+	 * @return the bedOut
+	 */
+	public String getBedOut() {
+		return this.bedOut;
+	}
+
+	/**
+	 * @param bedOut the bedOut to set
+	 */
+	public void setBedOut(String bedOut) {
+		this.bedOut = bedOut;
+	}
+
+	/**
+	 * @return the motionTopic
+	 */
+	public String getMotionTopic() {
+		return this.motionTopic;
+	}
+
+	/**
+	 * @param motionTopic the motionTopic to set
+	 */
+	public void setMotionTopic(String motionTopic) {
+		this.motionTopic = motionTopic;
+	}
+
+	/**
+	 * @return the motionIn
+	 */
+	public String getMotionIn() {
+		return this.motionIn;
+	}
+
+	/**
+	 * @param motionIn the motionIn to set
+	 */
+	public void setMotionIn(String motionIn) {
+		this.motionIn = motionIn;
+	}
+
+	/**
+	 * @return the motionOut
+	 */
+	public String getMotionOut() {
+		return this.motionOut;
+	}
+
+	/**
+	 * @param motionOut the motionOut to set
+	 */
+	public void setMotionOut(String motionOut) {
+		this.motionOut = motionOut;
+	}
+
+	/**
+	 * @return the lightTopic
+	 */
+	public String getLightTopic() {
+		return this.lightTopic;
+	}
+
+	/**
+	 * @param lightTopic the lightTopic to set
+	 */
+	public void setLightTopic(String lightTopic) {
+		this.lightTopic = lightTopic;
 	}
 	
 }

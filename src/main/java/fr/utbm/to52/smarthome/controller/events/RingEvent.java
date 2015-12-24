@@ -37,7 +37,7 @@ public class RingEvent extends AbstractEvent{
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-        this.connection.publish(Conf.getInstance().getMQTTRingTopic(), 
-        		Conf.getInstance().getMQTTRingPayload());
+        this.connection.publish(Conf.getInstance().getClockTopic(), 
+        		Conf.getInstance().getClockRing());
 	}
 }

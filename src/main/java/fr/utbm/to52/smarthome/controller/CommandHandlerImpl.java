@@ -88,26 +88,17 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 
 	private void handleQueuedCmd(String subject, String cmd) { // FIXME equals or contains
-		if(cmd.equals(Conf.getInstance().getCommandRing())){
+		if(cmd.equals(Conf.getInstance().getClockRing())){
 			if(this.getRingEvent() != null)
 				this.getRingEvent().inform(null);
 			if(this.getLightEvent() != null)
 				this.getLightEvent().inform(null);
-		}else if(cmd.equals(Conf.getInstance().getCommandQuit())){
+		}else if(cmd.equals("QUIT")){ // TODO conf
 			this.quitEvent.inform(null);
-		}else if(cmd.contains(Conf.getInstance().getCommandAddRing())){
+		}else if(cmd.contains("AddRing")){ // TODO conf
 			if(this.getAddRingEvent() != null)
 				this.getAddRingEvent().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandAddNote())){
-			if(this.getAddNote() != null)
-				this.getAddNote().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandGetNote())){
-			if(this.getGetNote() != null)
-				this.getGetNote().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandGetLogBook())){
-			if(this.getGetLogBook() != null)
-				this.getGetLogBook().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandMotionSensor())){
+		}else if(cmd.contains(Conf.getInstance().getMotionOut())){
 			if(this.motionSensor != null)
 				this.motionSensor.inform(null);
 		}else if(cmd.contains("out")){

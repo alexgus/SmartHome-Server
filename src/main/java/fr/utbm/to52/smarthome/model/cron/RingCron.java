@@ -46,7 +46,7 @@ public abstract class RingCron extends Cron {
 		
 		String host = "localhost";
 		String port = Conf.getInstance().getClockfeature().getInternalServerPort() + "";
-		String CMD = Conf.getInstance().getCommandRing();
+		String CMD = Conf.getInstance().getClockRing();
 		
 		if(INPUT == Conf.SOURCE_ICAL)
 			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port

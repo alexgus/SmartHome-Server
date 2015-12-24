@@ -31,7 +31,7 @@ public class ShutterEvent extends AbstractEvent {
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		// TODO open or close with o
-		this.connection.publish(Conf.getInstance().getMQTTShutterTopic(), Conf.getInstance().getCommandShutter());
+		this.connection.publish(Conf.getInstance().getBlindTopic(), Conf.getInstance().getBlindOpen());
 	}
 
 

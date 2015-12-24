@@ -34,8 +34,8 @@ public class AbortEvent extends AbstractEvent {
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-		this.connection.publish(Conf.getInstance().getMQTTRingTopic(), 
-        		Conf.getInstance().getMQTTAbortPayload());
+		this.connection.publish(Conf.getInstance().getClockTopic(), 
+        		Conf.getInstance().getClockAbort());
 	}
 
 }

@@ -55,7 +55,7 @@ public class LightEvent extends AbstractEvent {
 
 				@Override
 				public void run() {
-					LightEvent.this.getConnection().publish(Conf.getInstance().getMQTTLightTopic(), 
+					LightEvent.this.getConnection().publish(Conf.getInstance().getLightTopic(), 
 							Integer.toString(LightEvent.this.getLightIntensity()));
 					LightEvent.this.setLightIntensity(
 							Math.round(LightEvent.this.getLightIntensity() + LightEvent.this.step));
