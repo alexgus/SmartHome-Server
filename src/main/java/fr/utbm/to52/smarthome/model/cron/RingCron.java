@@ -45,15 +45,15 @@ public abstract class RingCron extends Cron {
 		ProcessTask p;
 		
 		String host = "localhost";
-		String port = Conf.getInstance().getServerPort() + "";
+		String port = Conf.getInstance().getClockfeature().getInternalServerPort() + "";
 		String CMD = Conf.getInstance().getCommandRing();
 		
 		if(INPUT == Conf.SOURCE_ICAL)
 			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
-					+ " " + Conf.getInstance().getCronICalTag());
+					+ " " + Conf.getInstance().getClockfeature().getCronICalTag());
 		else
 			p = new ProcessTask("echo " + CMD + " | nc " + host + " " + port
-					+ " " + Conf.getInstance().getCronTag());
+					+ " " + Conf.getInstance().getClockfeature().getCronTag());
 
 		int min = c.get(Calendar.MINUTE);
 		int hour = c.get(Calendar.HOUR_OF_DAY);

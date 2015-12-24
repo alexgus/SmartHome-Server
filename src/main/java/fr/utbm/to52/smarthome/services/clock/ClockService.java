@@ -42,12 +42,12 @@ public class ClockService extends AbstractService {
 	public void setUp(Conf c) {
 		super.setUp(c);
 
-		if(this.config.getCronSource().equals(Conf.CRON_SYSTEM))
+		if(this.config.getClockfeature().getCronSource().equals(Conf.CRON_SYSTEM))
 			this.cron = new SystemCron();
 		else
 			this.cron = new JavaCron();
 
-		for(int i = 0 ; i < this.config.getAlarmURL().size() ; ++i)
+		for(int i = 0 ; i < this.config.getClockfeature().getCalendars().size() ; ++i)
 			this.mainCron.schedule("* * * * *", new DateController(this.cron, i));
 
 		this.cleaner = new CronCleaner(this.cron);
