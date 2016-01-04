@@ -37,6 +37,9 @@ public class Bed extends ComponentAgent {
 	protected void inform(Message m) {
 		if(m.getSubject().equals(Conf.getInstance().getBedTopic())){
 			this.logger.info(m.getMessage());
+			this.publish(Conf.getInstance().getLightTopic(), "on");
+			this.publish(Conf.getInstance().getClockTopic(), Conf.getInstance().getClockAbort());
+			this.publish(Conf.getInstance().getBedTopic(), Conf.getInstance().getBlindOpen());
 		}
 	}
 

@@ -37,6 +37,7 @@ public class Motion extends ComponentAgent {
 	protected void inform(Message m) {
 		if(m.getSubject().equals(Conf.getInstance().getMotionTopic())){
 			this.logger.info(m.getMessage());
+			this.publish(Conf.getInstance().getLightTopic(), "off");
 		}
 	}
 
