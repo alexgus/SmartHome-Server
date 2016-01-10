@@ -71,7 +71,7 @@ public class GoogleCalendar implements ICalendar {
      * @return an authorized Credential object.
      * @throws IOException
      */
-    @SuppressWarnings({ "resource", "javadoc" })
+    @SuppressWarnings("javadoc")
 	public static Credential authorize() throws IOException {
         // Load client secrets.
         InputStream in =

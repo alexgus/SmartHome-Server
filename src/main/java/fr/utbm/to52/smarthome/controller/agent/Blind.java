@@ -30,13 +30,14 @@ public class Blind extends ComponentAgent {
 		this.logger.info("Blind ended");
 	}
 	
-	/* (non-Javadoc)
-	 * @see fr.utbm.to52.smarthome.controller.agent.ComponentAgent#inform(fr.utbm.to52.smarthome.controller.Message)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void inform(Message m) {
 		if(m.getSubject().equals(Conf.getInstance().getBlindTopic())){
 			this.logger.info(m.getMessage());
+			this.publish(Conf.getInstance().getLightTopic(), "off");
 		}
 	}
 

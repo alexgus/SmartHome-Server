@@ -2,6 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>smarthome-server</artifactId>
+	<groupId>fr.utbm.to52</groupId>
+	<version>1.1-alpha</version>
 	<name>smarthome-server</name>
 	<url>https://github.com/alexgus/SmartHome-Server</url>
 	<description>Used to connect your calendars to your alarm for waking at the right hour</description>
@@ -13,12 +15,12 @@
 		<developerConnection>Alexandre Guyon</developerConnection>
 	</scm>
 
-	<parent>
+	<!-- <parent>
 		<groupId>fr.utbm.to52</groupId>
 		<artifactId>smarthome</artifactId>
 		<version>1.1-alpha</version>
 		<relativePath>../SmartHome</relativePath>
-	</parent>
+	</parent> -->
 
 	<repositories>
 		<repository>
@@ -37,6 +39,10 @@
 			<id>org.arakhne-maven</id>
 			<name>Arakhnê.org Snapshots</name>
 			<url>http://download.tuxfamily.org/arakhne/maven/</url>
+		</repository>
+		<repository>
+			<id>local-repository</id>
+			<url>file://${basedir}/repo</url>
 		</repository>
 	</repositories>
 
@@ -133,6 +139,13 @@
 			<artifactId>tinymas</artifactId>
 			<type>pom</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.madkit</groupId>
+            <artifactId>madkit</artifactId>
+            <version>5.0.5.2</version>
+		</dependency>
+		
 	</dependencies>
 
 	<dependencyManagement>

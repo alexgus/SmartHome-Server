@@ -30,8 +30,8 @@ public class Bed extends ComponentAgent {
 		this.logger.info("Bed ended");
 	}
 	
-	/* (non-Javadoc)
-	 * @see fr.utbm.to52.smarthome.controller.agent.ComponentAgent#inform(fr.utbm.to52.smarthome.controller.Message)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void inform(Message m) {
@@ -39,7 +39,7 @@ public class Bed extends ComponentAgent {
 			this.logger.info(m.getMessage());
 			this.publish(Conf.getInstance().getLightTopic(), "on");
 			this.publish(Conf.getInstance().getClockTopic(), Conf.getInstance().getClockAbort());
-			this.publish(Conf.getInstance().getBedTopic(), Conf.getInstance().getBlindOpen());
+			this.publish(Conf.getInstance().getBlindTopic(), Conf.getInstance().getBlindOpen());
 		}
 	}
 

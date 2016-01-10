@@ -39,6 +39,7 @@ public class Controller extends AbstractService{
 
 	private ClockService clock;
 	
+	@SuppressWarnings("unused")
 	private GmailService mail;
 	
 	private CouchdbService couch;

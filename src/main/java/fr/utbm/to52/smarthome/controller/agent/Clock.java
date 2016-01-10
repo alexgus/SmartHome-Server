@@ -30,8 +30,8 @@ public class Clock extends ComponentAgent {
 		this.logger.info("Clock ended");
 	}
 	
-	/* (non-Javadoc)
-	 * @see fr.utbm.to52.smarthome.controller.agent.ComponentAgent#inform(fr.utbm.to52.smarthome.controller.Message)
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected void inform(Message m) {

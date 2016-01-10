@@ -43,7 +43,6 @@ public class SocketInput implements Runnable{
 	 * @throws IOException Throw IO Exception when error happens
 	 * @throws NextPortException Open server on next port if already in use
 	 */
-	@SuppressWarnings("unused")
 	public SocketInput(int port) throws IOException, NextPortException{
 		this.setListSocket(new LinkedList<Socket>());
 		try{

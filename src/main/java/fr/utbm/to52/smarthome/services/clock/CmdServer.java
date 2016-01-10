@@ -31,7 +31,6 @@ public class CmdServer extends AbstractService{
 	}
 
 	@Override
-	@SuppressWarnings("unused")
 	public void start() {
 		try {
 			this.server = new SocketInput(this.config.getClockfeature().getInternalServerPort());

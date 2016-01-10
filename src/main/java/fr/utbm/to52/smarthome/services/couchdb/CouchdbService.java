@@ -50,7 +50,6 @@ public class CouchdbService extends AbstractService {
 	/* (non-Javadoc)
 	 * @see fr.utbm.to52.smarthome.services.AbstractService#start()
 	 */
-	@SuppressWarnings("unused")
 	@Override
 	public void start() {
 		try{
