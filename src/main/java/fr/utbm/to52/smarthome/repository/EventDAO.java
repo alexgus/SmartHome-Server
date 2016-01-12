@@ -5,7 +5,7 @@ package fr.utbm.to52.smarthome.repository;
 
 import org.lightcouch.CouchDbClient;
 
-import fr.utbm.to52.smarthome.controller.events.StorableEvent;
+import fr.utbm.to52.smarthome.controller.events.core.StorableEvent;
 
 /**
  * @author Alexandre Guyon

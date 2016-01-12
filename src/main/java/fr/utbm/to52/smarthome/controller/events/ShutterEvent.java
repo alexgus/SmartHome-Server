@@ -6,6 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
@@ -30,7 +31,7 @@ public class ShutterEvent extends AbstractEvent {
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		// TODO open or close with o
-		this.connection.publish(Conf.getInstance().getMQTTShutterTopic(), Conf.getInstance().getCommandShutter());
+		this.connection.publish(Conf.getInstance().getBlindTopic(), Conf.getInstance().getBlindOpen());
 	}
 
 

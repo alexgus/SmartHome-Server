@@ -56,10 +56,10 @@ public abstract class Cron {
 	 * @param user The user you want the crontab to be loaded
 	 */
 	public Cron(String user){
-		this.tag = Conf.getInstance().getCronTag();
-		this.tagICal = Conf.getInstance().getCronICalTag();
-		this.command = Conf.getInstance().getCronCommand();
-		this.pathTmpFile = Conf.getInstance().getCronTMPFile();
+		this.tag = Conf.getInstance().getClockfeature().getCronTag();
+		this.tagICal = Conf.getInstance().getClockfeature().getCronICalTag();
+		this.command = Conf.getInstance().getClockfeature().getCronCommand();
+		this.pathTmpFile = Conf.getInstance().getClockfeature().getCronTmpFile();
 		this.user = user;
 		this.crontab = new MyTaskTable();
 	}

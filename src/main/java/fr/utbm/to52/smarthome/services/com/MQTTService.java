@@ -13,6 +13,8 @@ import fr.utbm.to52.smarthome.services.AbstractService;
  */
 public class MQTTService extends AbstractService {
 
+	private static int nbClient = 0;
+	
 	private MQTT mqtt;
 
 	private MqttCallback cmdHandler;
@@ -28,17 +30,19 @@ public class MQTTService extends AbstractService {
 	@Override
 	public void start() {
 		if(this.mqtt == null)
-			this.mqtt = new MQTT(this.config.getMQTTID(), this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
+			this.mqtt = new MQTT(this.config.getMQTTID() + MQTTService.nbClient , this.config.getMQTTServer(), this.config.getMQTTQOS(), this.cmdHandler);
 		this.mqtt.connect();
 		
-		this.mqtt.subscribe(this.config.getMQTTRingTopic());
-		this.mqtt.subscribe("/bed"); // TODO better
-		this.mqtt.subscribe("/presence"); // TODO better
+		this.mqtt.subscribe(this.config.getBedTopic());
+		this.mqtt.subscribe(this.config.getMotionTopic());
+		
+		MQTTService.nbClient++;
 	}
 
 	@Override
 	public void stop() {
 		this.mqtt.disconnect();
+		MQTTService.nbClient--;
 	}
 
 	/**

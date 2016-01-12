@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
 import fr.utbm.to52.smarthome.model.cron.RingCron;
 
 /**
@@ -17,7 +18,7 @@ import fr.utbm.to52.smarthome.model.cron.RingCron;
  * @author Alexandre Guyon
  *
  */
-public class AddRingEvent extends AbstractEvent {
+public class AddRing extends AbstractEvent {
 
 	private RingCron rcron;
 	
@@ -26,7 +27,7 @@ public class AddRingEvent extends AbstractEvent {
 	 * @param s Hibernate session
 	 * @param r The ring cron to object to add a date 
 	 */
-	public AddRingEvent(CouchDbClient s, RingCron r) {
+	public AddRing(CouchDbClient s, RingCron r) {
 		super(s);
 		this.rcron = r;
 	}

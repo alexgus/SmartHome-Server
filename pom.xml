@@ -38,6 +38,10 @@
 			<name>Arakhnê.org Snapshots</name>
 			<url>http://download.tuxfamily.org/arakhne/maven/</url>
 		</repository>
+		<repository>
+			<id>local-repository</id>
+			<url>file://${basedir}/repo</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -133,6 +137,13 @@
 			<artifactId>tinymas</artifactId>
 			<type>pom</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.madkit</groupId>
+            <artifactId>madkit</artifactId>
+            <version>5.0.5.2</version>
+		</dependency>
+		
 	</dependencies>
 
 	<dependencyManagement>

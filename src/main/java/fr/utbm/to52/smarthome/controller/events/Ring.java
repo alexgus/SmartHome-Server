@@ -6,6 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
@@ -14,7 +15,7 @@ import fr.utbm.to52.smarthome.services.com.MQTT;
  * @author Alexandre Guyon
  *
  */
-public class RingEvent extends AbstractEvent{
+public class Ring extends AbstractEvent{
 
 	private MQTT connection;  
 	
@@ -23,7 +24,7 @@ public class RingEvent extends AbstractEvent{
 	 * @param s Couchdb session
 	 * @param c A valid MQTT connection
 	 */
-	public RingEvent(CouchDbClient s, MQTT c) {
+	public Ring(CouchDbClient s, MQTT c) {
 		super(s);
 		this.connection = c;
 	}
@@ -36,7 +37,7 @@ public class RingEvent extends AbstractEvent{
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-        this.connection.publish(Conf.getInstance().getMQTTRingTopic(), 
-        		Conf.getInstance().getMQTTRingPayload());
+        this.connection.publish(Conf.getInstance().getClockTopic(), 
+        		Conf.getInstance().getClockRing());
 	}
 }

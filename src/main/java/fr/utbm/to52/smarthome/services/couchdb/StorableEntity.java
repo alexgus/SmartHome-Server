@@ -24,6 +24,12 @@ public abstract class StorableEntity {
 	 */
     protected String $table;
 	
+    /**
+     * Default constructor
+     */
+    public StorableEntity() {
+	}
+    
 	/**
 	 * Constructor defining table property
 	 * @param table Table to store

@@ -24,7 +24,6 @@ public class BasicIO {
 	 * @param file The file to read
 	 * @return String of the file
 	 */
-	@SuppressWarnings("resource")
 	public static String readFile(String file){
 		File f = new File(file);
 		String content = "";
@@ -101,7 +100,6 @@ public class BasicIO {
 	 * @param path The path to the file
 	 * @param content The content to write
 	 */
-	@SuppressWarnings("resource")
 	public static void write(String path, String content){
 		try {
 

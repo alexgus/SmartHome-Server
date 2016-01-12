@@ -12,7 +12,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import fr.utbm.to52.smarthome.controller.events.Event;
+import fr.utbm.to52.smarthome.controller.events.core.Event;
+import fr.utbm.to52.smarthome.services.com.SocketInput;
 
 /**
  * @author Alexandre Guyon
@@ -24,7 +25,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	private Controller controller;
 
-	private Collection<String> lCmd = Collections.synchronizedCollection(new ArrayList<String>());
+	private Collection<Message> lCmd = Collections.synchronizedCollection(new ArrayList<Message>());
 
 	private Event noSuchCommand;
 
@@ -35,16 +36,12 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	private Event lightEvent;
 
 	private Event quitEvent;
-
-	private Event addNote;
-
-	private Event getNote;
-
-	private Event getLogBook;
-
-	private Event motionSensor;
 	
 	private Event presence;
+	
+	private Event abort;
+	
+	private Event shutter;
 
 	/**
 	 * Create command handler with
@@ -56,17 +53,17 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 
 	@Override
 	public void run() {
-		List<String> handledCommand = new ArrayList<>();
+		List<Message> handledCommand = new ArrayList<>();
 
 		while(this.controller.isRunning()){
 			synchronized (this.lCmd) {
-				for (String cmd : this.lCmd) {
-					this.handleQueuedCmd(new String(cmd));
+				for (Message cmd : this.lCmd) {
+					this.handleQueuedCmd(cmd.getSubject(), cmd.getMessage());
 					handledCommand.add(cmd);
 				}
 			}
 
-			for (String cmdOk : handledCommand)
+			for (Message cmdOk : handledCommand)
 				this.lCmd.remove(cmdOk);
 
 			try {
@@ -81,37 +78,25 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 * @see fr.utbm.to52.smarthome.controller.CommandHandler#handle(java.lang.String)
 	 */
 	@Override
-	public synchronized void handle(String cmd){
-		this.lCmd.add(cmd);
+	public synchronized void handle(String subject, String cmd){
+		Message m = new Message(subject, cmd);
+		this.lCmd.add(m);
 	}
 
-
-	private void handleQueuedCmd(String cmd) {
-		if(cmd.equals(Conf.getInstance().getCommandRing())){
-			if(this.getRingEvent() != null)
-				this.getRingEvent().inform(null);
-			if(this.getLightEvent() != null)
-				this.getLightEvent().inform(null);
-		}else if(cmd.equals(Conf.getInstance().getCommandQuit())){
+	@SuppressWarnings("boxing")
+	private void handleQueuedCmd(String subject, String cmd) {
+		if(subject.contains(SocketInput.SUBJECT) && cmd.contains("AddRing")){ // TODO conf
+			this.addRingEvent.inform(cmd);
+		}else if(subject.contains(SocketInput.SUBJECT) && cmd.equals(Conf.getInstance().getClockRing())){
+			this.ringEvent.inform(null);
+			this.lightEvent.inform(150);
+		}else if(subject.equals(Conf.getInstance().getBedTopic()) && cmd.equals(Conf.getInstance().getBedOut())){
+			this.shutter.inform(null);
+			this.abort.inform(null);
+		}else if(subject.equals(Conf.getInstance().getMotionTopic()) &&cmd.contains(Conf.getInstance().getMotionOut())){
+			this.lightEvent.inform(0);
+		}else if(cmd.equals("QUIT")){ // TODO conf
 			this.quitEvent.inform(null);
-		}else if(cmd.contains(Conf.getInstance().getCommandAddRing())){
-			if(this.getAddRingEvent() != null)
-				this.getAddRingEvent().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandAddNote())){
-			if(this.getAddNote() != null)
-				this.getAddNote().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandGetNote())){
-			if(this.getGetNote() != null)
-				this.getGetNote().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandGetLogBook())){
-			if(this.getGetLogBook() != null)
-				this.getGetLogBook().inform(cmd);
-		}else if(cmd.contains(Conf.getInstance().getCommandMotionSensor())){
-			if(this.motionSensor != null)
-				this.motionSensor.inform(null);
-		}else if(cmd.contains("out")){
-			if(this.presence != null)
-				this.presence.inform(null);
 		}else{
 			this.noSuchCommand.inform(cmd);
 		}
@@ -131,7 +116,7 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	@Override
 	public void messageArrived(String arg0, MqttMessage arg1) throws Exception {
 		//if(arg0.equals(Conf.getInstance().getMQTTRingTopic()))
-			this.handle(arg1.toString());
+			this.handle(arg0.toString(), arg1.toString());
 	}
 
 	/**
@@ -209,62 +194,6 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	}
 
 	/**
-	 * @return the addNote
-	 */
-	public Event getAddNote() {
-		return this.addNote;
-	}
-
-	/**
-	 * @param addNote the addNote to set
-	 */
-	public void setAddNote(Event addNote) {
-		this.addNote = addNote;
-	}
-
-	/**
-	 * @return the getNote
-	 */
-	public Event getGetNote() {
-		return this.getNote;
-	}
-
-	/**
-	 * @param getNote the getNote to set
-	 */
-	public void setGetNote(Event getNote) {
-		this.getNote = getNote;
-	}
-
-	/**
-	 * @return the getLogBook
-	 */
-	public Event getGetLogBook() {
-		return this.getLogBook;
-	}
-
-	/**
-	 * @param getLogBook the getLogBook to set
-	 */
-	public void setGetLogBook(Event getLogBook) {
-		this.getLogBook = getLogBook;
-	}
-
-	/**
-	 * @return the motionSensor
-	 */
-	public Event getMotionSensor() {
-		return this.motionSensor;
-	}
-
-	/**
-	 * @param motionSensor the motionSensor to set
-	 */
-	public void setMotionSensor(Event motionSensor) {
-		this.motionSensor = motionSensor;
-	}
-
-	/**
 	 * @return the presence
 	 */
 	public Event getPresence() {
@@ -276,6 +205,34 @@ public class CommandHandlerImpl implements CommandHandler, MqttCallback, Runnabl
 	 */
 	public void setPresence(Event presence) {
 		this.presence = presence;
+	}
+
+	/**
+	 * @return the abort
+	 */
+	public Event getAbort() {
+		return this.abort;
+	}
+
+	/**
+	 * @param abort the abort to set
+	 */
+	public void setAbort(Event abort) {
+		this.abort = abort;
+	}
+
+	/**
+	 * @return the shutter
+	 */
+	public Event getShutter() {
+		return this.shutter;
+	}
+
+	/**
+	 * @param shutter the shutter to set
+	 */
+	public void setShutter(Event shutter) {
+		this.shutter = shutter;
 	}
 
 }

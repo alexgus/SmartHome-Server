@@ -177,7 +177,7 @@ public class GoogleAuth {
 		return inputCodeServer(PORT);
 	}
 	
-	@SuppressWarnings({ "resource", "unused" })
+	@SuppressWarnings("resource")
 	private static String inputCodeServer(int p) throws IOException, NextPortException{
 
 		ServerSocket serverCode = new ServerSocket();
@@ -208,7 +208,6 @@ public class GoogleAuth {
 		return code;
 	}
 	
-	@SuppressWarnings("resource")
 	private static String inputCodeConsole(){
 		String code;
 		
@@ -222,7 +221,6 @@ public class GoogleAuth {
 		return code;
 	}
 
-	@SuppressWarnings("unused")
 	public boolean connect(){
 		Verifier verifier = null;
 		String code;

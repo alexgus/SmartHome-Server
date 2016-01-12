@@ -6,6 +6,7 @@ package fr.utbm.to52.smarthome.controller.events;
 import org.lightcouch.CouchDbClient;
 
 import fr.utbm.to52.smarthome.controller.Conf;
+import fr.utbm.to52.smarthome.controller.events.core.AbstractEvent;
 import fr.utbm.to52.smarthome.services.com.MQTT;
 
 /**
@@ -33,8 +34,8 @@ public class AbortEvent extends AbstractEvent {
 	public void inform(Object o) {
 		this.registerEvent(getClass(), o);
 		
-		this.connection.publish(Conf.getInstance().getMQTTRingTopic(), 
-        		Conf.getInstance().getMQTTAbortPayload());
+		this.connection.publish(Conf.getInstance().getClockTopic(), 
+        		Conf.getInstance().getClockAbort());
 	}
 
 }

@@ -49,7 +49,6 @@ public class SystemCron extends RingCron{
 		try {
 			String CMD = this.command + " -l";
 			Process cronp = Runtime.getRuntime().exec(CMD);
-			@SuppressWarnings("resource")
 			BufferedReader reader = new BufferedReader(new InputStreamReader(cronp.getInputStream()));
 			
 			String line = reader.readLine();

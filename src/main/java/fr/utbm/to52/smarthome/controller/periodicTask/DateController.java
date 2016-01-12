@@ -46,7 +46,7 @@ public class DateController extends TimerTask {
 	public void run() {
 		try {
 			// Load calendar
-			this.c = new ICal(new URL(Conf.getInstance().getAlarmURL().get(this.iURL)));
+			this.c = new ICal(new URL(Conf.getInstance().getClockfeature().getCalendars().get(this.iURL)));
 			this.c.load();
 			
 			// Create instance of calendar
@@ -133,8 +133,8 @@ public class DateController extends TimerTask {
 	}
 	
 	private static fr.utbm.to52.smarthome.model.calendar.DateCalendar setWakeUpTime(fr.utbm.to52.smarthome.model.calendar.DateCalendar c){
-		int wakeUpBeforeH = Integer.parseInt(Conf.getInstance().getAlarmWakeUpTime().split("h")[0]);
-		int wakeUpBeforeM = Integer.parseInt(Conf.getInstance().getAlarmWakeUpTime().split("h")[1]);
+		int wakeUpBeforeH = Integer.parseInt(Conf.getInstance().getClockfeature().getWakeUpTimeBeforeEvent().split("h")[0]);
+		int wakeUpBeforeM = Integer.parseInt(Conf.getInstance().getClockfeature().getWakeUpTimeBeforeEvent().split("h")[1]);
 	
 		c.add(Calendar.HOUR, -wakeUpBeforeH);
 		c.add(Calendar.MINUTE, -wakeUpBeforeM);

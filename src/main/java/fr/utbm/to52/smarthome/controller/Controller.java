@@ -3,26 +3,14 @@ package fr.utbm.to52.smarthome.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.utbm.to52.smarthome.controller.events.AbortEvent;
-import fr.utbm.to52.smarthome.controller.events.AddNoteEvent;
-import fr.utbm.to52.smarthome.controller.events.AddRingEvent;
-import fr.utbm.to52.smarthome.controller.events.Event;
-import fr.utbm.to52.smarthome.controller.events.GetLogBookEvent;
-import fr.utbm.to52.smarthome.controller.events.GetNoteEvent;
-import fr.utbm.to52.smarthome.controller.events.LightEvent;
-import fr.utbm.to52.smarthome.controller.events.MotionSensor;
-import fr.utbm.to52.smarthome.controller.events.NoSuchCommand;
-import fr.utbm.to52.smarthome.controller.events.PresenceEvent;
-import fr.utbm.to52.smarthome.controller.events.QuitEvent;
-import fr.utbm.to52.smarthome.controller.events.RingEvent;
-import fr.utbm.to52.smarthome.controller.events.ShutterEvent;
 import fr.utbm.to52.smarthome.services.AbstractService;
 import fr.utbm.to52.smarthome.services.Service;
 import fr.utbm.to52.smarthome.services.clock.ClockService;
-import fr.utbm.to52.smarthome.services.com.CmdServer;
+import fr.utbm.to52.smarthome.services.clock.CmdServer;
 import fr.utbm.to52.smarthome.services.com.MQTTService;
 import fr.utbm.to52.smarthome.services.couchdb.CouchdbService;
 import fr.utbm.to52.smarthome.services.mail.GmailService;
+import madkit.kernel.Madkit;
 
 
 /**
@@ -51,31 +39,32 @@ public class Controller extends AbstractService{
 
 	private ClockService clock;
 	
+	@SuppressWarnings("unused")
 	private GmailService mail;
 	
 	private CouchdbService couch;
 	
 	/**
 	 * Default instance of a controller
+	 * @param c Configuration of the app
 	 */
-	public Controller(){
-		
-		this.cmdHandler = new CommandHandlerImpl(this);
-		this.tCmdhandler = new Thread(this.cmdHandler);
+	public Controller(Conf c){
 		
 		this.lService = new ArrayList<>();
 		
 		this.MQTT = new MQTTService(this.cmdHandler);
 		this.lService.add(this.MQTT);
 		
-		this.server = new CmdServer(this.cmdHandler);
-		this.lService.add(this.server);
-		
-		this.clock = new ClockService();
-		this.lService.add(this.clock);
-		
 		this.couch = new CouchdbService();
 		this.lService.add(this.couch);
+		
+		if(c.getFeaturesEnabled().contains("clock")){
+			this.server = new CmdServer(this.cmdHandler);
+			this.lService.add(this.server);
+			
+			this.clock = new ClockService();
+			this.lService.add(this.clock);
+		}
 		
 		/*this.mail = new GmailService();
 		this.lService.add(this.mail);*/
@@ -88,30 +77,16 @@ public class Controller extends AbstractService{
 			service.start();
 		}
 		
-		this.enableEvent();
-		this.tCmdhandler.start();
+		Controller.startAgent();
 		
 		this.running = true;
 	}
 	
-	private void enableEvent(){ // TODO make DAO singleton
-		this.cmdHandler.setQuitEvent(new QuitEvent(this, this.couch.getSession()));
-		this.cmdHandler.setNoSuchCommand(new NoSuchCommand(this.couch.getSession()));
-		this.cmdHandler.setRingEventController(new RingEvent(this.couch.getSession(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddRingEventController(new AddRingEvent(this.couch.getSession(), this.clock.getCron()));
-		this.cmdHandler.setLightEvent(new LightEvent(this.couch.getSession(), this.MQTT.getMqtt()));
-		this.cmdHandler.setAddNote(new AddNoteEvent(this.couch.getSession(), this.couch.getNoteDao()));
-		this.cmdHandler.setGetNote(new GetNoteEvent(this.couch.getSession(), this.couch.getNoteDao(), this.MQTT.getMqtt()));
-		this.cmdHandler.setGetLogBook(new GetLogBookEvent(this.couch.getSession(), this.couch.getLogbookDAO(), this.MQTT.getMqtt()));
-		
-		List<Event> ev = new ArrayList<>();
-		ev.add(new AbortEvent(this.couch.getSession(), this.MQTT.getMqtt()));
-		ev.add(new ShutterEvent(this.couch.getSession(), this.MQTT.getMqtt()));
-		this.cmdHandler.setMotionSensor(new MotionSensor(this.couch.getSession(), ev));
-		
-		this.cmdHandler.setPresence(new PresenceEvent(this.couch.getSession(), this.MQTT.getMqtt()));
+	private static void startAgent() {
+		String[] args = {"--launchAgents", "fr.utbm.to52.smarthome.controller.agent.StartupAgent,false"};
+		Madkit.main(args);
 	}
-	
+
 	@Override
 	public void stop() {
 		this.running = false;
@@ -130,6 +105,24 @@ public class Controller extends AbstractService{
 	 */
 	public boolean isRunning() {
 		return this.running;
-	}	
-
+	}
+	
+	/**
+	 * @return The list of services
+	 */
+	public List<Service> getServices(){
+		return this.lService;
+	}
+	
+	/**
+	 * @param c Services class
+	 * @return Asked service
+	 */
+	public Service getService(Class<? extends Service> c){
+		for (Service service : this.lService) {
+			if(service.getClass() == c)
+				return service;
+		}
+		return null;
+	}
 }

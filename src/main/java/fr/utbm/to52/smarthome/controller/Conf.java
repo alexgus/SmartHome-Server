@@ -1,14 +1,14 @@
 package fr.utbm.to52.smarthome.controller;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import fr.utbm.to52.smarthome.controller.conf.ClockFeature;
 import fr.utbm.to52.smarthome.util.BasicIO;
-
-// TODO re-organize import
+ 
 /**
  * This class is used to parse the configuration file.
  * This is also used to store all this values.
@@ -43,7 +43,7 @@ public class Conf {
 	public static final int SOURCE_ICAL = 1;
 	
 	/**
-	 * Default config file
+	 * New config file
 	 */
 	private static final String DEFAULT_CONF_FILE = "smart.conf";
 	
@@ -55,64 +55,46 @@ public class Conf {
 	/**
 	 * Use java cron (Multiplatform)
 	 */
-	public static final String CRON_JAVA = "java";
+	public static final String CRON_JAVA = "java";	
 	
 	private String MQTTServer;
 	
 	private String MQTTID;
-
-	private String MQTTRingTopic;
 	
-	private String MQTTLightTopic;
-	
-	private String MQTTShutterTopic;
-
-	private String MQTTRingPayload;
-	
-	private String MQTTAbortPayload;
-
 	private int MQTTQOS;
-	
-	private int serverPort;
-	
-	private String commandQuit;
-	
-	private String commandRing;
-	
-	private String commandAddRing;
-	
-	private String commandAddNote;
-	
-	private String commandGetNote;
-	
-	private String commandGetLogBook;
-	
-	private String commandMotionSensor;
-	
-	private String commandShutter;
-	
-	private String cronSource;
-	
-	private String cronCommand;
-	
-	private String cronTMPFile;
-	
-	private String cronTag;
-	
-	private String cronICalTag;
-	
-	private String alarmWakeUpTime;
-	
-	private List<String> alarmURL;
 	
 	private String googleApiKey;
 	
 	private String googleApiSecret;
 	
 	private String googleScope;
+	
+	private List<String> featuresEnabled;
+	
+	private ClockFeature clockfeature;
 
-	private String topicAnswerSuffix;
-
+	//-------- Components
+	
+	private String clockTopic;
+	private String clockAbort;
+	private String clockRing;
+	
+	private String lightTopic;
+	private String lightOn;
+	private String lightOff;
+	
+	private String blindTopic;
+	private String blindOpen;
+	private String blindClose;
+	
+	private String bedTopic;
+	private String bedIn;
+	private String bedOut;
+	
+	private String motionTopic;
+	private String motionIn;
+	private String motionOut;
+	
 	/**
 	 * Private constructor --> singleton
 	 */
@@ -135,58 +117,53 @@ public class Conf {
 		String content = BasicIO.readFile(defaultConfFile);
 		JSONObject js = new JSONObject(content);
 		
-		JSONObject MQTT = js.getJSONObject("MQTT");
+		JSONObject network = js.getJSONObject("network");
+		JSONObject MQTT = network.getJSONObject("MQTT");
 		this.setMQTTServer(MQTT.getString("server"));
 		this.setMQTTID(MQTT.getString("id"));
-		this.setMQTTRingTopic(MQTT.getString("topic"));
-		this.setMQTTLightTopic(MQTT.getString("topicLight"));
-		this.setMQTTShutterTopic(MQTT.getString("shutterTopic"));
-		this.setMQTTRingPayload(MQTT.getString("payload"));
-		this.setMQTTAbortPayload(MQTT.getString("abort"));
-		this.setMQTTRingQOS(MQTT.getInt("QOS"));
+		this.setMQTTQOS(MQTT.getInt("QOS"));
 		
-		JSONObject Server = js.getJSONObject("server");
-		this.setServerPort(Server.getInt("port"));
+		JSONObject connector = js.getJSONObject("connector");
+		JSONObject google = connector.getJSONObject("google");
+		this.setGoogleApiKey(google.getString("apiKey"));
+		this.setGoogleApiSecret(google.getString("apiSecret"));
+		this.setGoogleScope(google.getString("scope"));
 		
-		JSONObject Command = js.getJSONObject("command");
-		this.setTopicAnswerSuffix("topicAnswerSuffix");
-		this.setCommandQuit(Command.getString("quitAction"));
-		this.setCommandRing(Command.getString("ringAction"));
-		this.setCommandAddRing(Command.getString("addRingAction"));
-		this.setCommandAddNote(Command.getString("addNoteAction"));
-		this.setCommandGetNote(Command.getString("getNoteAction"));
-		this.setCommandGetLogBook(Command.getString("getLogBookAction"));
-		this.setCommandMotionSensor(Command.getString("motionSensorAction"));
-		this.setCommandShutter(Command.getString("shutterAction"));
+		JSONArray ftenabled = js.getJSONArray("featuresEnabled");
+		this.featuresEnabled = new ArrayList<>();
+		for(int i = 0 ; i < ftenabled.length(); ++i)
+			this.featuresEnabled.add(ftenabled.getString(i));
 		
-		JSONObject cron = js.getJSONObject("cron");
-		this.setCronSource(cron.getString("source"));
-		this.setCronCommand(cron.getString("command"));
-		this.setCronTag(cron.getString("tag"));
-		this.setCronICalTag(cron.getString("icalTag"));
-		this.setCronTMPFile(cron.getString("tmpFile"));
+		JSONObject featuresConfig = js.getJSONObject("featuresConfig");
+		if(this.featuresEnabled.contains("clock"))
+			this.clockfeature = new ClockFeature(featuresConfig.getJSONObject("clock"));
 		
-		JSONObject alarm = js.getJSONObject("alarm");
-		this.setAlarmWakeUpTime(alarm.getString("wakeUpTimeBeforeEvent"));
-		this.alarmURL = new LinkedList<>();
-		JSONArray jsArr = alarm.getJSONArray("calendar");
-		for(int i = 0 ; i < jsArr.length() ; ++i)
-			this.alarmURL.add(jsArr.getString(i));
+		JSONObject cpClock = js.getJSONObject("componentClock");
+		this.clockTopic = cpClock.getString("topic");
+		this.clockRing = cpClock.getString("commandRing");
+		this.clockAbort = cpClock.getString("commandAbort");
 		
-		JSONObject apiGoogle = js.getJSONObject("apiGoogle");
-		this.setGoogleApiKey(apiGoogle.getString("apiKey"));
-		this.setGoogleApiSecret(apiGoogle.getString("apiSecret"));
-		this.setGoogleScope(apiGoogle.getString("scope"));
+		JSONObject cpLight = js.getJSONObject("componentLight");
+		this.lightTopic = cpLight.getString("topic");
+		this.lightOn = cpLight.getString("commandOn");
+		this.lightOff = cpLight.getString("commandOff");
+		
+		JSONObject cpBlind = js.getJSONObject("componentBlind");
+		this.blindTopic = cpBlind.getString("topic");
+		this.blindClose = cpBlind.getString("commandClose");
+		this.blindOpen = cpBlind.getString("commandOpen");
+		
+		JSONObject cpBed = js.getJSONObject("componentBed");
+		this.bedTopic = cpBed.getString("topic");
+		this.bedIn = cpBed.getString("commandIn");
+		this.bedOut = cpBed.getString("commandOut");
+		
+		JSONObject cpMotion = js.getJSONObject("componentMotion");
+		this.motionTopic = cpMotion.getString("topic");
+		this.motionIn = cpMotion.getString("commandIn");
+		this.motionOut = cpMotion.getString("commandOut");
 	}
-
-	/**
-	 * Set the MQTT QOS in this object
-	 * @param int1 The MQTT QOS to set
-	 */
-	private void setMQTTRingQOS(int int1) {
-		this.MQTTQOS = int1;
-	}
-
+	
 	/**
 	 * Set the MQTT id uses
 	 * @param string The MQTT id
@@ -220,52 +197,6 @@ public class Conf {
 	}
 
 	/**
-	 * Get the MQTT topic to ring event
-	 * @return the MQTT topic to ring event
-	 */
-	public String getMQTTRingTopic() {
-		return this.MQTTRingTopic;
-	}
-
-	/**
-	 * Set the MQTT topic to ring event
-	 * @param mQTTRingTopic the MQTT topic to ring event
-	 */
-	public void setMQTTRingTopic(String mQTTRingTopic) {
-		this.MQTTRingTopic = mQTTRingTopic;
-	}
-
-	/**
-	 * @return the mQTTLightTopic
-	 */
-	public String getMQTTLightTopic() {
-		return this.MQTTLightTopic;
-	}
-
-	/**
-	 * @param mQTTLightTopic the mQTTLightTopic to set
-	 */
-	public void setMQTTLightTopic(String mQTTLightTopic) {
-		this.MQTTLightTopic = mQTTLightTopic;
-	}
-
-	/**
-	 * Get the MQTT payload to ring event
-	 * @return the MQTT payload to ring event
-	 */
-	public String getMQTTRingPayload() {
-		return this.MQTTRingPayload;
-	}
-
-	/**
-	 * Set the MQTT payload to ring event
-	 * @param mQTTRingPayload the MQTT payload to ring event
-	 */
-	public void setMQTTRingPayload(String mQTTRingPayload) {
-		this.MQTTRingPayload = mQTTRingPayload;
-	}
-
-	/**
 	 * Get the MQTT QOS uses in this object
 	 * @return The MQTT QOS uses
 	 */
@@ -274,164 +205,10 @@ public class Conf {
 	}
 
 	/**
-	 * @return the serverPort
-	 */
-	public int getServerPort() {
-		return this.serverPort;
-	}
-
-	/**
-	 * @param serverPort the serverPort to set
-	 */
-	public void setServerPort(int serverPort) {
-		this.serverPort = serverPort;
-	}
-
-	/**
-	 * @return the serverCommandQuit
-	 */
-	public String getCommandQuit() {
-		return this.commandQuit;
-	}
-
-	/**
-	 * @param serverCommandQuit the serverCommandQuit to set
-	 */
-	public void setCommandQuit(String serverCommandQuit) {
-		this.commandQuit = serverCommandQuit;
-	}
-
-	/**
-	 * @return the serverCommandAddRing
-	 */
-	public String getCommandAddRing() {
-		return this.commandAddRing;
-	}
-
-	/**
-	 * @param serverCommandAddRing the serverCommandAddRing to set
-	 */
-	public void setCommandAddRing(String serverCommandAddRing) {
-		this.commandAddRing = serverCommandAddRing;
-	}
-
-	/**
-	 * @return the serverCommandRing
-	 */
-	public String getCommandRing() {
-		return this.commandRing;
-	}
-
-	/**
-	 * @param serverCommandRing the serverCommandRing to set
-	 */
-	public void setCommandRing(String serverCommandRing) {
-		this.commandRing = serverCommandRing;
-	}
-
-	/**
-	 * @return the cronCommand
-	 */
-	public String getCronCommand() {
-		return this.cronCommand;
-	}
-
-	/**
-	 * @param cronCommand the cronCommand to set
-	 */
-	public void setCronCommand(String cronCommand) {
-		this.cronCommand = cronCommand;
-	}
-
-	/**
-	 * @return the cronTMPFile
-	 */
-	public String getCronTMPFile() {
-		return this.cronTMPFile;
-	}
-
-	/**
-	 * @param cronTMPFile the cronTMPFile to set
-	 */
-	public void setCronTMPFile(String cronTMPFile) {
-		this.cronTMPFile = cronTMPFile;
-	}
-
-	/**
-	 * @return the cronTag
-	 */
-	public String getCronTag() {
-		return this.cronTag;
-	}
-
-	/**
-	 * @param cronTag the cronTag to set
-	 */
-	public void setCronTag(String cronTag) {
-		this.cronTag = cronTag;
-	}
-
-	/**
 	 * @param mQTTQOS the mQTTQOS to set
 	 */
 	public void setMQTTQOS(int mQTTQOS) {
 		this.MQTTQOS = mQTTQOS;
-	}
-
-	/**
-	 * @return the alarmWakeUpTime
-	 */
-	public String getAlarmWakeUpTime() {
-		return this.alarmWakeUpTime;
-	}
-
-	/**
-	 * @param alarmWakeUpTime the alarmWakeUpTime to set
-	 */
-	public void setAlarmWakeUpTime(String alarmWakeUpTime) {
-		this.alarmWakeUpTime = alarmWakeUpTime;
-	}
-
-	/**
-	 * @return the alarmURL
-	 */
-	public List<String> getAlarmURL() {
-		return this.alarmURL;
-	}
-
-	/**
-	 * @param alarmURL the alarmURL to set
-	 */
-	public void setAlarmURL(List<String> alarmURL) {
-		this.alarmURL = alarmURL;
-	}
-
-	/**
-	 * @return the cronICalTag
-	 */
-	public String getCronICalTag() {
-		return this.cronICalTag;
-	}
-
-	/**
-	 * @param cronICalTag the cronICalTag to set
-	 */
-	public void setCronICalTag(String cronICalTag) {
-		this.cronICalTag = cronICalTag;
-	}
-
-	/**
-	 * @return the cronSource
-	 */
-	public String getCronSource() {
-		return this.cronSource;
-	}
-
-	/**
-	 * @param cronSource the cronSource to set
-	 */
-	public void setCronSource(String cronSource) {
-		this.cronSource = cronSource;
 	}
 
 	/**
@@ -477,116 +254,241 @@ public class Conf {
 	}
 
 	/**
-	 * @return the commandAddNote
+	 * @return the featuresEnabled
 	 */
-	public String getCommandAddNote() {
-		return this.commandAddNote;
+	public List<String> getFeaturesEnabled() {
+		return this.featuresEnabled;
 	}
 
 	/**
-	 * @param commandAddNote the commandAddNote to set
+	 * @param featuresEnabled the featuresEnabled to set
 	 */
-	public void setCommandAddNote(String commandAddNote) {
-		this.commandAddNote = commandAddNote;
+	public void setFeaturesEnabled(List<String> featuresEnabled) {
+		this.featuresEnabled = featuresEnabled;
 	}
 
 	/**
-	 * @return the commandGetNote
+	 * @return the clockfeature
 	 */
-	public String getCommandGetNote() {
-		return this.commandGetNote;
+	public ClockFeature getClockfeature() {
+		return this.clockfeature;
 	}
 
 	/**
-	 * @param commandGetNote the commandGetNote to set
+	 * @param clockfeature the clockfeature to set
 	 */
-	public void setCommandGetNote(String commandGetNote) {
-		this.commandGetNote = commandGetNote;
-	}
-	
-	/**
-	 * @return the topicAnswerSuffix
-	 */
-	public String getTopicAnswerSuffix() {
-		return this.topicAnswerSuffix;
+	public void setClockfeature(ClockFeature clockfeature) {
+		this.clockfeature = clockfeature;
 	}
 
 	/**
-	 * @param topicAnswerSuffix the topicAnswerSuffix to set
+	 * @return the clockTopic
 	 */
-	public void setTopicAnswerSuffix(String topicAnswerSuffix) {
-		this.topicAnswerSuffix = topicAnswerSuffix;
+	public String getClockTopic() {
+		return this.clockTopic;
 	}
 
 	/**
-	 * @return the commandGetLogBook
+	 * @param clockTopic the clockTopic to set
 	 */
-	public String getCommandGetLogBook() {
-		return this.commandGetLogBook;
+	public void setClockTopic(String clockTopic) {
+		this.clockTopic = clockTopic;
 	}
 
 	/**
-	 * @param commandGetLogBook the commandGetLogBook to set
+	 * @return the clockAbort
 	 */
-	public void setCommandGetLogBook(String commandGetLogBook) {
-		this.commandGetLogBook = commandGetLogBook;
+	public String getClockAbort() {
+		return this.clockAbort;
 	}
 
 	/**
-	 * @return the mQTTAbortPayload
+	 * @param clockAbort the clockAbort to set
 	 */
-	public String getMQTTAbortPayload() {
-		return this.MQTTAbortPayload;
+	public void setClockAbort(String clockAbort) {
+		this.clockAbort = clockAbort;
 	}
 
 	/**
-	 * @param mQTTAbortPayload the mQTTAbortPayload to set
+	 * @return the clockRing
 	 */
-	public void setMQTTAbortPayload(String mQTTAbortPayload) {
-		this.MQTTAbortPayload = mQTTAbortPayload;
+	public String getClockRing() {
+		return this.clockRing;
 	}
 
 	/**
-	 * @return the commandMotionSensor
+	 * @param clockRing the clockRing to set
 	 */
-	public String getCommandMotionSensor() {
-		return this.commandMotionSensor;
+	public void setClockRing(String clockRing) {
+		this.clockRing = clockRing;
 	}
 
 	/**
-	 * @param commandMotionSensor the commandMotionSensor to set
+	 * @return the blindTopic
 	 */
-	public void setCommandMotionSensor(String commandMotionSensor) {
-		this.commandMotionSensor = commandMotionSensor;
+	public String getBlindTopic() {
+		return this.blindTopic;
 	}
 
 	/**
-	 * @return the commandShutter
+	 * @param blindTopic the blindTopic to set
 	 */
-	public String getCommandShutter() {
-		return this.commandShutter;
+	public void setBlindTopic(String blindTopic) {
+		this.blindTopic = blindTopic;
 	}
 
 	/**
-	 * @param commandShutter the commandShutter to set
+	 * @return the blindOpen
 	 */
-	public void setCommandShutter(String commandShutter) {
-		this.commandShutter = commandShutter;
+	public String getBlindOpen() {
+		return this.blindOpen;
 	}
 
 	/**
-	 * @return the mQTTShutterTopic
+	 * @param blindOpen the blindOpen to set
 	 */
-	public String getMQTTShutterTopic() {
-		return this.MQTTShutterTopic;
+	public void setBlindOpen(String blindOpen) {
+		this.blindOpen = blindOpen;
 	}
 
 	/**
-	 * @param mQTTShutterTopic the mQTTShutterTopic to set
+	 * @return the blindClose
 	 */
-	public void setMQTTShutterTopic(String mQTTShutterTopic) {
-		this.MQTTShutterTopic = mQTTShutterTopic;
+	public String getBlindClose() {
+		return this.blindClose;
 	}
-	
+
+	/**
+	 * @param blindClose the blindClose to set
+	 */
+	public void setBlindClose(String blindClose) {
+		this.blindClose = blindClose;
+	}
+
+	/**
+	 * @return the bedTopic
+	 */
+	public String getBedTopic() {
+		return this.bedTopic;
+	}
+
+	/**
+	 * @param bedTopic the bedTopic to set
+	 */
+	public void setBedTopic(String bedTopic) {
+		this.bedTopic = bedTopic;
+	}
+
+	/**
+	 * @return the bedIn
+	 */
+	public String getBedIn() {
+		return this.bedIn;
+	}
+
+	/**
+	 * @param bedIn the bedIn to set
+	 */
+	public void setBedIn(String bedIn) {
+		this.bedIn = bedIn;
+	}
+
+	/**
+	 * @return the bedOut
+	 */
+	public String getBedOut() {
+		return this.bedOut;
+	}
+
+	/**
+	 * @param bedOut the bedOut to set
+	 */
+	public void setBedOut(String bedOut) {
+		this.bedOut = bedOut;
+	}
+
+	/**
+	 * @return the motionTopic
+	 */
+	public String getMotionTopic() {
+		return this.motionTopic;
+	}
+
+	/**
+	 * @param motionTopic the motionTopic to set
+	 */
+	public void setMotionTopic(String motionTopic) {
+		this.motionTopic = motionTopic;
+	}
+
+	/**
+	 * @return the motionIn
+	 */
+	public String getMotionIn() {
+		return this.motionIn;
+	}
+
+	/**
+	 * @param motionIn the motionIn to set
+	 */
+	public void setMotionIn(String motionIn) {
+		this.motionIn = motionIn;
+	}
+
+	/**
+	 * @return the motionOut
+	 */
+	public String getMotionOut() {
+		return this.motionOut;
+	}
+
+	/**
+	 * @param motionOut the motionOut to set
+	 */
+	public void setMotionOut(String motionOut) {
+		this.motionOut = motionOut;
+	}
+
+	/**
+	 * @return the lightTopic
+	 */
+	public String getLightTopic() {
+		return this.lightTopic;
+	}
+
+	/**
+	 * @param lightTopic the lightTopic to set
+	 */
+	public void setLightTopic(String lightTopic) {
+		this.lightTopic = lightTopic;
+	}
+
+	/**
+	 * @return the lightOn
+	 */
+	public String getLightOn() {
+		return this.lightOn;
+	}
+
+	/**
+	 * @param lightOn the lightOn to set
+	 */
+	public void setLightOn(String lightOn) {
+		this.lightOn = lightOn;
+	}
+
+	/**
+	 * @return the lightOff
+	 */
+	public String getLightOff() {
+		return this.lightOff;
+	}
+
+	/**
+	 * @param lightOff the lightOff to set
+	 */
+	public void setLightOff(String lightOff) {
+		this.lightOff = lightOff;
+	}
 	
 }

@@ -23,6 +23,11 @@ import fr.utbm.to52.smarthome.controller.CommandHandler;
  */
 public class SocketInput implements Runnable{
 
+	/**
+	 * Prefix subject sent by the socket
+	 */
+	public static String SUBJECT = "/internal";
+	
 	private ServerSocket server;
 
 	private List<Socket> listSocket;
@@ -38,7 +43,6 @@ public class SocketInput implements Runnable{
 	 * @throws IOException Throw IO Exception when error happens
 	 * @throws NextPortException Open server on next port if already in use
 	 */
-	@SuppressWarnings("unused")
 	public SocketInput(int port) throws IOException, NextPortException{
 		this.setListSocket(new LinkedList<Socket>());
 		try{
@@ -73,7 +77,7 @@ public class SocketInput implements Runnable{
 							reader = new BufferedReader(new InputStreamReader(this.s.getInputStream()));
 							String command = reader.readLine();
 							
-							SocketInput.this.getCmdHandler().handle(command);
+							SocketInput.this.getCmdHandler().handle(SocketInput.SUBJECT+this.s.getPort(), command);
 							
 							this.s.close();
 							reader.close();

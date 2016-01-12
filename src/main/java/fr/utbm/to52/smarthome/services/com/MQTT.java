@@ -58,7 +58,6 @@ public class MQTT{
 	/**
 	 * Connect to the broker
 	 */
-	@SuppressWarnings("unused")
 	public void connect(){
 		 try {
 			this.client.connect();
